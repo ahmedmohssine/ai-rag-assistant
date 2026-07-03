@@ -4,6 +4,6 @@ class Retriever:
         self.embedder = embedder
         self.store = store
 
-    def retrieve(self, question, top_k=5):
-        query = self.embedder.embed(question)
-        return self.store.search(query, top_k)
+    def retrieve(self, question: str, top_k: int = 5):
+        query_embedding = self.embedder.embed(question)
+        return self.store.search(query_embedding, top_k)

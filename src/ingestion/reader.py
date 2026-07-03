@@ -2,6 +2,10 @@ from pathlib import Path
 
 from src.models.document import Document
 
+SKIP_FILES = {
+    "AGENTS.md",
+    "CLAUDE.md",
+}
 
 class DocumentReader:
     """A class responsible for reading markdown documents from a directory."""
@@ -12,7 +16,8 @@ class DocumentReader:
         documents = []
 
         for file in directory.rglob("*.md"): # Recursively find all markdown files in the directory
-
+            if file.name in SKIP_FILES: # Skip files in the SKIP_FILES set
+                continue
             with open(file, "r", encoding="utf-8") as f:
                 content = f.read()
 

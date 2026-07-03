@@ -1,9 +1,22 @@
 class Document:
     """A class representing a document."""
-    def __init__(self, source: str, path: str, content: str):
+    def __init__(
+            self, 
+            source: str, 
+            path: str, 
+            content: str,
+            author: str = None,
+            date: str = None,
+            url: str = None
+            ):
         self.source = source
         self.path = path
         self.content = content
+        self.author = author
+        self.date = date
+        self.url = url
+        
+
 
     def __repr__(self):
         """Return a string representation of the Document object."""

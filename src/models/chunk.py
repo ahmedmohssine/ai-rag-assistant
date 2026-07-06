@@ -9,9 +9,12 @@ class Chunk:
         relative_path,
         chunk_id,
         content,
+        file_type=None,
+        title=None,
         author=None,
         date=None,
-        url=None
+        url=None,
+        metadata=None,
     ):
         self.document_source = document_source
         self.document_path = document_path
@@ -19,9 +22,12 @@ class Chunk:
         self.relative_path = relative_path
         self.chunk_id = chunk_id
         self.content = content
+        self.file_type = file_type
+        self.title = title
         self.author = author
         self.date = date
         self.url = url
+        self.metadata = metadata or {}
 
     def to_dict(self):
         return {
@@ -31,9 +37,12 @@ class Chunk:
             "filename": self.filename,
             "relative_path": self.relative_path,
             "content": self.content,
+            "file_type": self.file_type,
+            "title": self.title,
             "author": self.author,
             "date": self.date,
             "url": self.url,
+            "metadata": self.metadata,
         }
 
     def __repr__(self):

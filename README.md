@@ -1,75 +1,80 @@
-# AI Developer Assistant (RAG)
+# AI RAG Assistant
 
-A Retrieval-Augmented Generation (RAG) assistant that answers questions about AI developer documentation using semantic search and a local Large Language Model (LLM).
-
-This project is being developed as an internship project focused on building a complete RAG pipeline from document ingestion to answer generation.
+A local Retrieval-Augmented Generation (RAG) assistant that indexes documentation and answers questions using semantic search, BM25 lexical search, and a local LLM via Ollama.
 
 ---
 
 ## Features
-
-### Document Ingestion
-- Read Markdown documentation recursively
-- Document metadata extraction
-- Structured `Document` model
-
-### Chunking
-- Fixed-size overlapping chunking (MVP)
-- Chunk metadata
-- JSON dataset generation
-
-### Embeddings
-- SentenceTransformers (`all-MiniLM-L6-v2`)
-- Batch embedding generation
-
-### Vector Database
-- ChromaDB persistent storage
-- Automatic indexing
-- Metadata stored with every chunk
-
-### Retrieval
-- Semantic similarity search
-- Configurable Top-K retrieval
-- Retriever abstraction
-
-### Generation
-- Local LLM using Ollama
-- Context-aware answer generation
-- Sources displayed with every answer
+### 📄 Multi-format document ingestion
+ - Markdown (.md, .mdx)
+ - Text (.txt)
+ - reStructuredText (.rst)
+ - CSV
+ - JSON / JSONL
+ - PDF
+### ✂️ Structure-aware chunking
+ - Markdown heading awareness
+ - Recursive splitting
+ - Overlapping chunks
+ - Citation IDs
+### 🧠 Embeddings
+ - sentence-transformers/all-MiniLM-L6-v2
+### 🗂️ Vector Database
+ - ChromaDB
+### 🔍 Hybrid Retrieval
+ - Semantic vector search
+ - BM25 lexical search
+ - Hybrid score fusion
+### 🤖 Local LLM
+ - Ollama
+ - Llama 3.2
+### 📚 Source citations
+### 🖥️ Fully local
+ - No OpenAI API
+ - No cloud services
+ - Offline capable
 
 ---
 
 ## Current Architecture
 
 ```
-Documents (Markdown for now)
-     │
-     ▼
-Document Reader (Select only Markdown documents)
-     │
-     ▼
+Documents
+(.md .mdx .txt .rst .csv .json .jsonl .pdf)
+        │
+        ▼
+Document Reader
+        │
+        ▼
 Chunker
-     │
-     ▼
+        │
+        ▼
 chunks.json
-     │
-     ▼
+        │
+        ▼
 SentenceTransformer
-     │
-     ▼
+        │
+        ▼
 Embeddings
-     │
-     ▼
+        │
+        ▼
 ChromaDB
-     │
-     ▼
-Retriever
-     │
-     ▼
+        │
+        ▼
+Hybrid Retriever
+(Vector + BM25)
+        │
+        ▼
+(Optional Reranker)
+        │
+        ▼
+Prompt Builder
+        │
+        ▼
 Ollama (Llama)
-     │
-     ▼
-Generated Answer
+        │
+        ▼
+Answer + Citations
 ```
 
 ---
@@ -101,111 +106,101 @@ ai-rag-assistant/
 │
 ├── main.py (empty)
 │
-├── requirements.txt (empty)
+├── requirements.txt
 │
 └── README.md
-
 ```
 
 ---
 
-## Tech Stack
-
-- Python
-- ChromaDB
-- SentenceTransformers
-- Ollama
-- Llama 3.2
-- Markdown corpus
-
----
-
-## Current Corpus
-
-- FastAPI Documentation
-- ChromaDB Documentation
-
-Approximately:
-
-- 155 Markdown documents
-- 1910 indexed chunks
-
----
-
-## Running the Project
-
-### 1. Generate chunks
+## Installation
 
 ```bash
+git clone https://github.com/<your-name>/ai-rag-assistant.git
+
+cd ai-rag-assistant
+
+python -m venv .venv
+
+# Windows
+.venv\Scripts\activate
+
+pip install -r requirements.txt
+```
+
+### Install Ollama
+
+```bash
+ollama pull llama3.2:3b
+```
+
+## Build the Index
+```bash
+
 python scripts/build_chunks.py
-```
 
-### 2. Build the vector index
-
-```bash
 python scripts/build_index.py
 ```
 
-### 3. Start the assistant
+## Run
 
 ```bash
 python scripts/search.py
 ```
 
----
-
-## Example
-
+ - Example:
 ```
 Question:
-How do I create a FastAPI route?
+What is OpenAPI?
 
-↓
-
-Retriever searches ChromaDB
-
-↓
-
-Top relevant chunks are retrieved
-
-↓
-
-Ollama generates an answer using only the retrieved context
-
-↓
-
-Sources are displayed alongside the answer
+Answer:
+OpenAPI is the specification used to describe your API...
+[fastapi:index_0]
 ```
 
----
+## Current Status
+
+### Completed
+
+- [x] Document reader
+- [x] Multi-format ingestion
+- [x] Structure-aware chunking
+- [x] JSON chunk dataset
+- [x] SentenceTransformer embeddings
+- [x] ChromaDB indexing
+- [x] Vector search
+- [x] BM25 retrieval
+- [x] Hybrid retrieval
+- [x] Ollama integration
+- [x] End-to-end RAG pipeline
+- [x] Citation IDs
+
+### In Progress
+
+- [ ] Retrieval quality improvements
+- [ ] Better hybrid score fusion
+- [ ] Reranking improvements
+- [ ] Evaluation framework
+- [ ] FastAPI backend
+- [ ] Chat UI
+
+## Tech Stack
+
+ - Python
+ - SentenceTransformers
+ - ChromaDB
+ - Ollama
+ - Llama 3.2
+ - BM25
+ - PyPDF
+ - FastAPI (planned)
 
 ## Roadmap
 
-- [x] Document ingestion
-- [x] MVP chunking
-- [x] Embeddings
-- [x] ChromaDB vector index
-- [x] Semantic retrieval
-- [x] Ollama integration
-- [x] End-to-end RAG pipeline
-
-### Next
-
-- [ ] Read a heterogeneous document corpus
-- [ ] Recursive/Semantic chunking
-- [ ] BM25 lexical search
-- [ ] Hybrid retrieval (Vector + BM25)
-- [ ] Re-ranking
-- [ ] Citation formatting
-- [ ] FastAPI backend
-- [ ] Web chat interface
-- [ ] Evaluation (Recall@K, MRR, Ragas)
-- [ ] Deployment
-
----
-
-## Status
-
-🚧 Work in Progress
-
-The current version provides a fully functional MVP capable of answering questions over an indexed documentation corpus using Retrieval-Augmented Generation (RAG). Future iterations will focus on improving retrieval quality, evaluation, and user experience.
+ - Improve retrieval accuracy
+ - Add evaluation metrics
+ - Better reranking
+ - Source URL citations
+ - FastAPI backend
+ - Web chat interface
+ - Additional document connectors

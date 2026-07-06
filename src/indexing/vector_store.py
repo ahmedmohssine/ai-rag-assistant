@@ -11,25 +11,30 @@ class VectorStore:
         )
 
     def add_chunks(
-        self,
-        chunks: list[dict],
-        embeddings: list[list[float]],
-    ):
-        """Add chunks and their embeddings to the vector store."""
-        self.collection.add(
-        ids=[chunk["chunk_id"] for chunk in chunks],
-        documents=[chunk["content"] for chunk in chunks],
-        embeddings=embeddings,
-        metadatas=[
+            self,
+            chunks: list[dict],
+            embeddings: list[list[float]],
+        ):
+        batch_size = 1000
+
+        for i in range(0, len(chunks), batch_size):
+            batch_chunks = chunks[i:i + batch_size]
+            batch_embeddings = embeddings[i:i + batch_size]
+
+            self.collection.add(
+                ids=[chunk["chunk_id"] for chunk in batch_chunks],
+                documents=[chunk["content"] for chunk in batch_chunks],
+                embeddings=batch_embeddings,
+                metadatas=[
                     {
                         "source": chunk["source"],
                         "filename": chunk["filename"],
                         "path": chunk["path"],
                         "chunk_id": chunk["chunk_id"],
                     }
-                    for chunk in chunks
-                ]
-    )
+                    for chunk in batch_chunks
+                ],
+            )
 
     def search(
         self,
@@ -39,7 +44,8 @@ class VectorStore:
         """Search for the most relevant documents based on the query embedding."""
         return self.collection.query(
             query_embeddings=[query_embedding],
-            n_results=top_k
+            n_results=top_k,
+            include=["documents", "metadatas", "distances"]
         )
     
     def reset(self):
@@ -47,4 +53,21 @@ class VectorStore:
         self.client.delete_collection("ai_docs")
         self.collection = self.client.get_or_create_collection(
             name="ai_docs"
-    )
+        )
+
+    def _metadata_for_chunk(self, chunk: dict) -> dict:
+        metadata = {
+            "source": chunk["source"],
+            "filename": chunk["filename"],
+            "path": chunk["path"],
+            "relative_path": chunk.get("relative_path", ""),
+            "chunk_id": chunk["chunk_id"],
+            "citation_id": chunk.get("metadata", {}).get("citation_id", chunk["chunk_id"]),
+            "file_type": chunk.get("file_type", ""),
+            "title": chunk.get("title", ""),
+        }
+
+        if chunk.get("url"):
+            metadata["url"] = chunk["url"]
+
+        return metadata

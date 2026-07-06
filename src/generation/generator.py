@@ -1,26 +1,11 @@
 from ollama import chat
 
+from src.generation.prompt_builder import build_rag_prompt
+
 
 class Generator:
     def generate(self, question: str, context: str) -> str:
-
-        prompt = f"""
-You are an AI Developer Assistant.
-
-Answer ONLY using the documentation below.
-
-If the documentation doesn't contain the answer, reply:
-
-"I don't know based on the provided documentation."
-
-Documentation:
-{context}
-
-Question:
-{question}
-
-Answer:
-"""
+        prompt = build_rag_prompt(question, context)
 
         response = chat(
             model="llama3.2:3b",

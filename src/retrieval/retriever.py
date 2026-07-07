@@ -11,8 +11,8 @@ class Retriever:
         store,
         bm25_index: BM25Index = None,
         reranker: CrossEncoderReranker = None,
-        vector_weight: float = 0.65,
-        bm25_weight: float = 0.35,
+        vector_weight: float = 0.55,
+        bm25_weight: float = 0.45,
         fusion: str = "rrf",
         rrf_k: int = 60,
         min_confidence: float = 0.20,
@@ -35,8 +35,8 @@ class Retriever:
         self,
         question: str,
         top_k: int = 5,
-        vector_k: int = 25,
-        bm25_k: int = 20,
+        vector_k: int = 40,
+        bm25_k: int = 35,
         rerank: bool = True,
     ):
         # Vector search catches semantic similarity, e.g. "make an endpoint"

@@ -1,0 +1,302 @@
+[
+    {
+        "question": "What is FastAPI?",
+        "expected_document": "docs/fastapi/reference/fastapi.md",
+        "expected_chunk": "fastapi/reference/fastapi_0",
+        "unexpected": false
+    },
+    {
+        "question": "How do you install FastAPI?",
+        "expected_document": "docs/fastapi/tutorial/index.md",
+        "expected_chunk": "fastapi/tutorial/index_3935",
+        "unexpected": false
+    },
+    {
+        "question": "How do you create a FastAPI application?",
+        "expected_document": "docs/fastapi/tutorial/first-steps.md",
+        "expected_chunk": "",
+        "unexpected": "fastapi/deployment/versions_515"
+    },
+    {
+        "question": "What command starts the development server?",
+        "expected_document": "docs/fastapi/tutorial/first-steps.md",
+        "expected_chunk": "",
+        "unexpected": "fastapi/deployment/manually_5994"
+    },
+    {
+        "question": "What is OpenAPI?",
+        "expected_document": "docs/fastapi/how-to/extending-openapi.md",
+        "expected_chunk": "fastapi/how-to/extending-openapi_725",
+        "unexpected": false
+    },
+    {
+        "question": "What is Swagger UI?",
+        "expected_document": "docs/fastapi/how-to/configure-swagger-ui.md",
+        "expected_chunk": "fastapi/how-to/configure-swagger-ui_0",
+        "unexpected": false
+    },
+    {
+        "question": "What is ReDoc?",
+        "expected_document": "docs/fastapi/tutorial/metadata.md",
+        "expected_chunk": "",
+        "unexpected": "fastapi/deployment/concepts_2836"
+    },
+    {
+        "question": "How do you create a GET endpoint?",
+        "expected_document": "docs/fastapi/tutorial/first-steps.md",
+        "expected_chunk": "fastapi/tutorial/first-steps_10122",
+        "unexpected": "fastapi/tutorial/security/get-current-user_3290"
+    },
+    {
+        "question": "How do path parameters work?",
+        "expected_document": "docs/fastapi/tutorial/path-params.md",
+        "expected_chunk": "fastapi/tutorial/path-params_5767",
+        "unexpected": false
+    },
+    {
+        "question": "How do query parameters work?",
+        "expected_document": "docs/fastapi/tutorial/query-params.md",
+        "expected_chunk": "fastapi/tutorial/query-params_0",
+        "unexpected": false
+    },
+    {
+        "question": "How do request bodies work?",
+        "expected_document": "docs/fastapi/tutorial/body.md",
+        "expected_chunk": "fastapi/tutorial/body_0",
+        "unexpected": false
+    },
+    {
+        "question": "What is Pydantic used for?",
+        "expected_document": "docs/fastapi/tutorial/body.md",
+        "expected_chunk": "",
+        "unexpected": "fastapi/alternatives_19269"
+    },
+    {
+        "question": "How do file uploads work?",
+        "expected_document": "docs/fastapi/tutorial/request-files.md",
+        "expected_chunk": "",
+        "unexpected": "chromadb/cloud/sync/file-upload_0"
+    },
+    {
+        "question": "How do form fields work?",
+        "expected_document": "docs/fastapi/tutorial/request-forms.md",
+        "expected_chunk": "fastapi/tutorial/request-forms_1976",
+        "unexpected": false
+    },
+    {
+        "question": "How do cookies work?",
+        "expected_document": "docs/fastapi/tutorial/cookie-params.md",
+        "expected_chunk": "",
+        "unexpected": "fastapi/advanced/response-cookies_919"
+    },
+    {
+        "question": "How do headers work?",
+        "expected_document": "docs/fastapi/tutorial/header-params.md",
+        "expected_chunk": "",
+        "unexpected": "fastapi/advanced/behind-a-proxy_3435"
+    },
+    {
+        "question": "What are response models?",
+        "expected_document": "docs/fastapi/tutorial/response-model.md",
+        "expected_chunk": "fastapi/tutorial/response-model_3165",
+        "unexpected": false
+    },
+    {
+        "question": "How do dependencies work?",
+        "expected_document": "docs/fastapi/tutorial/dependencies/index.md",
+        "expected_chunk": "fastapi/tutorial/dependencies/index_3193",
+        "unexpected": false
+    },
+    {
+        "question": "What is APIRouter?",
+        "expected_document": "docs/fastapi/reference/apirouter.md",
+        "expected_chunk": "fastapi/reference/apirouter_0",
+        "unexpected": false
+    },
+    {
+        "question": "How do you include a router?",
+        "expected_document": "docs/fastapi/tutorial/bigger-applications.md",
+        "expected_chunk": "fastapi/tutorial/bigger-applications_19975",
+        "unexpected": false
+    },
+    {
+        "question": "How do middleware work?",
+        "expected_document": "docs/fastapi/tutorial/middleware.md",
+        "expected_chunk": "fastapi/tutorial/middleware_255",
+        "unexpected": false
+    },
+    {
+        "question": "How do CORS work?",
+        "expected_document": "docs/fastapi/tutorial/cors.md",
+        "expected_chunk": "fastapi/tutorial/cors_4403",
+        "unexpected": false
+    },
+    {
+        "question": "How do background tasks work?",
+        "expected_document": "docs/fastapi/tutorial/background-tasks.md",
+        "expected_chunk": "fastapi/tutorial/background-tasks_1476",
+        "unexpected": false
+    },
+    {
+        "question": "How do WebSockets work?",
+        "expected_document": "docs/fastapi/advanced/websockets.md",
+        "expected_chunk": "fastapi/advanced/websockets_4841",
+        "unexpected": false
+    },
+    {
+        "question": "How do you handle errors?",
+        "expected_document": "docs/fastapi/tutorial/handling-errors.md",
+        "expected_chunk": "fastapi/tutorial/handling-errors_8123",
+        "unexpected": false
+    },
+    {
+        "question": "How do you add tags?",
+        "expected_document": "docs/fastapi/tutorial/path-operation-configuration.md",
+        "expected_chunk": "",
+        "unexpected": "fastapi/tutorial/metadata_4146"
+    },
+    {
+        "question": "How do security dependencies work?",
+        "expected_document": "docs/fastapi/tutorial/security/index.md",
+        "expected_chunk": "",
+        "unexpected": "fastapi/advanced/advanced-dependencies_2290"
+    },
+    {
+        "question": "How do OAuth2 flows work?",
+        "expected_document": "docs/fastapi/tutorial/security/oauth2-jwt.md",
+        "expected_chunk": "",
+        "unexpected": "fastapi/advanced/security/oauth2-scopes_12926"
+    },
+    {
+        "question": "How do you deploy FastAPI?",
+        "expected_document": "docs/fastapi/deployment/index.md",
+        "expected_chunk": "",
+        "unexpected": "fastapi/deployment/cloud_0"
+    },
+    {
+        "question": "How do you deploy manually?",
+        "expected_document": "docs/fastapi/deployment/manually.md",
+        "expected_chunk": "fastapi/deployment/manually_6290",
+        "unexpected": false
+    },
+    {
+        "question": "How do Docker deployments work?",
+        "expected_document": "docs/fastapi/deployment/docker.md",
+        "expected_chunk": "fastapi/deployment/docker_12918",
+        "unexpected": false
+    },
+    {
+        "question": "How do HTTPS deployments work?",
+        "expected_document": "docs/fastapi/deployment/https.md",
+        "expected_chunk": "",
+        "unexpected": "fastapi/deployment/concepts_2369"
+    },
+    {
+        "question": "How do lifespan events work?",
+        "expected_document": "docs/fastapi/advanced/events.md",
+        "expected_chunk": "fastapi/advanced/events_3010",
+        "unexpected": false
+    },
+    {
+        "question": "How do custom responses work?",
+        "expected_document": "docs/fastapi/advanced/custom-response.md",
+        "expected_chunk": "",
+        "unexpected": "fastapi/reference/responses_1937"
+    },
+    {
+        "question": "How do response headers work?",
+        "expected_document": "docs/fastapi/advanced/response-headers.md",
+        "expected_chunk": "fastapi/advanced/response-headers_1540",
+        "unexpected": false
+    },
+    {
+        "question": "How do static files work?",
+        "expected_document": "docs/fastapi/tutorial/static-files.md",
+        "expected_chunk": "fastapi/tutorial/static-files_0",
+        "unexpected": false
+    },
+    {
+        "question": "How do templates work?",
+        "expected_document": "docs/fastapi/advanced/templates.md",
+        "expected_chunk": "fastapi/advanced/templates_1837",
+        "unexpected": false
+    },
+    {
+        "question": "How do testing utilities work?",
+        "expected_document": "docs/fastapi/tutorial/testing.md",
+        "expected_chunk": "fastapi/tutorial/testing_748",
+        "unexpected": false
+    },
+    {
+        "question": "How do SQL databases integrate?",
+        "expected_document": "docs/fastapi/tutorial/sql-databases.md",
+        "expected_chunk": "fastapi/tutorial/sql-databases_0",
+        "unexpected": false
+    },
+    {
+        "question": "How do async endpoints work?",
+        "expected_document": "docs/fastapi/async.md",
+        "expected_chunk": "fastapi/async_3447",
+        "unexpected": false
+    },
+    {
+        "question": "What is the FastAPI CLI?",
+        "expected_document": "docs/fastapi/fastapi-cli.md",
+        "expected_chunk": "fastapi/fastapi-cli_6040",
+        "unexpected": false
+    },
+    {
+        "question": "How do environment variables work?",
+        "expected_document": "docs/fastapi/environment-variables.md",
+        "expected_chunk": "fastapi/environment-variables_0",
+        "unexpected": false
+    },
+    {
+        "question": "How do you extend OpenAPI?",
+        "expected_document": "docs/fastapi/how-to/extending-openapi.md",
+        "expected_chunk": "fastapi/how-to/extending-openapi_0",
+        "unexpected": false
+    },
+    {
+        "question": "How do you configure Swagger UI?",
+        "expected_document": "docs/fastapi/how-to/configure-swagger-ui.md",
+        "expected_chunk": "fastapi/how-to/configure-swagger-ui_2691",
+        "unexpected": false
+    },
+    {
+        "question": "How do you generate API clients?",
+        "expected_document": "docs/fastapi/advanced/generate-clients.md",
+        "expected_chunk": "fastapi/advanced/generate-clients_1992",
+        "unexpected": false
+    },
+    {
+        "question": "How do you upload multiple files?",
+        "expected_document": "docs/fastapi/tutorial/request-files.md",
+        "expected_chunk": "fastapi/tutorial/request-files_6508",
+        "unexpected": false
+    },
+    {
+        "question": "How do sub-applications work?",
+        "expected_document": "docs/fastapi/advanced/sub-applications.md",
+        "expected_chunk": "fastapi/advanced/sub-applications_781",
+        "unexpected": false
+    },
+    {
+        "question": "How do proxies affect FastAPI?",
+        "expected_document": "docs/fastapi/advanced/behind-a-proxy.md",
+        "expected_chunk": "fastapi/advanced/behind-a-proxy_0",
+        "unexpected": false
+    },
+    {
+        "question": "How do custom exception handlers work?",
+        "expected_document": "docs/fastapi/tutorial/handling-errors.md",
+        "expected_chunk": "fastapi/tutorial/handling-errors_3175",
+        "unexpected": false
+    },
+    {
+        "question": "What are path operation decorators?",
+        "expected_document": "docs/fastapi/tutorial/path-operation-configuration.md",
+        "expected_chunk": "",
+        "unexpected": "fastapi/tutorial/dependencies/dependencies-in-path-operation-decorators_1275"
+    }
+]

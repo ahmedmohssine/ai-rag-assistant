@@ -52,18 +52,19 @@ STOP_WORDS = {
 SYNONYMS = {
     "add": ["create"],
     "begin": ["start", "first", "step"],
-    "build": ["create", "make"],
+    "build": ["create", "make", "tutorial"],
     "endpoint": ["route", "path", "operation"],
     "endpoints": ["route", "path", "operation"],
     "get": ["get"],
     "getting": ["start", "first", "step"],
-    "make": ["create", "build"],
+    "make": ["create", "build", "tutorial"],
     "page": ["route"],
     "pages": ["route"],
     "path": ["route", "endpoint"],
     "routing": ["route"],
     "start": ["begin", "first", "step"],
     "started": ["start", "first", "step"],
+    "create": ["add", "make", "build", "tutorial", "first-steps"],
 }
 
 # This is a tiny domain-specific stemmer. It keeps the project dependency-light

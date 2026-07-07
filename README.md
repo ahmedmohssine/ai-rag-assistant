@@ -22,9 +22,10 @@ A local Retrieval-Augmented Generation (RAG) assistant that indexes documentatio
 ### 🗂️ Vector Database
  - ChromaDB
 ### 🔍 Hybrid Retrieval
- - Semantic vector search
- - BM25 lexical search
- - Hybrid score fusion
+ - Semantic vector search (SentenceTransformers)
+ - BM25 lexical retrieval
+ - Weighted hybrid fusion
+ - Optional CrossEncoder reranking
 ### 🤖 Local LLM
  - Ollama
  - Llama 3.2
@@ -33,6 +34,10 @@ A local Retrieval-Augmented Generation (RAG) assistant that indexes documentatio
  - No OpenAI API
  - No cloud services
  - Offline capable
+### 📊 Evaluation
+ - Retrieval evaluation (Recall@1, Recall@3, Recall@5, MRR)
+ - Evaluation dataset (50 questions)
+ - Retrieval inspection tools
 
 ---
 
@@ -46,7 +51,7 @@ Documents
 Document Reader
         │
         ▼
-Chunker
+Structure-aware Chunker
         │
         ▼
 chunks.json
@@ -60,21 +65,24 @@ Embeddings
         ▼
 ChromaDB
         │
-        ▼
-Hybrid Retriever
-(Vector + BM25)
-        │
-        ▼
-(Optional Reranker)
-        │
-        ▼
-Prompt Builder
-        │
-        ▼
-Ollama (Llama)
-        │
-        ▼
-Answer + Citations
+        ├───────────────┐
+        ▼               ▼
+ Vector Search       BM25 Search
+        └──────┬────────┘
+               ▼
+        Hybrid Retriever
+               │
+               ▼
+     Optional CrossEncoder
+               │
+               ▼
+        Prompt Builder
+               │
+               ▼
+      Ollama (Llama 3.2)
+               │
+               ▼
+ Answer + Citation IDs
 ```
 
 ---
@@ -93,6 +101,8 @@ ai-rag-assistant/
 ├── scripts/
 │   ├── build_chunks.py
 │   ├── build_index.py
+│   ├── generate_eval_chunks.py
+│   ├── evaluate.py
 │   ├── chat.py (empty)
 │   └── search.py
 │
@@ -157,30 +167,49 @@ Answer:
 OpenAPI is the specification used to describe your API...
 [fastapi:index_0]
 ```
+## Evaluation
 
+Run retrieval evaluation:
+
+```bash
+python scripts/evaluate.py
+```
 ## Current Status
+
+### Current benchmark (FastAPI corpus, 50 questions):
+
+ - Recall@1: 72%
+ - Recall@3: 76%
+ - Recall@5: 84%
+ - MRR: 0.758
 
 ### Completed
 
 - [x] Document reader
 - [x] Multi-format ingestion
 - [x] Structure-aware chunking
+- [x] Recursive chunk splitting
+- [x] Citation IDs
 - [x] JSON chunk dataset
 - [x] SentenceTransformer embeddings
 - [x] ChromaDB indexing
-- [x] Vector search
+- [x] Vector retrieval
 - [x] BM25 retrieval
 - [x] Hybrid retrieval
+- [x] Optional CrossEncoder reranking
 - [x] Ollama integration
+- [x] Prompt builder
+- [x] Retrieval evaluation framework
+- [x] Evaluation dataset
 - [x] End-to-end RAG pipeline
-- [x] Citation IDs
 
 ### In Progress
 
-- [ ] Retrieval quality improvements
-- [ ] Better hybrid score fusion
-- [ ] Reranking improvements
-- [ ] Evaluation framework
+- [ ] Retrieval tuning
+- [ ] Better hybrid fusion
+- [ ] Better reranking
+- [ ] Answer evaluation (LLM Judge / Ragas)
+- [ ] Source URL citations
 - [ ] FastAPI backend
 - [ ] Chat UI
 
@@ -189,18 +218,21 @@ OpenAPI is the specification used to describe your API...
  - Python
  - SentenceTransformers
  - ChromaDB
+ - BM25
  - Ollama
  - Llama 3.2
- - BM25
+ - CrossEncoder (MS MARCO)
  - PyPDF
  - FastAPI (planned)
 
 ## Roadmap
 
  - Improve retrieval accuracy
- - Add evaluation metrics
- - Better reranking
+ - Automatic retrieval tuning
+ - Query rewriting
+ - LLM-as-a-Judge evaluation
+ - Ragas evaluation
  - Source URL citations
- - FastAPI backend
+ - FastAPI REST API
  - Web chat interface
  - Additional document connectors

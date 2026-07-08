@@ -10,6 +10,13 @@ class VectorStore:
             name="ai_docs"
         )
 
+    def _document_text_for_chunk(self, chunk: dict) -> str:
+        parts = []
+        for value in [chunk.get("title"), chunk.get("path"), chunk.get("relative_path"), chunk.get("filename"), chunk.get("content")]:
+            if value:
+                parts.append(str(value))
+        return "\n".join(parts)
+
     def add_chunks(
             self,
             chunks: list[dict],
@@ -21,17 +28,24 @@ class VectorStore:
             batch_chunks = chunks[i:i + batch_size]
             batch_embeddings = embeddings[i:i + batch_size]
 
+            ids = []
+            seen_ids = set()
+            for chunk in batch_chunks:
+                base_id = chunk["chunk_id"]
+                candidate_id = base_id
+                suffix = 1
+                while candidate_id in seen_ids:
+                    candidate_id = f"{base_id}_{suffix}"
+                    suffix += 1
+                seen_ids.add(candidate_id)
+                ids.append(candidate_id)
+
             self.collection.add(
-                ids=[chunk["chunk_id"] for chunk in batch_chunks],
-                documents=[chunk["content"] for chunk in batch_chunks],
+                ids=ids,
+                documents=[self._document_text_for_chunk(chunk) for chunk in batch_chunks],
                 embeddings=batch_embeddings,
                 metadatas=[
-                    {
-                        "source": chunk["source"],
-                        "filename": chunk["filename"],
-                        "path": chunk["path"],
-                        "chunk_id": chunk["chunk_id"],
-                    }
+                    self._metadata_for_chunk(chunk)
                     for chunk in batch_chunks
                 ],
             )

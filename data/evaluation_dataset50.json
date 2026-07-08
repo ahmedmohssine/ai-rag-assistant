@@ -1,302 +1,997 @@
 [
     {
-        "question": "What is FastAPI?",
-        "expected_document": "docs/fastapi/reference/fastapi.md",
+        "id": 1,
+        "difficulty": "easy",
+        "category": "reference",
+        "question": "What is FastAPI and why is it used for building Python APIs?",
+        "expected_documents": [
+            "docs/fastapi/reference/fastapi.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/reference/fastapi.md"
+        ],
         "expected_chunk": "fastapi/reference/fastapi_0",
-        "unexpected": false
+        "must_contain": [
+            "Fastapi"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do you install FastAPI?",
-        "expected_document": "docs/fastapi/tutorial/index.md",
+        "id": 2,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do you install FastAPI in a Python environment?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/index.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/index.md"
+        ],
         "expected_chunk": "fastapi/tutorial/index_3935",
-        "unexpected": false
+        "must_contain": [
+            "Install"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do you create a FastAPI application?",
-        "expected_document": "docs/fastapi/tutorial/first-steps.md",
-        "expected_chunk": "",
-        "unexpected": "fastapi/deployment/versions_515"
+        "id": 3,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do you create your first FastAPI application?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/first-steps.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/first-steps.md"
+        ],
+        "expected_chunk": "fastapi/tutorial/first-steps_2693",
+        "must_contain": [
+            "Create",
+            "Application"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "What command starts the development server?",
-        "expected_document": "docs/fastapi/tutorial/first-steps.md",
-        "expected_chunk": "",
-        "unexpected": "fastapi/deployment/manually_5994"
+        "id": 4,
+        "difficulty": "medium",
+        "category": "tutorial",
+        "question": "Which command starts the FastAPI development server locally?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/first-steps.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/first-steps.md"
+        ],
+        "expected_chunk": "fastapi/tutorial/first-steps_13391",
+        "must_contain": [
+            "Command",
+            "Starts",
+            "Development",
+            "Server"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "What is OpenAPI?",
-        "expected_document": "docs/fastapi/how-to/extending-openapi.md",
+        "id": 5,
+        "difficulty": "easy",
+        "category": "how-to",
+        "question": "What is OpenAPI and how does FastAPI generate it?",
+        "expected_documents": [
+            "docs/fastapi/how-to/extending-openapi.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/how-to/extending-openapi.md"
+        ],
         "expected_chunk": "fastapi/how-to/extending-openapi_725",
-        "unexpected": false
+        "must_contain": [
+            "Openapi"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "What is Swagger UI?",
-        "expected_document": "docs/fastapi/how-to/configure-swagger-ui.md",
+        "id": 6,
+        "difficulty": "easy",
+        "category": "how-to",
+        "question": "What is Swagger UI in the FastAPI documentation interface?",
+        "expected_documents": [
+            "docs/fastapi/how-to/configure-swagger-ui.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/how-to/configure-swagger-ui.md"
+        ],
         "expected_chunk": "fastapi/how-to/configure-swagger-ui_0",
-        "unexpected": false
+        "must_contain": [
+            "Swagger"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "What is ReDoc?",
-        "expected_document": "docs/fastapi/tutorial/metadata.md",
-        "expected_chunk": "",
-        "unexpected": "fastapi/deployment/concepts_2836"
+        "id": 7,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "What is ReDoc and how is it used with FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/metadata.md",
+            "docs/fastapi/index.md",
+            "docs/fastapi/tutorial/first-steps.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/metadata.md"
+        ],
+        "expected_chunk": "fastapi/tutorial/metadata_5472",
+        "must_contain": [
+            "Redoc"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do you create a GET endpoint?",
-        "expected_document": "docs/fastapi/tutorial/first-steps.md",
+        "id": 8,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do you define a GET endpoint in FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/first-steps.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/first-steps.md"
+        ],
         "expected_chunk": "fastapi/tutorial/first-steps_10122",
-        "unexpected": "fastapi/tutorial/security/get-current-user_3290"
+        "must_contain": [
+            "Create",
+            "Get",
+            "Endpoint"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do path parameters work?",
-        "expected_document": "docs/fastapi/tutorial/path-params.md",
+        "id": 9,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do path parameters work in FastAPI routes?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/path-params.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/path-params.md"
+        ],
         "expected_chunk": "fastapi/tutorial/path-params_5767",
-        "unexpected": false
+        "must_contain": [
+            "Path",
+            "Parameters"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do query parameters work?",
-        "expected_document": "docs/fastapi/tutorial/query-params.md",
+        "id": 10,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do query parameters work in FastAPI endpoints?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/query-params.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/query-params.md"
+        ],
         "expected_chunk": "fastapi/tutorial/query-params_0",
-        "unexpected": false
+        "must_contain": [
+            "Query",
+            "Parameters"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do request bodies work?",
-        "expected_document": "docs/fastapi/tutorial/body.md",
+        "id": 11,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do request bodies work in FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/body.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/body.md"
+        ],
         "expected_chunk": "fastapi/tutorial/body_0",
-        "unexpected": false
+        "must_contain": [
+            "Request",
+            "Bodies"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "What is Pydantic used for?",
-        "expected_document": "docs/fastapi/tutorial/body.md",
-        "expected_chunk": "",
-        "unexpected": "fastapi/alternatives_19269"
+        "id": 12,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "What is Pydantic used for in FastAPI request and response models?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/body.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/body.md"
+        ],
+        "expected_chunk": "fastapi/tutorial/body_5638",
+        "must_contain": [
+            "Pydantic",
+            "Used"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do file uploads work?",
-        "expected_document": "docs/fastapi/tutorial/request-files.md",
-        "expected_chunk": "",
-        "unexpected": "chromadb/cloud/sync/file-upload_0"
+        "id": 13,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do you handle file uploads in FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/request-files.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/request-files.md"
+        ],
+        "expected_chunk": "fastapi/tutorial/request-files_6022",
+        "must_contain": [
+            "File",
+            "Uploads"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do form fields work?",
-        "expected_document": "docs/fastapi/tutorial/request-forms.md",
+        "id": 14,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do form fields work in FastAPI request handling?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/request-forms.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/request-forms.md"
+        ],
         "expected_chunk": "fastapi/tutorial/request-forms_1976",
-        "unexpected": false
+        "must_contain": [
+            "Form",
+            "Fields"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do cookies work?",
-        "expected_document": "docs/fastapi/tutorial/cookie-params.md",
-        "expected_chunk": "",
-        "unexpected": "fastapi/advanced/response-cookies_919"
+        "id": 15,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do you read and set cookies in FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/cookie-params.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/cookie-params.md"
+        ],
+        "expected_chunk": "fastapi/tutorial/cookie-params_850",
+        "must_contain": [
+            "Cookies"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do headers work?",
-        "expected_document": "docs/fastapi/tutorial/header-params.md",
-        "expected_chunk": "",
-        "unexpected": "fastapi/advanced/behind-a-proxy_3435"
+        "id": 16,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do you read headers in FastAPI requests?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/header-params.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/header-params.md"
+        ],
+        "expected_chunk": "fastapi/tutorial/header-params_881",
+        "must_contain": [
+            "Headers"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "What are response models?",
-        "expected_document": "docs/fastapi/tutorial/response-model.md",
+        "id": 17,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "What are response models in FastAPI and why are they used?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/response-model.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/response-model.md"
+        ],
         "expected_chunk": "fastapi/tutorial/response-model_3165",
-        "unexpected": false
+        "must_contain": [
+            "Response",
+            "Models"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do dependencies work?",
-        "expected_document": "docs/fastapi/tutorial/dependencies/index.md",
+        "id": 18,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do dependencies work in FastAPI applications?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/dependencies/index.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/dependencies/index.md"
+        ],
         "expected_chunk": "fastapi/tutorial/dependencies/index_3193",
-        "unexpected": false
+        "must_contain": [
+            "Dependencies"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "What is APIRouter?",
-        "expected_document": "docs/fastapi/reference/apirouter.md",
+        "id": 19,
+        "difficulty": "easy",
+        "category": "reference",
+        "question": "What is APIRouter and when should you use it?",
+        "expected_documents": [
+            "docs/fastapi/reference/apirouter.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/reference/apirouter.md"
+        ],
         "expected_chunk": "fastapi/reference/apirouter_0",
-        "unexpected": false
+        "must_contain": [
+            "Apirouter"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do you include a router?",
-        "expected_document": "docs/fastapi/tutorial/bigger-applications.md",
+        "id": 20,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do you include an APIRouter in a FastAPI app?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/bigger-applications.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/bigger-applications.md"
+        ],
         "expected_chunk": "fastapi/tutorial/bigger-applications_19975",
-        "unexpected": false
+        "must_contain": [
+            "Include",
+            "Router"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do middleware work?",
-        "expected_document": "docs/fastapi/tutorial/middleware.md",
+        "id": 21,
+        "difficulty": "hard",
+        "category": "tutorial",
+        "question": "How does middleware work in FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/middleware.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/middleware.md"
+        ],
         "expected_chunk": "fastapi/tutorial/middleware_255",
-        "unexpected": false
+        "must_contain": [
+            "Middleware"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do CORS work?",
-        "expected_document": "docs/fastapi/tutorial/cors.md",
+        "id": 22,
+        "difficulty": "hard",
+        "category": "tutorial",
+        "question": "How do CORS settings work in FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/cors.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/cors.md"
+        ],
         "expected_chunk": "fastapi/tutorial/cors_4403",
-        "unexpected": false
+        "must_contain": [
+            "Cors"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do background tasks work?",
-        "expected_document": "docs/fastapi/tutorial/background-tasks.md",
+        "id": 23,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do you run background tasks in FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/background-tasks.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/background-tasks.md"
+        ],
         "expected_chunk": "fastapi/tutorial/background-tasks_1476",
-        "unexpected": false
+        "must_contain": [
+            "Background",
+            "Tasks"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do WebSockets work?",
-        "expected_document": "docs/fastapi/advanced/websockets.md",
+        "id": 24,
+        "difficulty": "hard",
+        "category": "advanced",
+        "question": "How do WebSockets work in FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/advanced/websockets.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/advanced/websockets.md"
+        ],
         "expected_chunk": "fastapi/advanced/websockets_4841",
-        "unexpected": false
+        "must_contain": [
+            "Websockets"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do you handle errors?",
-        "expected_document": "docs/fastapi/tutorial/handling-errors.md",
+        "id": 25,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do you handle errors in FastAPI endpoints?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/handling-errors.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/handling-errors.md"
+        ],
         "expected_chunk": "fastapi/tutorial/handling-errors_8123",
-        "unexpected": false
+        "must_contain": [
+            "Handle",
+            "Errors"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do you add tags?",
-        "expected_document": "docs/fastapi/tutorial/path-operation-configuration.md",
-        "expected_chunk": "",
-        "unexpected": "fastapi/tutorial/metadata_4146"
+        "id": 26,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do you add tags to FastAPI path operations?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/path-operation-configuration.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/path-operation-configuration.md"
+        ],
+        "expected_chunk": "fastapi/tutorial/path-operation-configuration_1037",
+        "must_contain": [
+            "Add",
+            "Tags"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do security dependencies work?",
-        "expected_document": "docs/fastapi/tutorial/security/index.md",
-        "expected_chunk": "",
-        "unexpected": "fastapi/advanced/advanced-dependencies_2290"
+        "id": 27,
+        "difficulty": "easy",
+        "category": "security",
+        "question": "How do security dependencies work in FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/security/index.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/security/index.md"
+        ],
+        "expected_chunk": "fastapi/tutorial/security/index_0",
+        "must_contain": [
+            "Security",
+            "Dependencies"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do OAuth2 flows work?",
-        "expected_document": "docs/fastapi/tutorial/security/oauth2-jwt.md",
-        "expected_chunk": "",
-        "unexpected": "fastapi/advanced/security/oauth2-scopes_12926"
+        "id": 28,
+        "difficulty": "hard",
+        "category": "security",
+        "question": "How do OAuth2 flows work in FastAPI security?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/security/oauth2-jwt.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/security/oauth2-jwt.md"
+        ],
+        "expected_chunk": "fastapi/tutorial/security/oauth2-jwt_0",
+        "must_contain": [
+            "Oauth2",
+            "Flows"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do you deploy FastAPI?",
-        "expected_document": "docs/fastapi/deployment/index.md",
-        "expected_chunk": "",
-        "unexpected": "fastapi/deployment/cloud_0"
+        "id": 29,
+        "difficulty": "hard",
+        "category": "deployment",
+        "question": "How do you deploy a FastAPI application to production?",
+        "expected_documents": [
+            "docs/fastapi/deployment/index.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/deployment/index.md"
+        ],
+        "expected_chunk": "fastapi/deployment/index_0",
+        "must_contain": [
+            "Deploy"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do you deploy manually?",
-        "expected_document": "docs/fastapi/deployment/manually.md",
+        "id": 30,
+        "difficulty": "hard",
+        "category": "deployment",
+        "question": "How do you deploy FastAPI manually with a server process?",
+        "expected_documents": [
+            "docs/fastapi/deployment/manually.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/deployment/manually.md"
+        ],
         "expected_chunk": "fastapi/deployment/manually_6290",
-        "unexpected": false
+        "must_contain": [
+            "Deploy",
+            "Manually"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do Docker deployments work?",
-        "expected_document": "docs/fastapi/deployment/docker.md",
+        "id": 31,
+        "difficulty": "hard",
+        "category": "deployment",
+        "question": "How do Docker deployments work for FastAPI apps?",
+        "expected_documents": [
+            "docs/fastapi/deployment/docker.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/deployment/docker.md"
+        ],
         "expected_chunk": "fastapi/deployment/docker_12918",
-        "unexpected": false
+        "must_contain": [
+            "Docker",
+            "Deployments"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do HTTPS deployments work?",
-        "expected_document": "docs/fastapi/deployment/https.md",
-        "expected_chunk": "",
-        "unexpected": "fastapi/deployment/concepts_2369"
+        "id": 32,
+        "difficulty": "hard",
+        "category": "deployment",
+        "question": "How do HTTPS deployments work for FastAPI services?",
+        "expected_documents": [
+            "docs/fastapi/deployment/https.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/deployment/https.md"
+        ],
+        "expected_chunk": "fastapi/deployment/https_0",
+        "must_contain": [
+            "Https",
+            "Deployments"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do lifespan events work?",
-        "expected_document": "docs/fastapi/advanced/events.md",
+        "id": 33,
+        "difficulty": "hard",
+        "category": "advanced",
+        "question": "How do lifespan events work in FastAPI applications?",
+        "expected_documents": [
+            "docs/fastapi/advanced/events.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/advanced/events.md"
+        ],
         "expected_chunk": "fastapi/advanced/events_3010",
-        "unexpected": false
+        "must_contain": [
+            "Lifespan",
+            "Events"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do custom responses work?",
-        "expected_document": "docs/fastapi/advanced/custom-response.md",
-        "expected_chunk": "",
-        "unexpected": "fastapi/reference/responses_1937"
+        "id": 34,
+        "difficulty": "easy",
+        "category": "advanced",
+        "question": "How do custom responses work in FastAPI endpoints?",
+        "expected_documents": [
+            "docs/fastapi/advanced/custom-response.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/advanced/custom-response.md"
+        ],
+        "expected_chunk": "fastapi/advanced/custom-response_0",
+        "must_contain": [
+            "Custom",
+            "Responses"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do response headers work?",
-        "expected_document": "docs/fastapi/advanced/response-headers.md",
+        "id": 35,
+        "difficulty": "easy",
+        "category": "advanced",
+        "question": "How do response headers work in FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/advanced/response-headers.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/advanced/response-headers.md"
+        ],
         "expected_chunk": "fastapi/advanced/response-headers_1540",
-        "unexpected": false
+        "must_contain": [
+            "Response",
+            "Headers"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do static files work?",
-        "expected_document": "docs/fastapi/tutorial/static-files.md",
+        "id": 36,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do you serve static files in FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/static-files.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/static-files.md"
+        ],
         "expected_chunk": "fastapi/tutorial/static-files_0",
-        "unexpected": false
+        "must_contain": [
+            "Static",
+            "Files"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do templates work?",
-        "expected_document": "docs/fastapi/advanced/templates.md",
+        "id": 37,
+        "difficulty": "easy",
+        "category": "advanced",
+        "question": "How do templates work in FastAPI applications?",
+        "expected_documents": [
+            "docs/fastapi/advanced/templates.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/advanced/templates.md"
+        ],
         "expected_chunk": "fastapi/advanced/templates_1837",
-        "unexpected": false
+        "must_contain": [
+            "Templates"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do testing utilities work?",
-        "expected_document": "docs/fastapi/tutorial/testing.md",
+        "id": 38,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do the FastAPI testing utilities work?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/testing.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/testing.md"
+        ],
         "expected_chunk": "fastapi/tutorial/testing_748",
-        "unexpected": false
+        "must_contain": [
+            "Testing",
+            "Utilities"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do SQL databases integrate?",
-        "expected_document": "docs/fastapi/tutorial/sql-databases.md",
+        "id": 39,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do SQL databases integrate with FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/sql-databases.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/sql-databases.md"
+        ],
         "expected_chunk": "fastapi/tutorial/sql-databases_0",
-        "unexpected": false
+        "must_contain": [
+            "Sql",
+            "Databases",
+            "Integrate"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do async endpoints work?",
-        "expected_document": "docs/fastapi/async.md",
+        "id": 40,
+        "difficulty": "easy",
+        "category": "general",
+        "question": "How do async endpoints work in FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/async.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/async.md"
+        ],
         "expected_chunk": "fastapi/async_3447",
-        "unexpected": false
+        "must_contain": [
+            "Async",
+            "Endpoints"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "What is the FastAPI CLI?",
-        "expected_document": "docs/fastapi/fastapi-cli.md",
+        "id": 41,
+        "difficulty": "easy",
+        "category": "general",
+        "question": "What is the FastAPI CLI and what does it do?",
+        "expected_documents": [
+            "docs/fastapi/fastapi-cli.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/fastapi-cli.md"
+        ],
         "expected_chunk": "fastapi/fastapi-cli_6040",
-        "unexpected": false
+        "must_contain": [
+            "Cli"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do environment variables work?",
-        "expected_document": "docs/fastapi/environment-variables.md",
+        "id": 42,
+        "difficulty": "easy",
+        "category": "general",
+        "question": "How do environment variables work in FastAPI apps?",
+        "expected_documents": [
+            "docs/fastapi/environment-variables.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/environment-variables.md"
+        ],
         "expected_chunk": "fastapi/environment-variables_0",
-        "unexpected": false
+        "must_contain": [
+            "Environment",
+            "Variables"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do you extend OpenAPI?",
-        "expected_document": "docs/fastapi/how-to/extending-openapi.md",
+        "id": 43,
+        "difficulty": "easy",
+        "category": "how-to",
+        "question": "How do you customize or extend OpenAPI in FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/how-to/extending-openapi.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/how-to/extending-openapi.md"
+        ],
         "expected_chunk": "fastapi/how-to/extending-openapi_0",
-        "unexpected": false
+        "must_contain": [
+            "Extend",
+            "Openapi"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do you configure Swagger UI?",
-        "expected_document": "docs/fastapi/how-to/configure-swagger-ui.md",
+        "id": 44,
+        "difficulty": "easy",
+        "category": "how-to",
+        "question": "How do you configure Swagger UI for FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/how-to/configure-swagger-ui.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/how-to/configure-swagger-ui.md"
+        ],
         "expected_chunk": "fastapi/how-to/configure-swagger-ui_2691",
-        "unexpected": false
+        "must_contain": [
+            "Configure",
+            "Swagger"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do you generate API clients?",
-        "expected_document": "docs/fastapi/advanced/generate-clients.md",
+        "id": 45,
+        "difficulty": "easy",
+        "category": "advanced",
+        "question": "How do you generate API clients from a FastAPI app?",
+        "expected_documents": [
+            "docs/fastapi/advanced/generate-clients.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/advanced/generate-clients.md"
+        ],
         "expected_chunk": "fastapi/advanced/generate-clients_1992",
-        "unexpected": false
+        "must_contain": [
+            "Generate",
+            "Api",
+            "Clients"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do you upload multiple files?",
-        "expected_document": "docs/fastapi/tutorial/request-files.md",
+        "id": 46,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do you upload multiple files in FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/request-files.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/request-files.md"
+        ],
         "expected_chunk": "fastapi/tutorial/request-files_6508",
-        "unexpected": false
+        "must_contain": [
+            "Upload",
+            "Multiple",
+            "Files"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do sub-applications work?",
-        "expected_document": "docs/fastapi/advanced/sub-applications.md",
+        "id": 47,
+        "difficulty": "hard",
+        "category": "advanced",
+        "question": "How do sub-applications work in FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/advanced/sub-applications.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/advanced/sub-applications.md"
+        ],
         "expected_chunk": "fastapi/advanced/sub-applications_781",
-        "unexpected": false
+        "must_contain": [
+            "Sub",
+            "Applications"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do proxies affect FastAPI?",
-        "expected_document": "docs/fastapi/advanced/behind-a-proxy.md",
+        "id": 48,
+        "difficulty": "easy",
+        "category": "advanced",
+        "question": "How do proxies affect FastAPI applications?",
+        "expected_documents": [
+            "docs/fastapi/advanced/behind-a-proxy.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/advanced/behind-a-proxy.md"
+        ],
         "expected_chunk": "fastapi/advanced/behind-a-proxy_0",
-        "unexpected": false
+        "must_contain": [
+            "Proxies",
+            "Affect"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "How do custom exception handlers work?",
-        "expected_document": "docs/fastapi/tutorial/handling-errors.md",
+        "id": 49,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "How do custom exception handlers work in FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/handling-errors.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/handling-errors.md"
+        ],
         "expected_chunk": "fastapi/tutorial/handling-errors_3175",
-        "unexpected": false
+        "must_contain": [
+            "Custom",
+            "Exception",
+            "Handlers"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     },
     {
-        "question": "What are path operation decorators?",
-        "expected_document": "docs/fastapi/tutorial/path-operation-configuration.md",
-        "expected_chunk": "",
-        "unexpected": "fastapi/tutorial/dependencies/dependencies-in-path-operation-decorators_1275"
+        "id": 50,
+        "difficulty": "easy",
+        "category": "tutorial",
+        "question": "What are path operation decorators in FastAPI?",
+        "expected_documents": [
+            "docs/fastapi/tutorial/path-operation-configuration.md"
+        ],
+        "acceptable_documents": [
+            "docs/fastapi/tutorial/path-operation-configuration.md"
+        ],
+        "expected_chunk": "fastapi/tutorial/path-operation-configuration_3779",
+        "must_contain": [
+            "Path",
+            "Operation",
+            "Decorators"
+        ],
+        "unexpected_documents": [
+            "docs/chromadb/**"
+        ]
     }
 ]

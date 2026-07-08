@@ -6,7 +6,7 @@ from src.models.chunk import Chunk
 
 class Chunker:
     """A class responsible for chunking documents into smaller pieces."""
-    def __init__(self, chunk_size: int = 750, overlap: int = 150):
+    def __init__(self, chunk_size: int = 500, overlap: int = 80):
         self.chunk_size = chunk_size
         self.overlap = overlap
 
@@ -30,7 +30,8 @@ class Chunker:
         chunk_path = Path(relative_path).with_suffix("").as_posix()
 
         for chunk_content, start_index in self._split_text(text, chunk_size, overlap):
-            if len(chunk_content.strip()) < 50:
+            cleaned = re.sub(r"\s+", " ", chunk_content).strip()
+            if len(cleaned) < 80:
                 continue
 
             citation_id = f"{document.source}:{filename}_{start_index}"
@@ -40,7 +41,7 @@ class Chunker:
                 filename=filename,
                 relative_path=relative_path,
                 chunk_id=f"{chunk_path}_{start_index}",
-                content=chunk_content,
+                content=cleaned,
                 file_type=document.file_type,
                 title=document.title,
                 author=document.author,
@@ -82,7 +83,8 @@ class Chunker:
 
             if current_parts and next_length > chunk_size:
                 chunk_text = "\n\n".join(current_parts).strip()
-                chunks.append((chunk_text, current_start))
+                if chunk_text:
+                    chunks.append((chunk_text, current_start))
                 overlap_text = self._tail_overlap(chunk_text, overlap)
                 current_parts = [overlap_text, block] if overlap_text else [block]
                 current_start = start_index - len(overlap_text) if overlap_text else start_index

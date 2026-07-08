@@ -4,8 +4,8 @@ from sentence_transformers import SentenceTransformer
 class Embedder:
     """Generates embeddings for text."""
 
-    def __init__(self, model_name="sentence-transformers/all-MiniLM-L6-v2"):
-        self.model = SentenceTransformer(model_name)
+    def __init__(self, model_name="sentence-transformers/all-MiniLM-L6-v2", cache_folder=None):
+        self.model = SentenceTransformer(model_name, cache_folder=cache_folder)
 
     def embed(self, text: str) -> list[float]:
         """Generate an embedding for a single text."""

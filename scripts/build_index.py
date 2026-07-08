@@ -13,7 +13,7 @@ store.reset()
 with open("data/chunks.json", "r", encoding="utf-8") as f: # Load chunks from JSON file
     chunks = json.load(f)
 
-texts = [chunk["content"] for chunk in chunks]
+texts = [store._document_text_for_chunk(chunk) for chunk in chunks]
 
 embeddings = embedder.embed_batch(texts)
 

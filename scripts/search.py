@@ -1,5 +1,6 @@
 import os
 import sys
+from pathlib import Path
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.retrieval.retriever import Retriever
@@ -33,11 +34,6 @@ while True:
     
     results = retriever.retrieve(question)
 
-    for i in range(len(results["documents"][0])):
-        print("=" * 80)
-        print(results["scores"][0][i])
-        print(results["metadatas"][0][i]["path"])
-
     if not results["is_confident"]:
         print("\nAnswer:\n")
         print("I don't know based on the available documentation.")
@@ -46,10 +42,9 @@ while True:
 
     context = ""
     for doc, meta in zip(results["documents"][0], results["metadatas"][0]):
-        citation_id = meta.get("citation_id", meta.get("chunk_id", "unknown"))
+        citation_id = meta.get("citation_id", meta.get("path", "unknown"))
         context += (
-            f"Citation: [{citation_id}]\n"
-            f"Source: {meta['filename']}\n"
+            f"Source Document: {meta['path']}\n"
             f"{doc}\n\n"
         )
 
@@ -58,6 +53,16 @@ while True:
     print(answer)
     
     print("\nSources:\n")
+    seen = set()
+
     for metadata in results["metadatas"][0]:
-        citation_id = metadata.get("citation_id", metadata.get("chunk_id", "unknown"))
-        print(f"- [{citation_id}] {metadata['source']} | {metadata['filename']}")
+        path = metadata["path"]
+
+        if path in seen:
+            continue
+
+        seen.add(path)
+
+        p = Path(path)
+
+        print(f"- {p.parent.name.title()} → {p.stem.replace('-', ' ').title()}")

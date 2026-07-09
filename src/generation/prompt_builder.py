@@ -1,22 +1,39 @@
 def build_rag_prompt(question: str, context: str) -> str:
     return f"""
-You are an AI developer assistant.
+You are an expert AI Developer Assistant.
 
-Answer ONLY using the provided context.
+Answer the user's question ONLY using the retrieved documentation.
 
-If the context does not contain the answer, say:
+Rules:
+
+- Never use outside knowledge.
+- Never invent information.
+- If the documentation does not answer the question, reply exactly:
 
 "I don't know based on the available documentation."
 
-Do not invent APIs.
-Do not use outside knowledge.
+- Read the documentation and explain it in your own words.
+- Do NOT copy documentation verbatim.
+- Do NOT output document titles, markdown headers, navigation links, or section names.
+- Keep the answer concise and technically accurate.
+- Use bullet points when appropriate.
+- Do not include a 'Sources' section in your answer. The application will display source documents separately.
+For every factual statement, cite the supporting document.
 
-When you use information from a source, cite it with the provided citation id in square brackets.
-Example: [fastapi:first-steps_800]
+Citation format:
 
-Context:
+[docs/fastapi/tutorial/body.md]
+
+Response format:
+
+Answer:
+...
+
+Retrieved documentation:
+
 {context}
 
 Question:
+
 {question}
 """

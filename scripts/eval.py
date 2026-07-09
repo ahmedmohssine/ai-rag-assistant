@@ -1,6 +1,12 @@
 import argparse
 import json
 import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from src.evaluation.judge import LLMjudge
+from src.generation.generator import Generator
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parent.parent))
@@ -61,31 +67,77 @@ def _normalize_expected(sample: dict) -> tuple[list[str], list[str], str | None]
         expected_documents = [sample["expected_document"]]
 
     acceptable_documents = sample.get("acceptable_documents") or []
-    expected_chunk = sample.get("expected_chunk") or None
-    return expected_documents, acceptable_documents, expected_chunk
+    return expected_documents, acceptable_documents
 
 
 def evaluate(
     retriever,
+    generator,
+    judge,
     dataset_path: str = "data/evaluation_dataset50.json",
     top_k: int = 5,
     verbose: bool = False,
 ) -> dict:
     dataset = _normalize_dataset(dataset_path)
+    faithfulness_total = 0
+    correctness_total = 0
+    relevance_total = 0
 
+    hallucinations = 0
+    judge_samples = 0
     total = len(dataset)
     document_recall1 = document_recall3 = document_recall5 = 0
     document_mrr = 0
-    chunk_recall1 = chunk_recall3 = chunk_recall5 = 0
-    chunk_mrr = 0
-    chunk_hits = 0
 
     for sample in dataset:
         question = sample["question"]
-        expected_documents, acceptable_documents, expected_chunk = _normalize_expected(sample)
+        expected_documents, acceptable_documents = _normalize_expected(sample)
 
         results = retriever.retrieve(question, top_k=top_k)
-        result_ids = results.get("ids", [[]])[0]
+        context = []
+
+        for metadata, document in zip(
+            results["metadatas"][0],
+            results["documents"][0],
+        ):
+            context.append(
+                {
+                    "content": document,
+                    "metadata": metadata,
+                }
+            )
+        expected_answer = sample.get("expected_answer", "")
+        generated_answer = generator.generate(
+            question,
+            context,
+        )     
+        scores = judge.evaluate(
+            question=question,
+            context=context,
+            expected_answer=expected_answer,
+            generated_answer=generated_answer,
+        )
+        faithfulness_total += scores["faithfulness"]
+        correctness_total += scores["correctness"]
+        relevance_total += scores["relevance"]
+
+        if scores["hallucination"]:
+            hallucinations += 1
+
+        judge_samples += 1
+        judge_results = []
+        judge_results.append({
+            "question": question,
+            "generated_answer": generated_answer,
+            "scores": scores,
+        })
+        with open(
+            r"C:\1337-Project\ai-rag-assistant\data\judge_results.json",
+            "w",
+            encoding="utf-8",
+        ) as f:
+            json.dump(judge_results, f, indent=2)
+
         result_metadatas = results.get("metadatas", [[]])[0]
 
         document_rank = None
@@ -97,11 +149,6 @@ def evaluate(
                 document_rank = index
                 break
 
-        if expected_chunk:
-            for index, chunk_id in enumerate(result_ids, start=1):
-                if chunk_id == expected_chunk:
-                    chunk_rank = index
-                    break
 
         if document_rank == 1:
             document_recall1 += 1
@@ -109,26 +156,10 @@ def evaluate(
             document_recall3 += 1
         if document_rank is not None and document_rank <= 5:
             document_recall5 += 1
-        if document_rank is not None:
+        if document_rank is not None: 
             document_mrr += 1 / document_rank
 
-        if expected_chunk:
-            if chunk_rank == 1:
-                chunk_recall1 += 1
-            if chunk_rank is not None and chunk_rank <= 3:
-                chunk_recall3 += 1
-            if chunk_rank is not None and chunk_rank <= 5:
-                chunk_recall5 += 1
-            if chunk_rank is not None:
-                chunk_mrr += 1 / chunk_rank
-                chunk_hits += 1
 
-        if verbose:
-            print(
-                f"{question}\n"
-                f"  document_rank={document_rank}\n"
-                f"  chunk_rank={chunk_rank}\n"
-            )
 
     metrics = {
         "total_samples": total,
@@ -137,12 +168,17 @@ def evaluate(
         "document_recall@3": document_recall3 / total if total else 0.0,
         "document_recall@5": document_recall5 / total if total else 0.0,
         "document_mrr": document_mrr / total if total else 0.0,
-        "chunk_recall@1": chunk_recall1 / chunk_hits if chunk_hits else 0.0,
-        "chunk_recall@3": chunk_recall3 / chunk_hits if chunk_hits else 0.0,
-        "chunk_recall@5": chunk_recall5 / chunk_hits if chunk_hits else 0.0,
-        "chunk_mrr": chunk_mrr / chunk_hits if chunk_hits else 0.0,
-        "chunk_samples": chunk_hits,
+        "faithfulness": faithfulness_total / judge_samples,
+        "correctness": correctness_total / judge_samples,
+        "relevance": relevance_total / judge_samples,
+        "hallucination_rate": hallucinations / judge_samples,
     }
+    if verbose:
+        print(
+            f"{question}\n"
+            f"  document_rank={document_rank}\n"
+            f"  chunk_rank={chunk_rank}\n"
+        )
     return metrics
 
 
@@ -153,12 +189,24 @@ def main() -> None:
     parser.add_argument("--verbose", action="store_true", help="Print per-question ranking details")
     parser.add_argument("--output", help="Optional path to save metrics as JSON")
     args = parser.parse_args()
+    embedder = Embedder()
+    store = VectorStore()
 
+    retriever = Retriever(embedder, store)
+    generator = Generator()
+    judge = LLMjudge()    
     embedder = Embedder()
     store = VectorStore()
     retriever = Retriever(embedder, store)
 
-    metrics = evaluate(retriever, dataset_path=args.dataset, top_k=args.top_k, verbose=args.verbose)
+    metrics = evaluate(
+        retriever,
+        generator,
+        judge,
+        dataset_path=args.dataset,
+        top_k=args.top_k,
+        verbose=args.verbose,
+    )
     print(json.dumps(metrics, indent=2))
 
     if args.output:
@@ -166,6 +214,7 @@ def main() -> None:
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(json.dumps(metrics, indent=2), encoding="utf-8")
         print(f"Saved metrics to {output_path}")
+
 
 
 if __name__ == "__main__":

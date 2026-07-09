@@ -1,133 +1,246 @@
 # AI RAG Assistant
 
-A local Retrieval-Augmented Generation (RAG) assistant that indexes documentation and answers questions using semantic search, BM25 lexical search, and a local LLM via Ollama.
+A fully local Retrieval-Augmented Generation (RAG) assistant that indexes technical documentation and answers questions using hybrid retrieval, local embeddings, and a local LLM through Ollama.
+
+The project is designed as a production-style RAG pipeline with evaluation tools, a REST API, and a web chat interface.
 
 ---
 
-## Features
-### 📄 Multi-format document ingestion
- - Markdown (.md, .mdx)
- - Text (.txt)
- - reStructuredText (.rst)
- - CSV
- - JSON / JSONL
- - PDF
-### ✂️ Structure-aware chunking
- - Markdown heading awareness
- - Recursive splitting
- - Overlapping chunks
- - Citation IDs
-### 🧠 Embeddings
- - sentence-transformers/all-MiniLM-L6-v2
-### 🗂️ Vector Database
- - ChromaDB
-### 🔍 Hybrid Retrieval
- - Semantic vector search (SentenceTransformers)
- - BM25 lexical retrieval
- - FastAPI-focused document filtering and document-prior boosting
- - Hybrid fusion with document-aware reranking
- - Optional CrossEncoder reranking
-### 🤖 Local LLM
- - Ollama
- - Llama 3.2
-### 📚 Source citations
-### 🖥️ Fully local
- - No OpenAI API
- - No cloud services
- - Offline capable
-### 📊 Evaluation
- - Retrieval evaluation (Recall@1, Recall@3, Recall@5, MRR)
- - Evaluation dataset (50 FastAPI-focused questions)
- - Retrieval inspection and regression tests
+# Features
+
+## 📄 Multi-format document ingestion
+
+- Markdown (.md, .mdx)
+- Text (.txt)
+- reStructuredText (.rst)
+- CSV
+- JSON / JSONL
+- PDF
 
 ---
 
-## Current Architecture
+## ✂️ Structure-aware chunking
 
-```
-Documents
-(.md .mdx .txt .rst .csv .json .jsonl .pdf)
-        │
-        ▼
-Document Reader
-        │
-        ▼
-Structure-aware Chunker
-        │
-        ▼
-chunks.json
-        │
-        ▼
-SentenceTransformer
-        │
-        ▼
-Embeddings
-        │
-        ▼
-ChromaDB
-        │
-        ├───────────────┐
-        ▼               ▼
- Vector Search       BM25 Search
-        └──────┬────────┘
-               ▼
-        Hybrid Retriever
-               │
-               ▼
-     Optional CrossEncoder
-               │
-               ▼
-        Prompt Builder
-               │
-               ▼
-      Ollama (Llama 3.2)
-               │
-               ▼
- Answer + Citation IDs
+- Markdown heading awareness
+- Recursive splitting
+- Overlapping chunks
+- Citation IDs
+- Metadata preservation
+
+---
+
+## 🧠 Embeddings
+
+- sentence-transformers/all-MiniLM-L6-v2
+
+---
+
+## 🗂️ Vector Database
+
+- ChromaDB
+
+---
+
+## 🔍 Hybrid Retrieval
+
+- Semantic vector search
+- BM25 lexical retrieval
+- Hybrid fusion
+- FastAPI-specific document boosting
+- Metadata-aware reranking
+- Optional CrossEncoder reranking
+- Confidence scoring
+
+---
+
+## 🤖 Local LLM
+
+- Ollama
+- Llama 3.2
+
+---
+
+## 🌐 REST API
+
+Built with FastAPI.
+
+Endpoints include:
+
+- Chat
+- Streaming chat
+- Conversation history
+- Conversation deletion
+
+---
+
+## 💬 Web Interface
+
+Built with Streamlit.
+
+Features:
+
+- Chat interface
+- Conversation history
+- Source citations
+- Confidence score
+- Multiple conversations
+- Delete conversation
+
+---
+
+## 📚 Source Citations
+
+Every answer includes the documents used during retrieval.
+
+---
+
+## 📊 Evaluation
+
+### Retrieval Evaluation
+
+- Recall@1
+- Recall@3
+- Recall@5
+- MRR
+
+### Generation Evaluation
+
+LLM-as-a-Judge scoring using Ollama.
+
+Evaluates:
+
+- Faithfulness
+- Correctness
+- Relevance
+- Hallucination rate
+
+---
+
+## 🖥️ Fully Local
+
+- No OpenAI API
+- No cloud services
+- Offline capable
+
+---
+
+# Architecture
+
+```text
+                  Documents
+ (.md .pdf .json .csv .txt .rst ...)
+                     │
+                     ▼
+             Document Reader
+                     │
+                     ▼
+        Structure-aware Chunker
+                     │
+                     ▼
+               chunks.json
+                     │
+                     ▼
+          Sentence Transformers
+                     │
+                     ▼
+                Embeddings
+                     │
+                     ▼
+                 ChromaDB
+                     │
+          ┌──────────┴──────────┐
+          ▼                     ▼
+     Vector Search         BM25 Search
+          └──────────┬──────────┘
+                     ▼
+            Hybrid Retriever
+                     │
+                     ▼
+        Optional CrossEncoder
+                     │
+                     ▼
+            Prompt Builder
+                     │
+                     ▼
+         Ollama (Llama 3.2)
+                     │
+                     ▼
+              Generated Answer
+                     │
+          ┌──────────┴──────────┐
+          ▼                     ▼
+     FastAPI API          Streamlit UI
 ```
 
 ---
 
-## Project Structure
+# Project Structure
 
-```
+```text
 ai-rag-assistant/
 
-├── docs/
-│
 ├── data/
 │   ├── chunks.json
-│   └── chroma/
+│   ├── judge_results.json
+│   ├── results.csv
+│   ├── chroma/
+│   └── evaluation_dataset50.json
+│
+├── docs/ (where you put your documents)
 │
 ├── scripts/
 │   ├── build_chunks.py
 │   ├── build_index.py
 │   ├── eval.py
-│   ├── generate_eval_chunks.py
-│   ├── chat.py (empty)
-│   └── search.py
-│
-├── tests/
-│   └── test_retriever.py
+│   ├── search.py
+│   └── tune_retreval.py (for tunning)
 │
 ├── src/
+│   ├── api/
 │   ├── chunking/
+│   ├── evaluation/
 │   ├── generation/
 │   ├── indexing/
 │   ├── ingestion/
-│   ├── models/
-│   └── retrieval/
+│   ├── retrieval/
+│   └── models/
 │
-├── main.py (empty)
+├── ui/
+│   └── app.py
+│
+├── tests/
 │
 ├── requirements.txt
-│
 └── README.md
 ```
 
 ---
 
-## Installation
+## Before Installation
+
+Important: The repository includes the FastAPI documentation corpus used for development and evaluation.
+
+Before building the index, delete everything inside the docs/ folder and add your own documentation files (Markdown, PDF, JSON, TXT, etc.).
+
+Example:
+```
+Delete
+
+docs/fastapi/
+
+docs/chromadb/
+
+Add your own corpus
+
+docs/my_docs/
+
+docs/product_docs/
+
+docs/company_docs/
+
+Then run the indexing pipeline normally.
+```
+# Installation
 
 ```bash
 git clone https://github.com/<your-name>/ai-rag-assistant.git
@@ -142,120 +255,154 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-### Requirements
+---
 
-The runtime requirements are listed in `requirements.txt` and currently include:
- - chromadb
- - ollama
- - pypdf
- - sentence-transformers
-
-No new runtime packages were added beyond those already required by the current pipeline.
-
-### Install Ollama
+# Install Ollama
 
 ```bash
 ollama pull llama3.2:3b
 ```
 
-## Build the Index
+---
+
+# Build the Index
+
 ```bash
 python scripts/build_chunks.py
 
 python scripts/build_index.py
 ```
 
-## Run
+---
+
+# Run CLI Search (optional)
 
 ```bash
 python scripts/search.py
 ```
 
- - Example:
-```
-Question:
-What is OpenAPI?
+---
 
-Answer:
-OpenAPI is the specification used to describe your API...
-[fastapi:index_0]
+# Run FastAPI
+
+```bash
+python -m uvicorn src.api.app:app --reload
 ```
 
-## Evaluation
+Swagger documentation:
 
-Run retrieval evaluation:
+```
+http://127.0.0.1:8000/docs
+```
+
+---
+
+# Run Streamlit
+
+```bash
+streamlit run ui/app.py
+```
+
+---
+
+# Evaluation (takes about 20-30 min related to your Q/A)
+
+Run retrieval + generation evaluation:
 
 ```bash
 python scripts/eval.py
 ```
 
-Run the retriever regression tests:
+Run retriever tests:
 
 ```bash
 python -m unittest discover -s tests
 ```
 
-## Current Status
+---
 
-### Current benchmark (FastAPI corpus, 50 questions):
+# Current Results
 
- - Recall@1: 60%
- - Recall@3: 76%
- - Recall@5: 80%
- - MRR: 0.685
+## Retrieval (50-question benchmark)
 
-### Completed
+| Metric | Score |
+|---------|-------|
+| Recall@1 | **64%** |
+| Recall@3 | **92%** |
+| Recall@5 | **98%** |
+| MRR | **0.782** |
 
-- [x] Document reader
-- [x] Multi-format ingestion
-- [x] Structure-aware chunking
-- [x] Recursive chunk splitting
-- [x] Citation IDs
-- [x] JSON chunk dataset
-- [x] SentenceTransformer embeddings
-- [x] ChromaDB indexing
-- [x] Vector retrieval
-- [x] BM25 retrieval
-- [x] Hybrid retrieval with document-aware reranking
-- [x] FastAPI-focused retrieval filtering and document-prior boosting
-- [x] Optional CrossEncoder reranking
-- [x] Ollama integration
-- [x] Prompt builder
-- [x] Retrieval evaluation framework
-- [x] Evaluation dataset
-- [x] End-to-end RAG pipeline
-- [x] Retriever regression tests
+---
 
-### In Progress
+## LLM-as-a-Judge
 
-- [ ] Retrieval tuning for MRR > 0.8
-- [ ] Better hybrid fusion
-- [ ] Better reranking
-- [ ] Answer evaluation (LLM Judge / Ragas)
-- [ ] Source URL citations
-- [ ] FastAPI backend
-- [ ] Chat UI
+| Metric | Score |
+|---------|-------|
+| Faithfulness | **3.88 / 5** |
+| Correctness | **4.34 / 5** |
+| Relevance | **4.74 / 5** |
+| Hallucination Rate | **0%** |
 
-## Tech Stack
+---
 
- - Python
- - SentenceTransformers
- - ChromaDB
- - BM25
- - Ollama
- - Llama 3.2
- - CrossEncoder (MS MARCO)
- - PyPDF
- - FastAPI (planned)
+# Completed
 
-## Roadmap
+- ✅ Multi-format ingestion
+- ✅ Structure-aware chunking
+- ✅ Citation IDs
+- ✅ ChromaDB indexing
+- ✅ SentenceTransformer embeddings
+- ✅ BM25 retrieval
+- ✅ Hybrid retrieval
+- ✅ Confidence scoring
+- ✅ CrossEncoder reranking
+- ✅ Ollama integration
+- ✅ Prompt builder
+- ✅ Retrieval evaluation
+- ✅ LLM-as-a-Judge evaluation
+- ✅ FastAPI REST API
+- ✅ Streamlit UI
+- ✅ Conversation history
+- ✅ Delete conversations
+- ✅ Source citations
 
- - Improve retrieval accuracy
- - Automatic retrieval tuning
- - Query rewriting
- - LLM-as-a-Judge evaluation
- - Ragas evaluation
- - Source URL citations
- - FastAPI REST API
- - Web chat interface
- - Additional document connectors
+---
+
+# In Progress
+
+- 🚧 Streaming responses
+- 🚧 Chat titles
+- 🚧 Feedback collection (👍 / 👎)
+- 🚧 Query rewriting
+
+---
+
+# Tech Stack
+
+- Python
+- FastAPI
+- Streamlit
+- ChromaDB
+- SentenceTransformers
+- BM25
+- CrossEncoder
+- Ollama
+- Llama 3.2
+- SQLite
+- PyPDF
+
+---
+
+# Roadmap
+
+- URL citations
+- Improving the UI
+- Streaming chat responses
+- User feedback collection
+- Automatic conversation titles
+- eval command print reports
+- Query rewriting
+- Hybrid search improvements
+- Additional document connectors
+- Docker deployment
+- Authentication

@@ -2,8 +2,9 @@
     {
         "id": 1,
         "difficulty": "easy",
-        "category": "reference",
+        "category": "reference",      
         "question": "What is FastAPI and why is it used for building Python APIs?",
+        "expected_answer": "FastAPI is a modern, high-performance web framework for building APIs with Python 3.8+ based on standard Python type hints. It is used because it provides automatic interactive documentation, native asynchronous support, standard validation via Pydantic, and performance on par with NodeJS and Go.",
         "expected_documents": [
             "docs/fastapi/reference/fastapi.md"
         ],
@@ -23,6 +24,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do you install FastAPI in a Python environment?",
+        "expected_answer": "You install FastAPI using pip. To include the default production server (Uvicorn) and standard dependencies, run: `pip install \"fastapi[all]\"`.",
         "expected_documents": [
             "docs/fastapi/tutorial/index.md"
         ],
@@ -42,6 +44,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do you create your first FastAPI application?",
+        "expected_answer": "Import `FastAPI`, instantiate the application object, and use a path operation decorator to map an asynchronous function to a route. Example: `from fastapi import FastAPI; app = FastAPI(); @app.get('/') async def root(): return {'message': 'Hello'}`.",
         "expected_documents": [
             "docs/fastapi/tutorial/first-steps.md"
         ],
@@ -62,6 +65,7 @@
         "difficulty": "medium",
         "category": "tutorial",
         "question": "Which command starts the FastAPI development server locally?",
+        "expected_answer": "Using the FastAPI CLI (v0.110.0+), use the command: `fastapi dev main.py`. Alternatively, using Uvicorn directly, run: `uvicorn main:app --reload`.",
         "expected_documents": [
             "docs/fastapi/tutorial/first-steps.md"
         ],
@@ -84,6 +88,7 @@
         "difficulty": "easy",
         "category": "how-to",
         "question": "What is OpenAPI and how does FastAPI generate it?",
+        "expected_answer": "OpenAPI is a standard specification for defining REST API schemas. FastAPI automatically generates an OpenAPI JSON schema at runtime by inspecting your route paths, python type hints, and Pydantic request/response models.",
         "expected_documents": [
             "docs/fastapi/how-to/extending-openapi.md"
         ],
@@ -103,6 +108,7 @@
         "difficulty": "easy",
         "category": "how-to",
         "question": "What is Swagger UI in the FastAPI documentation interface?",
+        "expected_answer": "Swagger UI is an interactive, web-based API documentation page rendered automatically at the `/docs` route. It parses the generated OpenAPI schema to allow users to visually inspect and test API endpoints directly from the browser.", 
         "expected_documents": [
             "docs/fastapi/how-to/configure-swagger-ui.md"
         ],
@@ -122,6 +128,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "What is ReDoc and how is it used with FastAPI?",
+        "expected_answer": "ReDoc is an alternative, highly structured, three-panel interactive API documentation interface. FastAPI hosts it automatically out of the box at the `/redoc` route.",
         "expected_documents": [
             "docs/fastapi/tutorial/metadata.md",
             "docs/fastapi/index.md",
@@ -143,6 +150,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do you define a GET endpoint in FastAPI?",
+        "expected_answer": "Use the `@app.get()` decorator above your endpoint function, specifying the target URL path string as the argument.",     
         "expected_documents": [
             "docs/fastapi/tutorial/first-steps.md"
         ],
@@ -164,6 +172,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do path parameters work in FastAPI routes?",
+        "expected_answer": "Path parameters are declared directly inside the route path string using curly braces `{}` and must be passed as identically named arguments to the endpoint function along with their Python type hints.",   
         "expected_documents": [
             "docs/fastapi/tutorial/path-params.md"
         ],
@@ -184,6 +193,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do query parameters work in FastAPI endpoints?",
+        "expected_answer": "When a function parameter is declared in an endpoint but is not part of the path route string, FastAPI automatically interprets it as a query parameter appended to the URL string (e.g., `?skip=0&limit=10`).",
         "expected_documents": [
             "docs/fastapi/tutorial/query-params.md"
         ],
@@ -204,6 +214,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do request bodies work in FastAPI?",
+        "expected_answer": "Request bodies are declared by assigning a Pydantic model type hint to a function parameter. FastAPI reads the incoming JSON payload, validates it against the schema, and injects the model instance into the function.",
         "expected_documents": [
             "docs/fastapi/tutorial/body.md"
         ],
@@ -224,6 +235,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "What is Pydantic used for in FastAPI request and response models?",
+        "expected_answer": "Pydantic is used for data validation, serialization, and schema enforcement. It ensures incoming request data matches specified types (throwing automatic 422 errors if invalid) and structures outgoing JSON responses.",
         "expected_documents": [
             "docs/fastapi/tutorial/body.md"
         ],
@@ -244,6 +256,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do you handle file uploads in FastAPI?",
+        "expected_answer": "Import `File` and `UploadFile` from `fastapi`, then declare them as parameters in your endpoint function. `UploadFile` is preferred because it streams files to memory or disk rather than loading them entirely into memory.",
         "expected_documents": [
             "docs/fastapi/tutorial/request-files.md"
         ],
@@ -264,6 +277,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do form fields work in FastAPI request handling?",
+        "expected_answer": "Import `Form` from `fastapi` and use it as a default parameter value in your function. This forces FastAPI to expect data formatted as HTML form inputs (`application/x-www-form-urlencoded`) instead of JSON.",
         "expected_documents": [
             "docs/fastapi/tutorial/request-forms.md"
         ],
@@ -284,6 +298,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do you read and set cookies in FastAPI?",
+        "expected_answer": "Read cookies by importing `Cookie` and declaring it as a function parameter. Set cookies by accepting a `Response` parameter and calling its `.set_cookie()` method.",
         "expected_documents": [
             "docs/fastapi/tutorial/cookie-params.md"
         ],
@@ -303,6 +318,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do you read headers in FastAPI requests?",
+        "expected_answer": "Import `Header` from `fastapi` and declare it as a parameter in your function. FastAPI automatically converts snake_case parameters to kebab-case HTTP headers (e.g., `user_agent` reads `User-Agent`).",
         "expected_documents": [
             "docs/fastapi/tutorial/header-params.md"
         ],
@@ -322,6 +338,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "What are response models in FastAPI and why are they used?",
+        "expected_answer": "Response models are Pydantic schemas declared via the `response_model` argument in path decorators. They filter out unmapped sensitive data fields from outgoing responses, validate output formats, and generate accurate OpenAPI schemas.",
         "expected_documents": [
             "docs/fastapi/tutorial/response-model.md"
         ],
@@ -342,6 +359,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do dependencies work in FastAPI applications?",
+        "expected_answer": "Dependencies are modular functions injected into endpoints using FastAPI's dependency injection system via `Depends()`. They are used to share logic, enforce authentication, manage database sessions, and reduce code repetition.",
         "expected_documents": [
             "docs/fastapi/tutorial/dependencies/index.md"
         ],
@@ -361,6 +379,7 @@
         "difficulty": "easy",
         "category": "reference",
         "question": "What is APIRouter and when should you use it?",
+        "expected_answer": "`APIRouter` is a utility class used to split big API applications into isolated, logical files. You should use it to group related endpoints (e.g., `/users`, `/items`) as your project grows.",
         "expected_documents": [
             "docs/fastapi/reference/apirouter.md"
         ],
@@ -380,6 +399,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do you include an APIRouter in a FastAPI app?",
+        "expected_answer": "Instantiate an `APIRouter()` in a separate module, define its routes, and then pass that router instance to your main app object using the `app.include_router(router)` method.",
         "expected_documents": [
             "docs/fastapi/tutorial/bigger-applications.md"
         ],
@@ -400,6 +420,7 @@
         "difficulty": "hard",
         "category": "tutorial",
         "question": "How does middleware work in FastAPI?",
+        "expected_answer": "Middleware is a function that processes every incoming request before it reaches its path operation, and intercepts every outgoing response before returning it to the client. You create custom middleware using the `@app.middleware('http')` decorator.",
         "expected_documents": [
             "docs/fastapi/tutorial/middleware.md"
         ],
@@ -419,6 +440,7 @@
         "difficulty": "hard",
         "category": "tutorial",
         "question": "How do CORS settings work in FastAPI?",
+        "expected_answer": "CORS (Cross-Origin Resource Sharing) is handled by adding `CORSMiddleware` to the application. This defines which external origins, methods, and headers are allowed to access your API from a browser window.",
         "expected_documents": [
             "docs/fastapi/tutorial/cors.md"
         ],
@@ -438,6 +460,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do you run background tasks in FastAPI?",
+        "expected_answer": "Import `BackgroundTasks` from `fastapi`, declare it as a parameter in your endpoint, and add your slow-running task function along with its arguments to it using `.add_task()`.",
         "expected_documents": [
             "docs/fastapi/tutorial/background-tasks.md"
         ],
@@ -458,6 +481,7 @@
         "difficulty": "hard",
         "category": "advanced",
         "question": "How do WebSockets work in FastAPI?",
+        "expected_answer": "Import `WebSocket` from `fastapi`, and define your endpoint using the `@app.websocket()` decorator. Manage persistent connections using an `async/await` loop with `.accept()`, `.send_text()`, and `.receive_text()`.",
         "expected_documents": [
             "docs/fastapi/advanced/websockets.md"
         ],
@@ -477,6 +501,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do you handle errors in FastAPI endpoints?",
+        "expected_answer": "Raise an instance of `HTTPException` imported from `fastapi`, providing an appropriate HTTP status code and a descriptive error detail string.",
         "expected_documents": [
             "docs/fastapi/tutorial/handling-errors.md"
         ],
@@ -497,6 +522,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do you add tags to FastAPI path operations?",
+        "expected_answer": "Pass a list of strings to the `tags` parameter inside your path operation decorator. This organizes your endpoints into distinct, collapsible groups within the interactive Swagger UI document.",
         "expected_documents": [
             "docs/fastapi/tutorial/path-operation-configuration.md"
         ],
@@ -517,6 +543,7 @@
         "difficulty": "easy",
         "category": "security",
         "question": "How do security dependencies work in FastAPI?",
+        "expected_answer": "Security dependencies are specialized built-in dependencies (like `OAuth2PasswordBearer`) that intercept incoming requests to extract credentials from headers or cookies, triggering automatic authentication challenges if they are missing.",
         "expected_documents": [
             "docs/fastapi/tutorial/security/index.md"
         ],
@@ -537,6 +564,7 @@
         "difficulty": "hard",
         "category": "security",
         "question": "How do OAuth2 flows work in FastAPI security?",
+        "expected_answer": "FastAPI uses `OAuth2PasswordBearer` to declare an endpoint path where a client can send a username and password to exchange for a JWT token, which is then verified in subsequent calls via headers.",
         "expected_documents": [
             "docs/fastapi/tutorial/security/oauth2-jwt.md"
         ],
@@ -557,6 +585,7 @@
         "difficulty": "hard",
         "category": "deployment",
         "question": "How do you deploy a FastAPI application to production?",
+        "expected_answer": "Production deployments typically involve packaging the application using containerization (Docker) and running it behind an ASGI server like Uvicorn or Hypercorn, often reverse-proxied through Nginx or hosted on managed cloud container services.",
         "expected_documents": [
             "docs/fastapi/deployment/index.md"
         ],
@@ -576,6 +605,7 @@
         "difficulty": "hard",
         "category": "deployment",
         "question": "How do you deploy FastAPI manually with a server process?",
+        "expected_answer": "You set up a process manager like Gunicorn or Systemd to continuously run an underlying production-configured ASGI command, like: `gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker`.",
         "expected_documents": [
             "docs/fastapi/deployment/manually.md"
         ],
@@ -596,6 +626,7 @@
         "difficulty": "hard",
         "category": "deployment",
         "question": "How do Docker deployments work for FastAPI apps?",
+        "expected_answer": "You build a Dockerfile based on an official Python image, copy your application files, install dependencies via `pip`, expose port 80, and set the container execution entrypoint command to run `uvicorn main:app --host 0.0.0.0 --port 80`.",
         "expected_documents": [
             "docs/fastapi/deployment/docker.md"
         ],
@@ -616,6 +647,7 @@
         "difficulty": "hard",
         "category": "deployment",
         "question": "How do HTTPS deployments work for FastAPI services?",
+        "expected_answer": "HTTPS encryption is usually stripped before it hits FastAPI. A reverse proxy (Nginx, Caddy), a cloud load balancer, or a TLS manager (Let's Encrypt) terminates HTTPS safely and routes unencrypted HTTP traffic to the FastAPI ASGI server process.",
         "expected_documents": [
             "docs/fastapi/deployment/https.md"
         ],
@@ -636,6 +668,7 @@
         "difficulty": "hard",
         "category": "advanced",
         "question": "How do lifespan events work in FastAPI applications?",
+        "expected_answer": "Lifespan events manage startup and shutdown processes. Using an asynccontextmanager decorator, you can run setup code (like connecting to a database) before the app accepts requests, yield control, and execute cleanup code upon server shutdown.",
         "expected_documents": [
             "docs/fastapi/advanced/events.md"
         ],
@@ -656,6 +689,7 @@
         "difficulty": "easy",
         "category": "advanced",
         "question": "How do custom responses work in FastAPI endpoints?",
+        "expected_answer": "Instead of returning dictionary objects, return a specific response instance imported from fastapi.responses (such as JSONResponse, HTMLResponse, StreamingResponse, or FileResponse) to directly manipulate status codes and media types.",
         "expected_documents": [
             "docs/fastapi/advanced/custom-response.md"
         ],
@@ -676,6 +710,7 @@
         "difficulty": "easy",
         "category": "advanced",
         "question": "How do response headers work in FastAPI?",
+        "expected_answer": "You can inject response headers either by declaring a Response parameter in your function and editing its .headers dictionary property, or by passing a dictionary to the headers argument when returning a custom JSONResponse.",
         "expected_documents": [
             "docs/fastapi/advanced/response-headers.md"
         ],
@@ -696,6 +731,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do you serve static files in FastAPI?",
+        "expected_answer": "Import StaticFiles from fastapi.staticfiles, and use app.mount() to attach a directory of static assets (like CSS, JS, images) to a specific URL sub-path prefix.",
         "expected_documents": [
             "docs/fastapi/tutorial/static-files.md"
         ],
@@ -716,6 +752,7 @@
         "difficulty": "easy",
         "category": "advanced",
         "question": "How do templates work in FastAPI applications?",
+        "expected_answer": "FastAPI uses Jinja2Templates via fastapi.templating. Instantiate the template engine pointing to an HTML folder, and return templates using templates.TemplateResponse(request=request, name='index.html').",
         "expected_documents": [
             "docs/fastapi/advanced/templates.md"
         ],
@@ -735,6 +772,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do the FastAPI testing utilities work?",
+        "expected_answer": "FastAPI provides a TestClient class built on top of HTTPX. Pass your app object to TestClient(app), and call methods like .get() or .post() to simulate requests and assert response statuses/data.",
         "expected_documents": [
             "docs/fastapi/tutorial/testing.md"
         ],
@@ -755,6 +793,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do SQL databases integrate with FastAPI?",
+        "expected_answer": "SQL databases integrate cleanly using ORMs like SQLAlchemy or SQLModel. You set up a session dependency generator that opens a clean database connection per request and closes it safely once the response is sent.",
         "expected_documents": [
             "docs/fastapi/tutorial/sql-databases.md"
         ],
@@ -776,6 +815,7 @@
         "difficulty": "easy",
         "category": "general",
         "question": "How do async endpoints work in FastAPI?",
+        "expected_answer": "Endpoints declared with async def run natively on Python's asynchronous event loop. They use non-blocking await calls for I/O operations (like database queries or external API calls) to handle thousands of concurrent requests efficiently.",
         "expected_documents": [
             "docs/fastapi/async.md"
         ],
@@ -796,6 +836,7 @@
         "difficulty": "easy",
         "category": "general",
         "question": "What is the FastAPI CLI and what does it do?",
+        "expected_answer": "The FastAPI CLI is a command-line interface helper. It streamlines running, developing, and managing FastAPI applications by providing convenient wrapper commands like fastapi dev and fastapi run.",
         "expected_documents": [
             "docs/fastapi/fastapi-cli.md"
         ],
@@ -815,6 +856,7 @@
         "difficulty": "easy",
         "category": "general",
         "question": "How do environment variables work in FastAPI apps?",
+        "expected_answer": "Environment variables are handled best by combining Pydantic's BaseSettings framework (pydantic-settings). It reads environment files automatically, casts variable types, and injects configuration configurations securely into application dependencies.",
         "expected_documents": [
             "docs/fastapi/environment-variables.md"
         ],
@@ -835,6 +877,7 @@
         "difficulty": "easy",
         "category": "how-to",
         "question": "How do you customize or extend OpenAPI in FastAPI?",
+        "expected_answer": "You modify the app.openapi_schema property directly. Define a custom function that generates the standard schema structure, injects extensions or extra documentation, and caches it back onto the app object.",
         "expected_documents": [
             "docs/fastapi/how-to/extending-openapi.md"
         ],
@@ -855,6 +898,7 @@
         "difficulty": "easy",
         "category": "how-to",
         "question": "How do you configure Swagger UI for FastAPI?",
+        "expected_answer": "Pass a dictionary of parameters to the swagger_ui_parameters argument when instantiating the FastAPI(swagger_ui_parameters={'syntaxHighlight.theme': 'monokai'}) application instance.",
         "expected_documents": [
             "docs/fastapi/how-to/configure-swagger-ui.md"
         ],
@@ -875,6 +919,7 @@
         "difficulty": "easy",
         "category": "advanced",
         "question": "How do you generate API clients from a FastAPI app?",
+        "expected_answer": "Because FastAPI exports a standard OpenAPI JSON file, you can run tools like openapi-ts or OpenAPI Generator to automatically output fully typed TypeScript, Python, or Go client SDK packages.",
         "expected_documents": [
             "docs/fastapi/advanced/generate-clients.md"
         ],
@@ -896,6 +941,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do you upload multiple files in FastAPI?",
+        "expected_answer": "Declare a function parameter as a typed list of UploadFile wrapped inside Python's List[] construct. Example: async def upload_multiple(files: List[UploadFile] = File(...)):.",
         "expected_documents": [
             "docs/fastapi/tutorial/request-files.md"
         ],
@@ -917,6 +963,7 @@
         "difficulty": "hard",
         "category": "advanced",
         "question": "How do sub-applications work in FastAPI?",
+        "expected_answer": "You can create an independent FastAPI() application object and isolate it entirely by mounting it to a parent app using app.mount('/sub-api', sub_app). It retains its own OpenAPI schema and endpoints under that route prefix.",
         "expected_documents": [
             "docs/fastapi/advanced/sub-applications.md"
         ],
@@ -937,6 +984,7 @@
         "difficulty": "easy",
         "category": "advanced",
         "question": "How do proxies affect FastAPI applications?",
+        "expected_answer": "Proxies can obscure original client IP addresses and protocol headers (https). To resolve this, you must configure ASGI server options (like Uvicorn's --proxy-headers flag) and ensure headers like X-Forwarded-For are correctly trusted.",
         "expected_documents": [
             "docs/fastapi/advanced/behind-a-proxy.md"
         ],
@@ -957,6 +1005,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "How do custom exception handlers work in FastAPI?",
+        "expected_answer": "Register custom handlers using the @app.exception_handler() decorator, passing the specific exception class you wish to intercept. The handler function returns a custom structural response whenever that specific exception is thrown.",
         "expected_documents": [
             "docs/fastapi/tutorial/handling-errors.md"
         ],
@@ -978,6 +1027,7 @@
         "difficulty": "easy",
         "category": "tutorial",
         "question": "What are path operation decorators in FastAPI?",
+        "expected_answer": "Path operation decorators are the route triggers (like @app.get(), @app.post(), @app.put()) written directly above your python functions to define their associated HTTP verb and URL path mapping.",
         "expected_documents": [
             "docs/fastapi/tutorial/path-operation-configuration.md"
         ],

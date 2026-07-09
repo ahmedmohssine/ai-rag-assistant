@@ -1,0 +1,13 @@
+[
+  {
+    "question": "What are path operation decorators in FastAPI?",
+    "generated_answer": "Path operation decorators in FastAPI are a way to modify the behavior of a path operation. They can be used to add functionality such as authentication, rate limiting, or logging.\n\nThese decorators are applied to a path operation using the `@` symbol, followed by the name of the decorator function. For example:\n```\nfrom fastapi import Depends\nfrom fastapi.responses import JSONResponse\n\nasync def get_current_user(user_id: int = Depends(get_user)):\n    return user_id\n\n@app.get(\"/users/{user_id}\")\nasync def read_user(user_id: int):\n    return {\"username\": \"John Doe\", \"id\": user_id}\n```\nIn this example, the `get_current_user` function is a path operation decorator that depends on another function to retrieve the current user.\n\nPath operation decorators can be used to add additional functionality to a path operation without modifying its underlying logic.",
+    "scores": {
+      "faithfulness": 4,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Path operation decorators are partially supported by the retrieved context. The main answer is correct, but some minor details are missing."
+    }
+  }
+]

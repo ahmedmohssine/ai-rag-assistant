@@ -625,6 +625,7 @@ class Retriever:
             "citation_id": chunk_metadata.get("citation_id", chunk.get("chunk_id", "")),
             "file_type": chunk.get("file_type", ""),
             "title": chunk.get("title", ""),
+            "url": chunk.get("url"),
         }
 
     def _complete_metadata(self, metadata: dict, chunk_id: str) -> dict:
@@ -640,4 +641,5 @@ class Retriever:
             "source": metadata.get("source", ""),
             "chunk_id": metadata.get("chunk_id", chunk_id),
             "file_type": metadata.get("file_type", ""),
+            "url": metadata.get("url"),
         }

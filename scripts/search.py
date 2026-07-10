@@ -31,8 +31,11 @@ while True:
 
     if question.lower() == "exit":
         break
-    
+
+    print(results["metadatas"][0][0])
     results = retriever.retrieve(question)
+    print(results["metadatas"][0][0])
+
 
     if not results["is_confident"]:
         print("\nAnswer:\n")

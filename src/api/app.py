@@ -6,16 +6,16 @@ from fastapi.responses import StreamingResponse
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
-from src.api.models import ChatRequest, ChatResponse, Source
+from src.api.models import ChatRequest, ChatResponse, Source, FeedbackRequest
 from src.api.services import rag
 from src.api.database import (
     initialize_database,
     create_conversation,
     add_message,
-    get_history,
     get_conversations,
     get_messages,
     delete_conversation,
+    add_feedback,
 )
 
 
@@ -27,10 +27,6 @@ app = FastAPI(
 )
 
 initialize_database()
-
-@app.get("/history/{conversation_id}")
-def history(conversation_id: int):
-    return get_history(conversation_id)
 
 @app.get("/conversations")
 def conversations():
@@ -71,11 +67,15 @@ def chat_stream(request: ChatRequest):
             f"{doc}\n\n"
         )
 
-    return StreamingResponse(
-        rag.generator.generate_stream(
+    def stream():
+        for chunk in rag.generator.generate_stream(
             request.question,
             context,
-        ),
+        ):
+            yield chunk
+
+    return StreamingResponse(
+        stream(),
         media_type="text/plain",
     )
 
@@ -83,11 +83,19 @@ def chat_stream(request: ChatRequest):
 
 def chat(request: ChatRequest):
     if request.conversation_id is None:
-        conversation_id = create_conversation()
+
+        title = (
+            request.question
+            if len(request.question) <= 50
+            else request.question[:47] + "..."
+        )
+
+        conversation_id = create_conversation(title)
+
     else:
         conversation_id = request.conversation_id
 
-    add_message(
+    user_message_id = add_message(
         conversation_id,
         "user",
         request.question,
@@ -117,7 +125,7 @@ def chat(request: ChatRequest):
         context,
     )
     
-    add_message(
+    assistant_message_id = add_message(
         conversation_id,
         "assistant",
         answer,
@@ -137,12 +145,26 @@ def chat(request: ChatRequest):
         seen.add(path)
 
         sources.append(
-            Source(document=path)
+            Source(document=path, url=meta.get("url"))
         )
 
     return ChatResponse(
         answer=answer,
         confidence=results["confidence"],
         conversation_id=conversation_id,
+        assistant_message_id=assistant_message_id,
         sources=sources,
     )
+@app.post("/feedback")
+def feedback(request: FeedbackRequest):
+
+    add_feedback(
+        conversation_id=request.conversation_id,
+        message_id=request.message_id,
+        rating=request.rating,
+        comment=request.comment,
+    )
+
+    return {
+        "success": True
+    }

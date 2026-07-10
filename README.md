@@ -50,6 +50,7 @@ The project is designed as a production-style RAG pipeline with evaluation tools
 - Metadata-aware reranking
 - Optional CrossEncoder reranking
 - Confidence scoring
+- URL-aware source metadata
 
 ---
 
@@ -67,9 +68,11 @@ Built with FastAPI.
 Endpoints include:
 
 - Chat
-- Streaming chat
+- Streaming chat (experimental)
 - Conversation history
+- Conversation management
 - Conversation deletion
+- Feedback submission
 
 ---
 
@@ -79,19 +82,33 @@ Built with Streamlit.
 
 Features:
 
-- Chat interface
-- Conversation history
-- Source citations
-- Confidence score
+- Modern chat interface
 - Multiple conversations
-- Delete conversation
-
+- Persistent chat history
+- Confidence score
+- Clickable documentation sources
+- Feedback system (thumbs up/down + comments)
+- Conversation deletion
+- Fully local execution
 ---
 
 ## 📚 Source Citations
 
-Every answer includes the documents used during retrieval.
+Every answer includes:
 
+- Retrieved source documents
+- Direct links to the original documentation (when available)
+- Clickable references from the chat interface
+---
+
+## 💾 Local Storage
+
+SQLite is used to store:
+
+- Conversation history
+- Chat messages
+- User feedback
+- Confidence scores
 ---
 
 ## 📊 Evaluation
@@ -180,6 +197,7 @@ Evaluates:
 ai-rag-assistant/
 
 ├── data/
+│   ├── chat_history.db
 │   ├── chunks.json
 │   ├── judge_results.json
 │   ├── results.csv
@@ -350,6 +368,7 @@ python -m unittest discover -s tests
 - ✅ Multi-format ingestion
 - ✅ Structure-aware chunking
 - ✅ Citation IDs
+- ✅ URL extraction from documentation
 - ✅ ChromaDB indexing
 - ✅ SentenceTransformer embeddings
 - ✅ BM25 retrieval
@@ -363,18 +382,22 @@ python -m unittest discover -s tests
 - ✅ FastAPI REST API
 - ✅ Streamlit UI
 - ✅ Conversation history
+- ✅ Multiple conversations
 - ✅ Delete conversations
 - ✅ Source citations
-
+- ✅ Clickable documentation links
+- ✅ SQLite chat history
+- ✅ User feedback collection (👍 / 👎 + comments)
 ---
 
 # In Progress
 
 - 🚧 Streaming responses
-- 🚧 Chat titles
-- 🚧 Feedback collection (👍 / 👎)
+- 🚧 Automatic chat titles
+- 🚧 Evaluation report command
 - 🚧 Query rewriting
-
+- 🚧 Authentication
+- 🚧 Deployment
 ---
 
 # Tech Stack
@@ -382,27 +405,26 @@ python -m unittest discover -s tests
 - Python
 - FastAPI
 - Streamlit
+- SQLite
 - ChromaDB
 - SentenceTransformers
 - BM25
 - CrossEncoder
 - Ollama
 - Llama 3.2
-- SQLite
-- PyPDF
+- PyPDFPDF
 
 ---
 
 # Roadmap
 
-- URL citations
-- Improving the UI
-- Streaming chat responses
-- User feedback collection
-- Automatic conversation titles
-- eval command print reports
-- Query rewriting
-- Hybrid search improvements
-- Additional document connectors
-- Docker deployment
 - Authentication
+- Deployment
+- Desktop application
+- Automatic conversation titles
+- Streaming chat responses
+- Query rewriting
+- Evaluation report generation
+- Improved hybrid search
+- Additional document connectors
+- Docker support

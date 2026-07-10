@@ -15,6 +15,7 @@ def initialize_database():
     conn.execute("""
     CREATE TABLE IF NOT EXISTS conversations(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT DEFAULT 'New Conversation',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     """)
@@ -29,19 +30,33 @@ def initialize_database():
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     """)
+    conn.execute("""
+    CREATE TABLE IF NOT EXISTS feedback(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        conversation_id INTEGER,
+        message_id INTEGER,
+        rating TEXT,
+        comment TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
 
     conn.commit()
     conn.close()
 
 
-def create_conversation():
+def create_conversation(title: str = "New Conversation"):
 
     conn = get_connection()
 
     cursor = conn.cursor()
 
     cursor.execute(
-        "INSERT INTO conversations DEFAULT VALUES"
+        """
+        INSERT INTO conversations(title)
+        VALUES(?)
+         """,
+        (title,), #how to get title from app.py 
     )
 
     conn.commit()
@@ -59,10 +74,11 @@ def add_message(
     content,
     confidence=0,
 ):
-
     conn = get_connection()
 
-    conn.execute(
+    cursor = conn.cursor()
+
+    cursor.execute(
         """
         INSERT INTO messages(
             conversation_id,
@@ -82,10 +98,14 @@ def add_message(
 
     conn.commit()
 
+    message_id = cursor.lastrowid
+
     conn.close()
 
+    return message_id
 
 def get_history(conversation_id: int):
+    print(">>> get_history() called")
     conn = get_connection()
 
     rows = conn.execute(
@@ -107,7 +127,7 @@ def get_conversations():
     conn = get_connection()
 
     rows = conn.execute("""
-        SELECT id
+        SELECT id, title
         FROM conversations
         ORDER BY id DESC
     """).fetchall()
@@ -118,10 +138,11 @@ def get_conversations():
 
 
 def get_messages(conversation_id: int):
+    print(">>> get_messages() called")
     conn = get_connection()
 
     rows = conn.execute("""
-        SELECT role, content
+        SELECT id, role, content
         FROM messages
         WHERE conversation_id = ?
         ORDER BY id
@@ -129,7 +150,15 @@ def get_messages(conversation_id: int):
 
     conn.close()
 
-    return [dict(row) for row in rows]
+    return [
+        {
+            "message_id": row["id"],
+            "role": row["role"],
+            "content": row["content"],
+        }
+        for row in rows
+    ]
+
 
 def delete_conversation(conversation_id: int):
     conn = get_connection()
@@ -142,6 +171,36 @@ def delete_conversation(conversation_id: int):
     conn.execute(
         "DELETE FROM conversations WHERE id = ?",
         (conversation_id,),
+    )
+
+    conn.commit()
+    conn.close()
+
+
+def add_feedback(
+    conversation_id: int,
+    message_id: int,
+    rating: str,
+    comment: str = "",
+):
+    conn = get_connection()
+
+    conn.execute(
+        """
+        INSERT INTO feedback(
+            conversation_id,
+            message_id,
+            rating,
+            comment
+        )
+        VALUES(?,?,?,?)
+        """,
+        (
+            conversation_id,
+            message_id,
+            rating,
+            comment,
+        ),
     )
 
     conn.commit()

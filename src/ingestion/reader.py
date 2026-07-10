@@ -1,6 +1,7 @@
 from pathlib import Path
 from pypdf import PdfReader
 
+from src.ingestion.url_builder import URLBuilder
 from src.models.document import Document
 
 SKIP_FILES = {
@@ -45,7 +46,7 @@ class DocumentReader:
 
             relative_path = file.relative_to(directory).as_posix()
             source = self._source_from_path(relative_path)
-
+            url_builder = URLBuilder()
             document = Document(
                 source=source,
                 path=file.as_posix(),
@@ -53,6 +54,7 @@ class DocumentReader:
                 filename=file.stem,
                 file_type=file.suffix.lower().lstrip("."),
                 title=self._extract_title(content, file),
+                url=url_builder.build(source, file.as_posix()),
                 metadata={
                     "relative_path": relative_path,
                     "extension": file.suffix.lower(),

@@ -39,7 +39,7 @@ class VectorStore:
                     suffix += 1
                 seen_ids.add(candidate_id)
                 ids.append(candidate_id)
-
+                
             self.collection.add(
                 ids=ids,
                 documents=[self._document_text_for_chunk(chunk) for chunk in batch_chunks],
@@ -79,6 +79,7 @@ class VectorStore:
             "citation_id": chunk.get("metadata", {}).get("citation_id", chunk["chunk_id"]),
             "file_type": chunk.get("file_type", ""),
             "title": chunk.get("title", ""),
+            "url": chunk.get("url", ""),
         }
 
         if chunk.get("url"):

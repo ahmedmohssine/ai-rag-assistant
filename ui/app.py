@@ -22,11 +22,76 @@ div.stButton > button {
 </style>
 """, unsafe_allow_html=True)
 
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
 
+if "user_id" not in st.session_state:
+    st.session_state.user_id = None
 
+if not st.session_state.logged_in:
 
-def render_assistant_message(message, confidence=None, sources=None):
+    st.title("🔐 Login")
 
+    tab1, tab2 = st.tabs(["Login", "Register"])
+
+    with tab1:
+
+        email = st.text_input("Email", key="login_email")
+        password = st.text_input(
+            "Password",
+            type="password",
+            key="login_password",
+        )
+
+        if st.button("Login"):
+
+            response = requests.post(
+                f"{API}/login",
+                json={
+                    "email": email,
+                    "password": password,
+                },
+            ).json()
+
+            if response["success"]:
+
+                st.session_state.logged_in = True
+                st.session_state.user_id = response["user_id"]
+
+                st.rerun()
+
+            else:
+                st.error(response["message"])
+
+    with tab2:
+
+        email = st.text_input("Email", key="register_email")
+        password = st.text_input(
+            "Password",
+            type="password",
+            key="register_password",
+        )
+
+        if st.button("Register"):
+
+            response = requests.post(
+                f"{API}/register",
+                json={
+                    "email": email,
+                    "password": password,
+                },
+            ).json()
+
+            if response["success"]:
+                st.success("Account created successfully!")
+            else:
+                st.error(response["message"])
+
+    st.stop()
+
+def render_assistant_message(message):
+    confidence = message.get("confidence")
+    sources = message.get("sources")
     msg_id = message["message_id"]
 
     with st.chat_message("assistant"):
@@ -159,7 +224,7 @@ with st.sidebar:
                 ).json()
 
                 st.session_state.messages = history
-
+                
                 st.rerun()
 
         with col2:
@@ -196,7 +261,8 @@ for message in st.session_state.messages:
     if message["role"] == "assistant":
 
         render_assistant_message(message)
-
+        confidence = message.get("confidence")
+        sources = message.get("sources")
     else:
 
         with st.chat_message("user"):
@@ -226,8 +292,10 @@ if question:
                 "conversation_id": st.session_state.conversation_id,
             },
         )
-
+    print(response.status_code)
+    print(response.text)
     data = response.json()
+    print(data)
     st.session_state.conversation_id = data["conversation_id"]
 
     answer = data["answer"]
@@ -238,6 +306,8 @@ if question:
             "role": "assistant",
             "content": answer,
             "message_id": data["assistant_message_id"],
+            "sources": data["sources"],
+            "confidence": data.get("confidence"),
         }
     )
 

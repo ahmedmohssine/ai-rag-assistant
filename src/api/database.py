@@ -1,4 +1,6 @@
 import sqlite3
+import json
+import bcrypt
 
 DATABASE = "data/chat_history.db"
 
@@ -11,6 +13,14 @@ def get_connection():
 
 def initialize_database():
     conn = get_connection()
+
+    try:
+        conn.execute("""
+        ALTER TABLE messages
+        ADD COLUMN sources TEXT
+        """)
+    except sqlite3.OperationalError:
+        pass
 
     conn.execute("""
     CREATE TABLE IF NOT EXISTS conversations(
@@ -27,9 +37,20 @@ def initialize_database():
         role TEXT,
         content TEXT,
         confidence REAL,
+        sources TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     """)
+
+    conn.execute("""
+    CREATE TABLE IF NOT EXISTS users(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
+    
     conn.execute("""
     CREATE TABLE IF NOT EXISTS feedback(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,6 +58,7 @@ def initialize_database():
         message_id INTEGER,
         rating TEXT,
         comment TEXT,
+        sources TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     """)
@@ -73,6 +95,7 @@ def add_message(
     role,
     content,
     confidence=0,
+    sources=None,
 ):
     conn = get_connection()
 
@@ -84,15 +107,17 @@ def add_message(
             conversation_id,
             role,
             content,
-            confidence
+            confidence,
+            sources
         )
-        VALUES(?,?,?,?)
+        VALUES(?,?,?,?,?)
         """,
         (
             conversation_id,
             role,
             content,
             confidence,
+            json.dumps(sources or []),
         ),
     )
 
@@ -110,7 +135,7 @@ def get_history(conversation_id: int):
 
     rows = conn.execute(
         """
-        SELECT role, content, confidence, created_at
+        SELECT role, content, confidence, created_at, sources
         FROM messages
         WHERE conversation_id = ?
         ORDER BY id
@@ -142,7 +167,7 @@ def get_messages(conversation_id: int):
     conn = get_connection()
 
     rows = conn.execute("""
-        SELECT id, role, content
+        SELECT id, role, content, confidence, sources
         FROM messages
         WHERE conversation_id = ?
         ORDER BY id
@@ -155,6 +180,8 @@ def get_messages(conversation_id: int):
             "message_id": row["id"],
             "role": row["role"],
             "content": row["content"],
+            "confidence": row["confidence"],
+            "sources": json.loads(row["sources"] or "[]"),
         }
         for row in rows
     ]
@@ -181,6 +208,7 @@ def add_feedback(
     conversation_id: int,
     message_id: int,
     rating: str,
+    sources: str,
     comment: str = "",
 ):
     conn = get_connection()
@@ -191,6 +219,7 @@ def add_feedback(
             conversation_id,
             message_id,
             rating,
+            srouces,
             comment
         )
         VALUES(?,?,?,?)
@@ -199,9 +228,61 @@ def add_feedback(
             conversation_id,
             message_id,
             rating,
+            sources,
             comment,
         ),
     )
 
     conn.commit()
     conn.close()
+
+def create_user(email: str, password: str):
+    conn = get_connection()
+
+    password_hash = bcrypt.hashpw(
+        password.encode(),
+        bcrypt.gensalt(),
+    ).decode()
+
+    try:
+        conn.execute(
+            """
+            INSERT INTO users(email, password_hash)
+            VALUES(?, ?)
+            """,
+            (email, password_hash),
+        )
+
+        conn.commit()
+
+    except sqlite3.IntegrityError:
+        conn.close()
+        return False
+
+    conn.close()
+    return True
+
+def verify_user(email: str, password: str):
+    conn = get_connection()
+
+    row = conn.execute(
+        """
+        SELECT id, password_hash
+        FROM users
+        WHERE email = ?
+        """,
+        (email,),
+    ).fetchone()
+
+    conn.close()
+
+    if row is None:
+        return None
+
+    if bcrypt.checkpw(
+        password.encode(),
+        row["password_hash"].encode(),
+    ):
+        return row["id"]
+
+    return None

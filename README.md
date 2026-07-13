@@ -68,10 +68,11 @@ Built with FastAPI.
 Endpoints include:
 
 - Chat
-- Streaming chat (experimental)
 - Conversation history
 - Conversation management
 - Conversation deletion
+- User registration
+- User login
 - Feedback submission
 
 ---
@@ -89,8 +90,9 @@ Features:
 - Clickable documentation sources
 - Feedback system (thumbs up/down + comments)
 - Conversation deletion
+- User authentication
+- Login & registration
 - Fully local execution
----
 
 ## 📚 Source Citations
 
@@ -105,10 +107,13 @@ Every answer includes:
 
 SQLite is used to store:
 
+- User accounts
+- Password hashes (bcrypt)
 - Conversation history
 - Chat messages
-- User feedback
 - Confidence scores
+- Source metadata
+- User feedback
 ---
 
 ## 📊 Evaluation
@@ -130,6 +135,21 @@ Evaluates:
 - Correctness
 - Relevance
 - Hallucination rate
+
+---
+
+## 🔐 Authentication
+
+The assistant includes a local authentication system.
+
+Features:
+
+- Email/password registration
+- Secure password hashing using bcrypt
+- SQLite user database
+- Login before accessing the assistant
+
+No third-party authentication provider is required.
 
 ---
 
@@ -211,7 +231,7 @@ ai-rag-assistant/
 │   ├── build_index.py
 │   ├── eval.py
 │   ├── search.py
-│   └── tune_retreval.py (for tunning)
+│   └── tune_retrieval.py (for tuning)
 │
 ├── src/
 │   ├── api/
@@ -260,19 +280,36 @@ Then run the indexing pipeline normally.
 ```
 # Installation
 
+Clone the repository:
+
 ```bash
-git clone https://github.com/<your-name>/ai-rag-assistant.git
-
+git clone https://github.com/<your-username>/ai-rag-assistant.git
 cd ai-rag-assistant
-
-python -m venv .venv
-
-# Windows
-.venv\Scripts\activate
-
-pip install -r requirements.txt
 ```
 
+Create and activate a virtual environment:
+
+```bash
+python -m venv .venv
+```
+
+Windows
+
+```bash
+.venv\Scripts\activate
+```
+
+Linux / macOS
+
+```bash
+source .venv/bin/activate
+```
+
+Install the dependencies:
+
+```bash
+pip install -r requirements.txt
+```
 ---
 
 # Install Ollama
@@ -388,16 +425,21 @@ python -m unittest discover -s tests
 - ✅ Clickable documentation links
 - ✅ SQLite chat history
 - ✅ User feedback collection (👍 / 👎 + comments)
+- ✅ User registration
+- ✅ User login
+- ✅ Password hashing (bcrypt)
+- ✅ SQLite user database
+- ✅ Source persistence in chat history
 ---
 
 # In Progress
 
-- 🚧 Streaming responses
 - 🚧 Automatic chat titles
 - 🚧 Evaluation report command
 - 🚧 Query rewriting
-- 🚧 Authentication
 - 🚧 Deployment
+- 🚧 User session management
+- 🚧 Per-user conversation isolation
 ---
 
 # Tech Stack
@@ -406,19 +448,22 @@ python -m unittest discover -s tests
 - FastAPI
 - Streamlit
 - SQLite
+- bcrypt
 - ChromaDB
 - SentenceTransformers
 - BM25
 - CrossEncoder
 - Ollama
 - Llama 3.2
-- PyPDFPDF
+- PyPDF
 
 ---
 
 # Roadmap
 
-- Authentication
+- Google OAuth login
+- Persistent login sessions
+- Per-user conversation isolation
 - Deployment
 - Desktop application
 - Automatic conversation titles

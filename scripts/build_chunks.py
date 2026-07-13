@@ -16,6 +16,8 @@ reader = DocumentReader()
 chunker = Chunker()
 
 documents = reader.load_documents(Path("docs")) # Load documents from the "docs" directory
+for doc in documents:
+    print(doc.path)
 Path("data").mkdir(parents=True, exist_ok=True) # Create the "data" directory if it doesn't exist
 
 

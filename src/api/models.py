@@ -23,3 +23,12 @@ class FeedbackRequest(BaseModel):
     message_id: int
     rating: str
     comment: str = ""   
+
+class RegisterRequest(BaseModel):
+    email: str
+    password: str
+
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str

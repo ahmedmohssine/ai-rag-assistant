@@ -1,0 +1,103 @@
+---
+title: Overview
+---
+
+Chroma Sync is a managed ingestion service for Chroma Cloud. Point a source — an S3 bucket, a GitHub repository, a website, or an individual file upload — at a Chroma database, and Chroma parses, chunks, embeds, and indexes the data into a collection that's ready to query. No ingest infrastructure to write, no embedding API keys to manage. The Sync API is available to all Chroma Cloud users and the first $5 of usage is free with a new account.
+
+# How Chroma Sync Works
+
+Sync runs the same pipeline regardless of source:
+
+1. **Managed ingestion.** Connect a source once; every invocation runs through Chroma's queue-based pipeline with automatic retries, rate-limit awareness, and error recovery. Monitor invocations in the dashboard or through the [Sync API](/reference/sync-api).
+2. **High throughput.** The pipeline is designed to maximize throughput without dropping work, whether you're syncing a handful of files or millions of documents.
+3. **Parse.** Best-in-class PDF and document parsing. PDFs, Office documents, HTML, ebooks, and images are converted to clean markdown with tables, headings, lists, and layout preserved — so chunks reflect the actual structure of the document, not just the raw text stream. Images inside documents are described in text so their content remains searchable. Code files are kept as-is.
+4. **Chunk.** Tree-sitter syntax-aware chunking for code; structured markdown chunking for documents; line-based fallback for plain text. The strategy is configurable per source.
+5. **Embed.** Dense embeddings are generated automatically with [Qwen3-Embedding-0.6B](/integrations/embedding-models/chroma-cloud-qwen#chroma-cloud-qwen). Optional sparse embeddings are available via [Splade](/integrations/embedding-models/chroma-cloud-splade#chroma-cloud-splade) or [BM25](https://en.wikipedia.org/wiki/Okapi_BM25). No extra API keys needed.
+6. **Index.** Output is written into the target Chroma collection, ready for vector, full-text, regex, sparse, and hybrid search.
+
+# Source Types
+
+Chroma Sync supports four source types. Each has its own walkthrough and configuration reference:
+
+- [**S3 buckets**](/cloud/sync/s3) — sync files from Amazon S3, with optional auto-sync on upload.
+- [**GitHub repositories**](/cloud/sync/github) — sync code from public or private repos, with diff-based incremental updates.
+- [**Web**](/cloud/sync/web) — crawl and ingest websites starting from a seed URL.
+- [**File upload**](/cloud/sync/file-upload) — upload individual files directly from the dashboard or via the API.
+
+Need a source type that isn't here? Email [engineering@trychroma.com](mailto:engineering@trychroma.com).
+
+# Concepts
+
+Chroma Sync has three primary concepts: **source types**, **sources**, and **invocations**.
+
+A **source type** defines a kind of entity that can be chunked, embedded, and indexed (e.g. S3, GitHub, Web, File Upload). A **source** is a configured instance of a source type — for example, a specific S3 bucket with credentials and a path prefix. An **invocation** is one sync run over a source's data; each invocation produces or appends to one Chroma collection.
+
+# Global Source Configuration
+
+Every source, regardless of type, is configured with a target database and an embedding configuration. Source-type-specific fields (bucket name, repository, starting URL, etc.) are documented on each [source type's page](#source-types).
+
+```json
+{
+  "database_name": "string",
+  "embedding": {
+    "dense": {
+      "model": "Qwen/Qwen3-Embedding-0.6B"
+    }
+  }
+}
+```
+
+- `database_name` is the Chroma database in which collections will be created. The database must already exist.
+- `embedding.dense.model` is the dense embedding model. Currently only `Qwen/Qwen3-Embedding-0.6B` is supported. Reach out to [engineering@trychroma.com](mailto:engineering@trychroma.com) to request additional models.
+
+You can optionally configure sparse embeddings alongside dense embeddings:
+
+```json
+{
+  "embedding": {
+    "dense": { "model": "Qwen/Qwen3-Embedding-0.6B" },
+    "sparse": {
+      "model": "Chroma/BM25",
+      "key": "sparse_embedding"
+    }
+  }
+}
+```
+
+- `embedding.sparse.model` — `Chroma/BM25` or `prithivida/Splade_PP_en_v1`.
+- `embedding.sparse.key` — metadata key under which sparse embeddings are stored.
+
+You can also override the chunking strategy:
+
+```json
+{
+  "chunking": {
+    "type": "tree_sitter",
+    "max_size_bytes": 8192
+  }
+}
+```
+
+- `chunking.type` — `tree_sitter` (syntax-aware, with `max_size_bytes`) or `lines` (line-based, with `max_lines` and `max_size_bytes`).
+
+# Global Invocation Configuration
+
+Each invocation may specify a target collection:
+
+```json
+{
+  "target_collection_name": "string"
+}
+```
+
+- `target_collection_name` is the Chroma collection to write into. The collection is created on first use, or appended to if it already exists. Required for GitHub and Web invocations; optional for S3 (defaults to the source's `collection_name`); set automatically for file uploads via the `collection_name` form field. If a collection has already finished an ingest (`finished_ingest=true` metadata), invocation creation returns `409 Conflict`.
+
+Source-type-specific invocation fields (S3 `object_key`, GitHub `ref_identifier`, etc.) are documented on each source type's page.
+
+# Authentication
+
+The Sync API authenticates with a Chroma Cloud API key sent in the `x-chroma-token` header.
+
+# Reference
+
+For the full request and response schemas of every endpoint, see the [Sync API Reference](/reference/sync-api).

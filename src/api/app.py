@@ -5,9 +5,15 @@ from fastapi.responses import StreamingResponse
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-
-from src.api.models import ChatRequest, ChatResponse, Source, FeedbackRequest
 from src.api.services import rag
+from src.api.models import (
+    ChatRequest, 
+    ChatResponse, 
+    Source, 
+    FeedbackRequest,
+    RegisterRequest,
+    LoginRequest,
+)
 from src.api.database import (
     initialize_database,
     create_conversation,
@@ -16,6 +22,8 @@ from src.api.database import (
     get_messages,
     delete_conversation,
     add_feedback,
+    create_user,
+    verify_user,
 )
 
 
@@ -124,14 +132,7 @@ def chat(request: ChatRequest):
         request.question,
         context,
     )
-    
-    assistant_message_id = add_message(
-        conversation_id,
-        "assistant",
-        answer,
-        results["confidence"],
-    )
-    
+
     seen = set()
     sources = []
 
@@ -147,6 +148,22 @@ def chat(request: ChatRequest):
         sources.append(
             Source(document=path, url=meta.get("url"))
         )
+
+    assistant_message_id = add_message(
+        conversation_id,
+        "assistant",
+        answer,
+        results["confidence"],
+        sources=[
+            {
+                "document": source.document,
+                "url": source.url,
+            }
+            for source in sources
+        ],
+    )
+    
+    
 
     return ChatResponse(
         answer=answer,
@@ -167,4 +184,42 @@ def feedback(request: FeedbackRequest):
 
     return {
         "success": True
+    }
+
+@app.post("/register")
+def register(request: RegisterRequest):
+
+    success = create_user(
+        request.email,
+        request.password,
+    )
+
+    if not success:
+        return {
+            "success": False,
+            "message": "Email already exists.",
+        }
+
+    return {
+        "success": True,
+    }
+
+@app.post("/login")
+
+def login(request: LoginRequest):
+
+    user_id = verify_user(
+        request.email,
+        request.password,
+    )
+
+    if user_id is None:
+        return {
+            "success": False,
+            "message": "Invalid email or password.",
+        }
+
+    return {
+        "success": True,
+        "user_id": user_id,
     }

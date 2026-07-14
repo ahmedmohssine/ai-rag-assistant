@@ -5,7 +5,7 @@ __pycache__/
 # Virtual environments
 .venv/
 venv/
-env/
+ENV/
 
 # VS Code
 .vscode/
@@ -15,3 +15,20 @@ Thumbs.db
 
 # macOS
 .DS_Store
+
+# Local SQLite databases
+data/chat_history.db
+
+# Dynamic tracking evaluation logs
+data/evaluation_report.json
+data/retrieval_failures.json
+data/generation_failures.json
+data/worst_judged_answers.json
+data/judge_results.json
+
+# Local Vector store database
+data/chroma/
+
+# tests
+tests/
+

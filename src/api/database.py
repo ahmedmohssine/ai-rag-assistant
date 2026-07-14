@@ -63,11 +63,19 @@ def initialize_database():
     )
     """)
 
+    try:
+        conn.execute("""
+        ALTER TABLE conversations
+        ADD COLUMN user_id INTEGER
+        """)
+    except sqlite3.OperationalError:
+        pass
+
     conn.commit()
     conn.close()
 
 
-def create_conversation(title: str = "New Conversation"):
+def create_conversation(title: str = "New Conversation",user_id: int = None):
 
     conn = get_connection()
 
@@ -75,10 +83,10 @@ def create_conversation(title: str = "New Conversation"):
 
     cursor.execute(
         """
-        INSERT INTO conversations(title)
-        VALUES(?)
+        INSERT INTO conversations(title, user_id)
+        VALUES(?,?)
          """,
-        (title,), #how to get title from app.py 
+        (title,user_id),
     )
 
     conn.commit()
@@ -148,31 +156,43 @@ def get_history(conversation_id: int):
     return [dict(row) for row in rows]
 
 
-def get_conversations():
+def get_conversations(user_id: int):
     conn = get_connection()
 
     rows = conn.execute("""
         SELECT id, title
         FROM conversations
+        WHERE user_id = ?
         ORDER BY id DESC
-    """).fetchall()
+        """,
+        (user_id,),
+        ).fetchall()
 
     conn.close()
 
     return [dict(row) for row in rows]
 
 
-def get_messages(conversation_id: int):
+def get_messages(conversation_id: int, user_id: int):
     print(">>> get_messages() called")
     conn = get_connection()
 
     rows = conn.execute("""
-        SELECT id, role, content, confidence, sources
-        FROM messages
-        WHERE conversation_id = ?
-        ORDER BY id
-    """, (conversation_id,)).fetchall()
-
+        SELECT
+            m.id,
+            m.role,
+            m.content,
+            m.confidence,
+            m.sources
+        FROM messages m
+        JOIN conversations c
+            ON m.conversation_id = c.id
+        WHERE
+            m.conversation_id = ?
+            AND c.user_id = ?
+        ORDER BY m.id
+    """, (conversation_id, user_id)).fetchall()
+    
     conn.close()
 
     return [
@@ -187,29 +207,53 @@ def get_messages(conversation_id: int):
     ]
 
 
-def delete_conversation(conversation_id: int):
+def delete_conversation(conversation_id: int, user_id: int) -> bool:
+    """Safely deletes a conversation only if it belongs to the requesting user."""
     conn = get_connection()
+    cursor = conn.cursor()
 
-    conn.execute(
+    # 1. Verify ownership before executing the delete sequence
+    cursor.execute(
+        "SELECT id FROM conversations WHERE id = ? AND user_id = ?",
+        (conversation_id, user_id)
+    )
+    if cursor.fetchone() is None:
+        conn.close()
+        return False  # Ownership verification failed
+
+    # 2. Proceed with cascade deletion now that it's safe
+    cursor.execute(
         "DELETE FROM messages WHERE conversation_id = ?",
         (conversation_id,),
     )
-
-    conn.execute(
+    cursor.execute(
         "DELETE FROM conversations WHERE id = ?",
         (conversation_id,),
     )
 
     conn.commit()
     conn.close()
+    return True
+
+
+def verify_conversation_owner(conversation_id: int, user_id: int) -> bool:
+    """Helper function to verify if a conversation belongs to a specific user."""
+    conn = get_connection()
+    row = conn.execute(
+        "SELECT id FROM conversations WHERE id = ? AND user_id = ?",
+        (conversation_id, user_id)
+    ).fetchone()
+    conn.close()
+    return row is not None
+
 
 
 def add_feedback(
     conversation_id: int,
     message_id: int,
     rating: str,
-    sources: str,
     comment: str = "",
+    sources: str = None,
 ):
     conn = get_connection()
 
@@ -219,22 +263,23 @@ def add_feedback(
             conversation_id,
             message_id,
             rating,
-            srouces,
-            comment
+            comment,
+            sources
         )
-        VALUES(?,?,?,?)
+        VALUES(?, ?, ?, ?, ?)
         """,
         (
             conversation_id,
             message_id,
             rating,
-            sources,
             comment,
+            sources,
         ),
     )
 
     conn.commit()
     conn.close()
+
 
 def create_user(email: str, password: str):
     conn = get_connection()
@@ -286,3 +331,20 @@ def verify_user(email: str, password: str):
         return row["id"]
 
     return None
+
+
+def delete_user(user_id: int):
+    conn = get_connection()
+
+    conn.execute(
+        """
+        DELETE FROM users
+        WHERE id = ?
+        """,
+        (user_id,),
+    )
+
+    conn.commit()
+    conn.close()
+
+

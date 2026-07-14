@@ -1,0 +1,15 @@
+[
+  {
+    "question": "How do dependencies work in FastAPI applications?",
+    "expected_documents": [
+      "docs/fastapi/tutorial/dependencies/index.md"
+    ],
+    "retrieved_documents": [
+      "docs/fastapi/tutorial/bigger-applications.md",
+      "docs/fastapi/tutorial/bigger-applications.md",
+      "docs/fastapi/tutorial/bigger-applications.md",
+      "docs/fastapi/tutorial/bigger-applications.md",
+      "docs/fastapi/tutorial/bigger-applications.md"
+    ]
+  }
+]

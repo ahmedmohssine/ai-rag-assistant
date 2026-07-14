@@ -1,0 +1,26 @@
+
+    ============================================================
+    AI RAG ASSISTANT - EVALUATION REPORT
+    ============================================================
+
+    Dataset size: 50 questions
+    Top-K: 5
+
+    Retrieval
+    ------------------------------
+    Recall@1 : 64.00%
+    Recall@3 : 92.00%
+    Recall@5 : 98.00%
+    MRR       : 0.782
+
+    Average Retrieval Time : 685.0 ms
+
+    Generation
+    ------------------------------
+    Faithfulness      : 4.52/5
+    Correctness       : 4.30/5
+    Relevance         : 4.80/5
+    HallucinationRate : 0.00%
+
+    Average Generation Time : 11.25 s
+    

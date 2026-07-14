@@ -1,13 +1,552 @@
 [
   {
-    "question": "What are path operation decorators in FastAPI?",
-    "generated_answer": "Path operation decorators in FastAPI are a way to modify the behavior of a path operation. They can be used to add functionality such as authentication, rate limiting, or logging.\n\nThese decorators are applied to a path operation using the `@` symbol, followed by the name of the decorator function. For example:\n```\nfrom fastapi import Depends\nfrom fastapi.responses import JSONResponse\n\nasync def get_current_user(user_id: int = Depends(get_user)):\n    return user_id\n\n@app.get(\"/users/{user_id}\")\nasync def read_user(user_id: int):\n    return {\"username\": \"John Doe\", \"id\": user_id}\n```\nIn this example, the `get_current_user` function is a path operation decorator that depends on another function to retrieve the current user.\n\nPath operation decorators can be used to add additional functionality to a path operation without modifying its underlying logic.",
+    "question": "What is FastAPI and why is it used for building Python APIs?",
+    "generated_answer": "FastAPI is a modern Python web framework that enables the creation of high-performance, scalable, and secure APIs. It is designed to be fast, with support for asynchronous views and requests, making it ideal for building efficient APIs.\n\nFastAPI is built on top of Starlette and Pydantic, which provide additional features such as auto-generated API documentation, robust error handling, and strong typing. By using FastAPI, developers can create high-quality APIs that meet the demands of modern web development.\n\nOne of the key reasons why FastAPI is used for building Python APIs is its ability to handle large volumes of requests and data efficiently. It provides features such as support for asynchronous programming, automatic response serialization, and robust error handling, making it well-suited for building scalable and high-performance APIs.\n\nOverall, FastAPI's unique combination of performance, scalability, and developer-friendly features makes it an attractive choice for building modern Python APIs.",
+    "scores": {
+      "faithfulness": 4,
+      "correctness": 4,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "The generated answer mostly supports the retrieved context, but lacks specific details on performance and features."
+    }
+  },
+  {
+    "question": "How do you install FastAPI in a Python environment?",
+    "generated_answer": "To install FastAPI, you can use pip. Specifically, you can install the standard dependencies of FastAPI with `pip install \"fastapi[standard]\"` or without the `fastapi-cloud-cli` using `pip install \"fastapi[standard-no-fastapi-cloud-cli]\"`.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "How do you create your first FastAPI application?",
+    "generated_answer": "To create the first FastAPI application, follow these steps:\n\n*   Import `FastAPI`.\n*   Create an `app` instance.\n*   Write a path operation decorator using decorators like `@app.get(\"/\")`.\n*   Define a path operation function; for example, `def root(): ...`\n*   Run the development server using the command `fastapi dev`.\n\nHere's the step-by-step process:\n\n1.  First, import `FastAPI` to begin your FastAPI application.\n2.  Next, create an instance of `app` using the `FastAPI` class.\n3.  Define a path operation decorator by decorating a function with `@app.get(\"/\")`.\n4.  Write a path operation function, which will handle incoming requests and return responses.\n5.  Finally, run the development server using the command `fastapi dev`.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "The retrieved context supports all claims made in the generated answer."
+    }
+  },
+  {
+    "question": "Which command starts the FastAPI development server locally?",
+    "generated_answer": "To start the FastAPI development server locally, you can use the `fastapi dev` command.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "What is OpenAPI and how does FastAPI generate it?",
+    "generated_answer": "OpenAPI is a standard for describing APIs. FastAPI generates an OpenAPI schema based on the API's routes, models, and other metadata.\n\nFastAPI uses Pydantic to define models, which are used to validate incoming request data and generate JSON responses. The generated OpenAPI schema includes information about these models, as well as the API's routes and endpoints.\n\nWhen you use the `@OpenAPI` annotation on a route or endpoint, FastAPI generates additional metadata about that specific route in the OpenAPI schema. This allows users to easily discover and interact with your API using tools like Swagger UI or API documentation generators.\n\nFastAPI also provides an `openapi.json` file that can be used as a reference for customizing the generated OpenAPI schema.",
     "scores": {
       "faithfulness": 4,
       "correctness": 5,
       "relevance": 5,
       "hallucination": false,
-      "reason": "Path operation decorators are partially supported by the retrieved context. The main answer is correct, but some minor details are missing."
+      "reason": "Generated answer matches context, but contains minor generality ('OpenAPI is a standard for describing APIs') instead of specific detail ('a standard specification for defining REST API schemas')"
+    }
+  },
+  {
+    "question": "What is Swagger UI in the FastAPI documentation interface?",
+    "generated_answer": "Swagger UI is a built-in interactive API documentation interface in FastAPI. It provides a visual representation of your API's endpoints, methods, and parameters, allowing for easy exploration and testing. \n\nThe Swagger UI is automatically integrated into your API when you run it. You can view the UI at http://127.0.0.1:8000/redoc.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Answer supported by context"
+    }
+  },
+  {
+    "question": "What is ReDoc and how is it used with FastAPI?",
+    "generated_answer": "ReDoc is a documentation generator for APIs. It is used with FastAPI to provide automatic API documentation, including Swagger UI and Redoc.\n\nTo use ReDoc with FastAPI, you can set the `redoc_url` parameter in the FastAPI application configuration to enable the ReDoc interface. For example:\n```\napp = FastAPI()\napp.add_middleware(redoc.RedocMiddleware, redoc_url=\"/docs\")\n```\nThis will serve the ReDoc interface at the `/docs` URL and provide automatic documentation of your API.\n\nYou can also customize the ReDoc UI by setting additional parameters, such as disabling ReDoc or serving it from a custom CDN.",
+    "scores": {
+      "faithfulness": 4,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Faithfulness: The answer is mostly supported by the context, but 'a documentation generator for APIs' is not a direct match. Correctness: The answer is fully correct. Relevance: The answer directly answers the question."
+    }
+  },
+  {
+    "question": "How do you define a GET endpoint in FastAPI?",
+    "generated_answer": "To define a GET endpoint in FastAPI, you use the `@app.get()` decorator. This specifies that the function associated with it should be called when a GET request is made to that endpoint.\n\nExample:\n```python\nfrom fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/\")\ndef read_root():\n    return {\"Hello\": \"World\"}\n```\nIn this example, the `read_root` function will be executed when a GET request is made to the root URL (\"/\"). The function returns a simple dictionary with a single key-value pair.\n\nNote that the `@app.get()` decorator can also take additional parameters, such as the path parameter(s) it expects. For example:\n```python\nfrom fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/users/{user_id}\")\ndef read_user(user_id: int):\n    return {\"User ID\": user_id}\n```\nIn this case, the `read_user` function will be executed when a GET request is made to the \"/users/{user_id}\" endpoint, where `{user_id}` is a path parameter that can be passed in the URL. The `user_id` parameter is annotated with `int`, indicating that it should be an integer value.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "How do path parameters work in FastAPI routes?",
+    "generated_answer": "Path parameters are used to extract values from the URL of a route. \n\nIn FastAPI, path parameters can be defined using curly brackets `{}`. For example:\n`home/johndoe/myfile.txt`\n\nThe `home`, `johndoe`, and `myfile.txt` parts are path parameters. They will be extracted and made available as variables in the function that handles the request.\n\nHere is a key point about path parameters: The order of path parameters matters, because each parameter must come after all its preceding siblings (except for optional ones).",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "How do query parameters work in FastAPI endpoints?",
+    "generated_answer": "Query parameters are a way to pass data from the client to the server through the URL. In FastAPI, you can access these parameters using the `Request` object and the `query_params()` method.\n\nHere's an example:\n```python\nfrom fastapi import FastAPI, Request\n\napp = FastAPI()\n\n@app.get(\"/items/{item_id}\")\nasync def read_item(item_id: int, q: str | None):\n    return {\"item_id\": item_id, \"q\": q}\n```\nIn this example, the `read_item` endpoint accepts two parameters: `item_id` and `q`. The `item_id` is a path parameter, while `q` is a query parameter.\n\nYou can access the values of these parameters using the `Request` object:\n```python\nasync def read_item(request: Request):\n    item_id = request.path_params[\"item_id\"]\n    q = request.query_params.get(\"q\")\n    return {\"item_id\": item_id, \"q\": q}\n```\nFastAPI also supports optional query parameters. You can declare an optional parameter by assigning it a default value:\n```python\n@app.get(\"/items/{item_id}\")\nasync def read_item(item_id: int, q: str = None):\n    return {\"item_id\": item_id, \"q\": q}\n```\nIn this case, the `q` parameter has a default value of `None`, which means it is optional.\n\nFastAPI can also automatically detect query parameters and their types. You don't need to declare them explicitly:\n```python\n@app.get(\"/items/{item_id}\")\nasync def read_item(item_id: int):\n    q = request.query_params.get(\"q\")\n    return {\"item_id\": item_id, \"q\": q}\n```\nIn this case, FastAPI will automatically detect the `q` parameter and its type.\n\nOverall, query parameters provide a convenient way to pass data from the client to the server in FastAPI.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "How do request bodies work in FastAPI?",
+    "generated_answer": "To declare your data model, you need to create a class that inherits from `BaseModel`. This allows you to define the structure of your request body.\n\nYou can also use Pydantic's built-in features to simplify this process. For example, you can use the `Body` class to specify multiple parameters and query parameters.\n\nHere are some key points to keep in mind:\n\n*   By default, singular values are interpreted as query parameters.\n*   You don't need to explicitly add a `Query` parameter; you can just omit it.\n*   The `Body` class returns objects of a subclass of `FieldInfo`.\n*   There are other subclasses of the `Body` class that you'll see later.\n\nOverall, FastAPI provides flexible and powerful tools for working with request bodies using Pydantic.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Answer accurately reflects retrieved context"
+    }
+  },
+  {
+    "question": "What is Pydantic used for in FastAPI request and response models?",
+    "generated_answer": "Pydantic is used to create data validation and analysis capabilities. In the context of FastAPI, it's used to declare both input models (request bodies) and output models (response payloads). \n\nThis allows you to define your own custom models that dictate how your data should be structured. When a request comes in, Pydantic will automatically validate it against your model, ensuring it conforms to the expected format.\n\nOn the other hand, when FastAPI sends back a response, the same model is used to serialize the data into JSON bytes on the client side, which achieves better performance than using custom JSON responses.",
+    "scores": {
+      "faithfulness": 1,
+      "correctness": 2,
+      "relevance": 4,
+      "hallucination": false,
+      "reason": "The answer contains claims that are not supported by the retrieved context."
+    }
+  },
+  {
+    "question": "How do you handle file uploads in FastAPI?",
+    "generated_answer": "To handle file uploads in FastAPI, you can use the `File` parameter. This allows you to receive uploaded files from a client.\n\nHere's an example:\n```python\nfrom fastapi import File, UploadFile\n\napp = FastAPI()\n\n@app.post(\"/upload\")\nasync def upload_file(file: UploadFile = File(...)):\n    # Process the file here\n    return {\"message\": \"File uploaded successfully\"}\n```\nIn this example, `UploadFile` is used to define a parameter that accepts an uploaded file. The `File` function is used to specify the name of the parameter and any additional parameters.\n\nYou can also use the `Form` parameter in combination with `File` to receive data and files in the same request.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "How do form fields work in FastAPI request handling?",
+    "generated_answer": "In FastAPI, you can use Pydantic models to declare form fields. To use forms, first install `python-multipart`. Make sure you create a virtual environment, activate it, and then install it.\n\nFastAPI will know to get the files from the correct part of the body when using the `File` parameter.\n\nHere are some key points about how form fields work in FastAPI:\n\n*   To declare form fields, use Pydantic models.\n*   Install `python-multipart` before using forms.\n*   Create a virtual environment and install `python-multipart` in it.",
+    "scores": {
+      "faithfulness": 4,
+      "correctness": 3,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "The answer provides a correct but incomplete explanation of how form fields work in FastAPI."
+    }
+  },
+  {
+    "question": "How do you read and set cookies in FastAPI?",
+    "generated_answer": "To read and set cookies in FastAPI, you can use the `Cookie` parameter.\n\nYou can declare cookie parameters using the same structure as with `Path` and `Query`. Then, you can access these values in your route handlers. The `Cookie` object allows you to get all the available cookie names and their values.\n\nHere's an example:\n```\nfrom fastapi import FastAPI, Request\napp = FastAPI()\n\n@app.get(\"/\")\nasync def read_root():\n    response = Request()\n    return {\"cookie\": response.cookies}\n```\n\nIn this example, we create a new FastAPI application and define a route for the root URL. In the handler function, we get an instance of `Request` which returns a dictionary-like object that contains all the information about the request including cookies.\n\nBy using this approach, you can read and access cookie values in your FastAPI application.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Faithful and correct, directly answering the question about reading and setting cookies in FastAPI."
+    }
+  },
+  {
+    "question": "How do you read headers in FastAPI requests?",
+    "generated_answer": "In FastAPI, you can access request headers directly. Here's an example of how to do it:\n\n```python\nfrom fastapi import Request\n\nasync def read_headers(request: Request):\n    headers = await request.headers()\n    for name, value in headers.items():\n        print(f\"{name}: {value}\")\n```\n\nThis code snippet shows how you can access the `Request` object and then iterate over its headers using the `items()` method. The `await` keyword is used because `request.headers()` returns a coroutine.\n\nAlternatively, you can access specific headers like this:\n\n```python\nfrom fastapi import Request\n\nasync def read_headers(request: Request):\n    content_type = await request.headers()['Content-Type']\n```\n\nIn this example, we're accessing the value of the 'Content-Type' header directly using its key.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Import `Header` from `fastapi` and declare it as a parameter in your function. FastAPI automatically converts snake_case parameters to kebab-case HTTP headers (e.g., `user_agent` reads `User-Agent`)."
+    }
+  },
+  {
+    "question": "What are response models in FastAPI and why are they used?",
+    "generated_answer": "Response models in FastAPI allow you to specify the structure of your responses, making it easier for clients to understand what data to expect. This is achieved by defining a class that inherits from `fastapi.responses.Response`.\n\nSome common use cases include:\n\n• Returning custom response classes such as `File`, `HTML`, or `Redirect`.\n• Using Starlette's built-in response classes like `Streaming` and `HTML`.\n• Defining a custom response model to exclude certain fields from the response.\n\nResponse models are used to provide more control over how data is returned in your API, making it easier for clients to parse and understand the responses.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "How do dependencies work in FastAPI applications?",
+    "generated_answer": "To work with dependencies in a FastAPI application, you can use the `import` statement with a relative path.\n\nHere are some examples of how to import dependencies:\n* Importing from the same package: ```python from .dependencies import get_token_header ```\n* Importing from a subpackage: \n  - Using dot notation (i.e., `.`): ```Python from ..dependencies import get_token_header ```\n  - Without using dot notation, you can provide the full path to your dependency file.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "The retrieved context provides information about how to use relative imports in FastAPI applications, which supports the answer."
+    }
+  },
+  {
+    "question": "What is APIRouter and when should you use it?",
+    "generated_answer": "APIRouter is a class in FastAPI that allows you to create multiple routers with different prefixes. It's an advanced usage that might not be necessary for most applications, but it's there if you need it.\n\nYou can include an APIRouter in another router using the `include_router()` function. This can be useful for organizing your code and protecting certain routes with middleware or dependencies.\n\nIn general, you should use APIRouter when you need to create multiple independent routers that can handle different types of requests or have different configurations.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 4,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Generates a correct and faithful answer, but with minor wording differences."
+    }
+  },
+  {
+    "question": "How do you include an APIRouter in a FastAPI app?",
+    "generated_answer": "To include an `APIRouter` in a `FastAPI` app, you can use the `app.include_router()` method.\n\nHere's an example of how to add an `APIRouter` for `users` and `items`:\n\n```python\nfrom fastapi import APIRouter\n\n# Create API routers for users and items\nusers_router = APIRouter()\nitems_router = APIRouter()\n\n# Include the API routers in the main FastAPI app\napp.include_router(users_router)\napp.include_router(items_router)\n```\n\nAlternatively, you can include an `APIRouter` in another `APIRouter` using the same method:\n\n```python\nfrom fastapi import APIRouter\n\n# Create API routers for users and items\nusers_router = APIRouter()\nitems_router = APIRouter()\n\n# Include an API router in another API router\ninner_router = APIRouter()\nouter_router = APIRouter()\nouter_router.include_router(inner_router)\n\napp.include_router(outer_router)\n```\n\nThis allows you to create nested routing structures within your `FastAPI` application.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Retrieved context fully supports the answer."
+    }
+  },
+  {
+    "question": "How does middleware work in FastAPI?",
+    "generated_answer": "In FastAPI, middleware is a function that works with every request before it is processed by any specific path operation, and also with every response before returning it. \n\nMiddleware functions are executed at the beginning and end of each incoming request or outgoing response. They can modify or replace the headers, status codes, content, etc.\n\nHere's an example:\n\n```python\nfrom fastapi import FastAPI\n\napp = FastAPI()\n\n@app.middleware(\"http\")\nasync def middleware_func(request: Request, call_next):\n    # some preprocessing logic here...\n    return await call_next(request)\n```\n\nMiddleware can be added to the application using the `middleware` parameter in the `FastAPI` constructor. \n\nFor example:\n\n```python\nfrom fastapi import FastAPI\n\napp = FastAPI(\n    middleware=[\n        # Some middleware instance here.\n    ]\n)\n```\n\nYou can also create your own custom middleware by importing it from `fastapi.middleware`.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "How do CORS settings work in FastAPI?",
+    "generated_answer": "In FastAPI, CORS (Cross-Origin Resource Sharing) settings are configured using the `CORSMiddleware`. This middleware allows you to specify which origins are allowed to make cross-origin requests.\n\nHere's how it works:\n\n*   You can specify a list of allowed origins using the `allow_origins` argument. For example: \n    ```python\nfrom fastapi import CORSMiddleware\n\napp = FastAPI()\n\norigins = [\n    \"https://example.org\",\n    \"https://www.example.org\"\n]\n\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=origins,\n    allow_credentials=True,\n    allow_methods=[\"*\"],\n    allow_headers=[\"*\"]\n)\n```\n\n*   Alternatively, you can use a regex pattern to match against origins that should be permitted. For example:\n    ```python\nfrom fastapi import CORSMiddleware\n\napp = FastAPI()\n\norigins_regex = \"https://.*\\\\.example\\\\.org\"\n\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=origins_regex,\n    allow_credentials=True,\n    allow_methods=[\"*\"],\n    allow_headers=[\"*\"]\n)\n```\n\n*   Wildcards can be used to match any origin, but it's recommended to specify explicitly the allowed origins for better security.\n\nBy configuring CORS settings in this way, you can control which cross-origin requests are allowed and ensure that your application is secure.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "How do you run background tasks in FastAPI?",
+    "generated_answer": "To run background tasks in FastAPI, execute the command `fastapi run` in production mode.",
+    "scores": {
+      "faithfulness": 0,
+      "correctness": 0,
+      "relevance": 0,
+      "hallucination": false,
+      "reason": "Generated answer contains unsupported information 'To run background tasks in FastAPI, execute the command fastapi run' which is not supported by the retrieved context."
+    }
+  },
+  {
+    "question": "How do WebSockets work in FastAPI?",
+    "generated_answer": "Here's a concise explanation of how WebSockets work in FastAPI, based on the retrieved documentation:\n\nWebSockets allow for bidirectional communication between a client and a server over the web. In FastAPI, you can use them to create endpoints that are more responsive and interactive.\n\nWhen a client connects to a WebSocket endpoint, a `WebSocket` object is created by FastAPI, which maintains the connection with the client. This allows multiple clients to be connected to the same endpoint at the same time.\n\nTo handle disconnections and multiple clients, you need to keep track of all open connections in memory. However, this means that the WebSockets will only work while the process is running and will only work with a single process.\n\nYou can use various dependencies such as `Depends`, `Security`, `Cookie`, `Header`, `Path`, and `Query` to add authentication and authorization to your WebSocket endpoints.\n\nIn addition, you can catch `WebSocketDisconnect` exceptions when a client disconnects from the endpoint. You can import this exception directly from `fastapi`.\n\nFor more information on using WebSockets in FastAPI, please check the documentation for testing WebSockets.\n\n[docs/fastapi/tutorial/body.md]\n\n[docs/fastapi/reference/websockets.md]\n[docs/fastapi/advanced/websockets.md]",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "How do you handle errors in FastAPI endpoints?",
+    "generated_answer": "According to the documentation, when any part of Starlette's internal code, or a Starlette extension or plug-in, raises a Starlette `HTTPException`, your handler will be able to catch and handle it.\n\n[docs/fastapi/tutorial/handling-errors.md]",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "The answer is fully supported by the retrieved context, and it correctly states how to handle errors in FastAPI endpoints."
+    }
+  },
+  {
+    "question": "How do you add tags to FastAPI path operations?",
+    "generated_answer": "To add tags to a FastAPI path operation, you can pass the `tags` parameter when defining your `APIRouter`.\n\nHere are some examples of how you can use this feature:\n\n•   You can add an array of strings that represent the tag names. For example: `from fastapi import APIRouter; from pydantic import BaseModel; router = APIRouter(tags=[\"items\"])`\n\n•   Alternatively, you can define an Enum for the tags and use it in your path operation configuration.\n\nHere is how to do this using the Enum:\n\n```python\nfrom enum import Enum\nfrom fastapi import APIRouter\nfrom pydantic import BaseModel\n\nclass TagName(str, Enum):\n    items = \"items\"\n    custom = \"custom\"\n\nrouter = APIRouter(tags=[TagName.items])\n\n# The path operation can be defined like this:\n@router.get(\"/items\", tags=[TagName.items])\nasync def read_items():\n    # Implementation\n    pass\n\n@router.get(\"/custom\", tags=[TagName.custom])\nasync def read_custom():\n    # Implementation\n    pass\n```\n\nFastAPI supports using Enum as well as plain strings for tags.",
+    "scores": {
+      "faithfulness": 4,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Added examples of how to use tags with Enum and plain strings."
+    }
+  },
+  {
+    "question": "How do security dependencies work in FastAPI?",
+    "generated_answer": "Security dependencies in FastAPI allow you to extend the functionality of your application by adding additional requirements for specific routes or operations. Here's how it works:\n\n*   You can declare scopes in path operations and dependencies.\n*   The `Depends` annotation is used to specify dependencies for a route operation.\n*   The `Security` annotation is used to specify security requirements, such as authentication methods, that must be met before the route can be accessed.\n\nFor example:\n```python\nfrom fastapi import Depends, HTTPException\nfrom fastapi.security import OAuth2PasswordBearer\nfrom fastapi import Security\n\noauth2_scheme = OAuth2PasswordBearer(tokenUrl=\"token\")\n\nasync def get_current_user(token: str = Depends(oauth2_scheme)):\n    # logic to validate the token and return the current user\n    pass\n\nasync def get_current_active_user(current_user: User = Depends(get_current_user)):\n    # logic to check if the user is active\n    pass\n\n@app.get(\"/users/me\", security=[Security(oauth2_scheme, scopes={\"read\": \"active\"})])\nasync def read_users_me(current_user: User = Depends(get_current_active_user)):\n    return current_user\n```\nIn this example, the `get_current_active_user` function is used to check if the user is active before allowing access to the `/users/me` route. The `Security` annotation specifies that the `oauth2_scheme` security requirement must be met for this route.\n\nBy using security dependencies in FastAPI, you can add an extra layer of protection to your application and ensure that sensitive data is only accessible by authorized users.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "How do OAuth2 flows work in FastAPI security?",
+    "generated_answer": "According to the documentation, OAuth2 flows are specified in the section \"Security\" and then further detailed under \"OAuth2 with Password (and hashing), Bearer with JWT tokens\". In this context, the \"password flow\" is discussed. \n\nIn summary, OAuth2 specifies that when using the password flow, the client/user must send `username` and `password` fields as form data.",
+    "scores": {
+      "faithfulness": 2,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Faithfulness: The generated answer partially supports the retrieved context, but does not explicitly state how OAuth2 flows work in FastAPI security. Correctness: The generated answer is fully correct and accurately states that FastAPI uses `OAuth2PasswordBearer` to declare an endpoint path where a client can send a username and password to exchange for a JWT token. Relevance: The generated answer directly answers the question."
+    }
+  },
+  {
+    "question": "How do you deploy a FastAPI application to production?",
+    "generated_answer": "To deploy a FastAPI application, you can use the `fastapi run` command, which uses Uvicorn, or manually set up a remote server such as a cloud server, virtual machine, etc.\n\nYou can also use FastAPI Cloud, which allows you to deploy your app with just one command. Additionally, there is the option to deploy to cloud providers using the same developer experience of building apps with FastAPI.",
+    "scores": {
+      "faithfulness": 3,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Fully answers the question correctly, but contains a claim that requires background knowledge (e.g., deploying to cloud providers). Faithfulness is reduced because it mentions cloud providers without explicit evidence in the retrieved context."
+    }
+  },
+  {
+    "question": "How do you deploy FastAPI manually with a server process?",
+    "generated_answer": "To deploy FastAPI manually with a server process, follow these steps:\n\n* Run the `fastapi` command to start the server program.\n* Uvicorn and other servers support the `--reload` option for development purposes.\n* Each running process has its own memory, meaning that consuming large amounts of memory in your code will be processed by each individual instance.\n\nFor more information on manually deploying FastAPI with a server process, refer to the documentation provided.",
+    "scores": {
+      "faithfulness": 3,
+      "correctness": 4,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Faithfulness: partially supported by retrieved context. Correctness: missing details (e.g., specifying the correct command). Relevance and hallucination: relevant answer, no factual claims unsupported by context."
+    }
+  },
+  {
+    "question": "How do Docker deployments work for FastAPI apps?",
+    "generated_answer": "According to the documentation, when working with containers, a load balancer can transmit network communication (e.g. HTTP requests) from the load balancer to one of multiple replicated containers running an app. This happens because each request could be handled by one of the replicated containers.\n\nWhen using a system like Kubernetes or similar distributed container management systems, their internal networking mechanisms would allow the single load balancer to transmit communication (requests) to possibly multiple containers running your app.\n\nThis is done using Docker deployments, which utilize strategies such as replication and load balancing to manage and distribute traffic to your FastAPI app.",
+    "scores": {
+      "faithfulness": 3,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Faithfulness reduced due to minor unsupported details. Correctness increased because the generated answer fully answers the question correctly."
+    }
+  },
+  {
+    "question": "How do HTTPS deployments work for FastAPI services?",
+    "generated_answer": "For FastAPI services, HTTPS deployments involve using an HTTPS certificate to establish a secure connection between the client and server. This ensures that the client knows it's communicating with the correct server.\n\nWhen deploying to multiple applications or containers, each container should run a separate process before running replicated worker containers. \n\nFastAPI supports deployment on cloud providers through tools such as Docker, Kubernetes, Docker Compose, Docker in Swarm Mode, Systemd, Supervisor, and others.",
+    "scores": {
+      "faithfulness": 4,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "How do lifespan events work in FastAPI applications?",
+    "generated_answer": "Lifespan events allow developers to perform specific actions at different stages of an application's lifecycle. When an application is shutting down, a `shutdown` event can be triggered, allowing developers to run functions that are essential for the application's cleanup.\n\nHere's how it works:\n\n*   The `shutdown` event is declared using the event `\"shutdown\"`.\n*   A function that should be executed when the application is shutting down must be registered with this event.\n*   When the application receives a request, FastAPI checks if any functions are registered for the specific event.\n\nHere's an example of how to declare and use lifespan events in a FastAPI application:\n\n```python\nfrom fastapi import FastAPI\n\napp = FastAPI()\n\n@app.on_event(\"shutdown\")\nasync def shutdown_event():\n    # Code to be executed when the application is shutting down\n    print(\"Shutting down the application...\")\n```\n\nThis allows developers to handle critical tasks such as closing database connections or stopping worker processes during application shutdown.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "The generated answer accurately explains lifespan events in FastAPI applications and includes relevant examples."
+    }
+  },
+  {
+    "question": "How do custom responses work in FastAPI endpoints?",
+    "generated_answer": "Custom responses in FastAPI can be used to handle different types of requests and return corresponding responses.\n\nHere's an example of how you can use a custom response for HTML, Stream, File, or other data types. You can achieve this by using the `HTMLResponse` class.\n\nFor instance, when making a GET request to the `/items` endpoint:\n\n```python\nfrom fastapi import FastAPI, Response\n\napp = FastAPI()\n\n@app.get(\"/items/{item_id}\")\nasync def read_item(item_id: int):\n    return {'item_id': item_id}\n```\n\nThis will automatically return a JSON response with the provided `item_id`. However, if you want to return an HTML response instead of a JSON one, you can use the `HTMLResponse` class.\n\nHere's how you can modify the previous example to return an HTML response:\n\n```python\nfrom fastapi import FastAPI, Response\n\napp = FastAPI()\n\n@app.get(\"/items/{item_id}\")\nasync def read_item(item_id: int):\n    return {'item_id': item_id}\n```\n\nHowever, when using a custom response type, you need to create your own `Response` class that will be used by FastAPI.\n\nAlternatively, FastAPI also supports creating a custom request body encoding. For instance:\n\n```python\nfrom fastapi import APIRouter, Request\nfrom fastapi.responses import JSONResponse\n\nrouter = APIRouter()\n\n@router.post(\"/items/{item_id}\")\nasync def create_item(item_id: int, request: dict):\n    return JSONResponse({'message': f'Item {item_id} created'})\n```\n\nThis will automatically handle the request body encoding and return a JSON response with the provided message.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "How do response headers work in FastAPI?",
+    "generated_answer": "Response headers are used to send additional information with the response. They can be custom headers that you want a client in a browser to be able to see. To make these visible, you need to add them to your CORS configurations using the parameter `expose_headers`.\n\nWhen using `expose_headers`, you must declare the header parameters first, then specify which ones you want to expose.\n\nFor example:\n\n- Declare the custom headers.\n- Specify which of those headers you want to expose in your CORS configuration.\n\nThis allows clients like browsers to see and use these additional headers.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "How do you serve static files in FastAPI?",
+    "generated_answer": "To serve static files in FastAPI, you need to use the `StaticFiles` component.\n\nHere are the main parameters for serving static files in FastAPI:\n* `path`: The URL path under which the static files will be served.\n* `directory`: The directory where the static files are stored.\n\nExample:\n\n```python\nfrom fastapi import FastAPI\nfrom fastapi.staticfiles import StaticFiles\n\napp = FastAPI()\n\n# Define the path and directory for serving static files\nstatic_dir = \"path/to/your/static/files\"\n\n# Initialize the StaticFiles component with the defined path and directory\nappStatic = StaticFiles(directory=static_dir)\n\n# Include the StaticFiles component in your main application\n@app.app Mountain()\nasync def root():\n    # Serve the static files from the defined directory\n    return appStatic\n\n```\n\nFor more details and options, check [Starlette's docs about Static Files](https://www.starlette.dev/staticfiles/).",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "How do templates work in FastAPI applications?",
+    "generated_answer": "In FastAPI, you can use any template engine with the framework. A common choice is Jinja2, which is also used by Flask and other tools.\n\nFastAPI has utilities to configure Jinja2 easily, and these utilities can be used directly in your FastAPI application (provided by Starlette).\n\nTo start using a template engine, you'll need to install the required dependencies for that engine. \n\nThe exact steps may vary depending on which template engine you choose for your FastAPI application.",
+    "scores": {
+      "faithfulness": 4,
+      "correctness": 2,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Incorrectly states FastAPI uses Jinja2Templates, while retrieved context supports using fastapi.templating."
+    }
+  },
+  {
+    "question": "How do the FastAPI testing utilities work?",
+    "generated_answer": "According to the documentation, the FastAPI testing utilities are used to test your FastAPI applications.\n\nTo pass a *path* or *query* parameter, you add it to the URL itself. \n\nTo pass a JSON body, you pass a Python object (e.g. a `dict`) to the parameter `json`. \n\nIf you need to send *Form Data* instead of JSON, you use the `data` parameter.\n\nYou can also pass *headers*, using a `dict` in the `headers` parameter.\n\nThe documentation also explains that you can test your FastAPI applications using the provided `TestClient`, which allows you to write tests without using `async` functions.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 4,
+      "relevance": 3,
+      "hallucination": false,
+      "reason": "Contains relevant details, minor unsupported claim about using async functions."
+    }
+  },
+  {
+    "question": "How do SQL databases integrate with FastAPI?",
+    "generated_answer": "According to the documentation, SQL databases don't have to be used with FastAPI. However, you can use any database that you want.\n\nFastAPI doesn't require a specific type of database to function. It is designed to work with various types of databases, including relational ones like SQL databases. \n\nYou can interact with a SQL database using [SQLModel](https://sqlmodel.tiangolo.com/), which is built on top of SQLAlchemy and Pydantic.\n\nBy declaring models in the `response_model` field, you are telling FastAPI to handle data from your chosen database without interfering with type annotations and editor help.",
+    "scores": {
+      "faithfulness": 4,
+      "correctness": 3,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "By declaring models in the `response_model` field, you are telling FastAPI to handle data from your chosen database without interfering with type annotations and editor help."
+    }
+  },
+  {
+    "question": "How do async endpoints work in FastAPI?",
+    "generated_answer": "Async endpoints in FastAPI use the `async def` syntax to define path operations. \n\nWhen an asynchronous endpoint is called, the function is executed, and the request body can be accessed as part of the exception handler.\n\nTo determine if a third-party library supports `await`, you must check its documentation or support resources.\n\nIf you're unsure about the best way to handle async and await for your dependencies, please refer to the [Async: *\"In a hurry?\"*](../../async.md#in-a-hurry) section of the FastAPI docs.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "What is the FastAPI CLI and what does it do?",
+    "generated_answer": "FastAPI CLI is a command-line interface (CLI) for FastAPI. It allows users to start and manage FastAPI applications. The main purpose of FastAPI CLI is to simplify the process of creating, running, and managing FastAPI projects.\n\nWith FastAPI CLI, you can execute commands such as `fastapi run`, which starts a FastAPI development server in production mode. This allows developers to quickly spin up a server and test their application without needing to manually configure the environment.\n\nFastAPI CLI provides an interactive experience for users, allowing them to perform various tasks, including starting a server, reloading changes, and shutting down the server.",
+    "scores": {
+      "faithfulness": 4,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Main purpose and key features supported by context, but some minor details not explicitly mentioned."
+    }
+  },
+  {
+    "question": "How do environment variables work in FastAPI apps?",
+    "generated_answer": "Environment variables are a way to pass data from outside the application into the application itself. In FastAPI, you can access environment variables using the `os` module.\n\nFastAPI automatically loads environment variables from three sources: \n\n* The operating system's environment variables\n* A `.env` file specified in the `settings.py` file\n* Environment variables set on the command line when running the FastAPI application\n\nHere are some key points about how environment variables work in FastAPI apps:\n\n* You can access environment variables using the `os.environ` dictionary.\n* Environment variables are case-sensitive and cannot contain special characters except for underscore (_).\n* Environment variables can be set on the operating system, in a `.env` file, or on the command line when running the application.\n\n[docs/fastapi/tutorial/body.md]",
+    "scores": {
+      "faithfulness": 3,
+      "correctness": 4,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "How do you customize or extend OpenAPI in FastAPI?",
+    "generated_answer": "To customize or extend OpenAPI in FastAPI, you can use the `app.routes` lower-level route tree to include route candidates that FastAPI uses internally for included routers. This means that you can add custom routes and behaviors to your application's OpenAPI definition.\n\nFor example, you can define a custom OpenAPI schema for your model by separating the input and output schemas. There are two approaches: separating the schemas or not separating them.\n\nWhen not separating schemas, a single schema is used for both input and output models, with some fields having default values. On the other hand, when separating schemas, you can use conditional OpenAPI to include only specific schemas based on certain conditions.\n\nAdditionally, FastAPI provides an `OpenAPIWebhooks` feature that allows you to define webhooks in your code, which can be used to send requests or events at specific moments.\n\nTo customize your OpenAPI definition further, you can use the various utilities provided by FastAPI, such as OpenAPI validation.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "How do you configure Swagger UI for FastAPI?",
+    "generated_answer": "To configure Swagger UI for FastAPI, follow these steps:\n\n1. Create an instance of the `SwaggerUIConfig` class and pass it to the `SWAGGER_UI_CONFIG` environment variable.\n2. Specify the `url` parameter to point to your OpenAPI document (usually `/docs/openapi.json`).\n3. You can also customize the Swagger UI configuration by providing additional parameters, such as `title`, `uiversion`, and `css_path`.\n\nHere's an example:\n```python\nfrom fastapi import FastAPI, SWAGGER_UI_CONFIG\n\napp = FastAPI()\n\nSWAGGER_UI_CONFIG = {\n    \"url\": \"/docs/openapi.json\",\n    # Add custom configuration parameters here\n}\n\n@app.get(\"/swagger-ui/\")\ndef open_api():\n    return app.include_router(\n        OpenAPISchemaRouter(),\n        description=\"Serve Swagger UI\",\n        tags=[{\"name\": \"Root\"}],\n    )\n```\nThis configuration will render the Swagger UI for your FastAPI application.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Answer directly supported by retrieved context"
+    }
+  },
+  {
+    "question": "How do you generate API clients from a FastAPI app?",
+    "generated_answer": "To generate an API client from a FastAPI app, follow these steps as mentioned in the [Generating SDKs](https://fastapi.tiangolo.com/advanced/generate-clients/) documentation:\n\n*   Create a new directory for your project's client code.\n*   Install the necessary dependencies using pip: `pip install --upgrade pydantic`\n*   Run the command to generate the OpenAPI schema from your FastAPI app: `python -m fastapi --help` or `fastapi dev main.py`\n*   Use a tool like [Hey API](https://heyapi.dev/openapi-ts/get-started) to generate TypeScript SDKs for your API.\n\nThe documentation provides more information on using the generated output, including how to install it and use it in your application.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "How do you upload multiple files in FastAPI?",
+    "generated_answer": "To upload multiple files in FastAPI, you can use the `File` parameter with a list of file names.\n\nHere's an example:\n```python\nfrom fastapi import FastAPI, Form\nfrom fastapi.requests import Request\nfrom pydantic import BaseModel\nimport multer\n\napp = FastAPI()\n\nclass Item(BaseModel):\n    name: str\n    description: str\n\n@app.post(\"/upload/\")\nasync def upload(files: dict = File(...)):\n    # files is a dictionary containing the uploaded file objects\n    return {\"files\": len(files)}\n```\n\nNote that you need to install `python-multipart` and configure it according to your needs.\n\nAlternatively, you can use the `multer` library to handle file uploads.\n```python\nfrom fastapi import FastAPI\nimport multer\n\napp = FastAPI()\n\n uploaded_file = multipart.FileField(\"file\")\n\n@app.post(\"/upload/\")\nasync def upload(file: multipart.FileField=\"uploaded_file\"):\n    # file is a File object containing the uploaded file\n    return {\"files\": len(file)}\n```\n\nRemember to handle errors and exceptions properly, as well as validate user input.",
+    "scores": {
+      "faithfulness": 3,
+      "correctness": 4,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Uploaded files are declared as a typed list of UploadFile wrapped inside Python's List[] construct."
+    }
+  },
+  {
+    "question": "How do sub-applications work in FastAPI?",
+    "generated_answer": "Sub-applications in FastAPI allow for the creation of separate, independent applications that can be mounted and managed as part of a larger application.\n\nHere's how it works:\n\n*   A main application is created, which serves as the top-level entry point.\n*   One or more sub-applications are defined, each with its own API routing configuration.\n*   The sub-applications are then mounted to the main application using the `@app Mount()` decorator.\n*   FastAPI handles all the `root_path`s automatically, allowing for multiple sub-applications to coexist.\n\nSub-applications can be useful when building larger applications that require multiple, independent services or modules. They enable developers to create and manage separate applications within a single project, making it easier to organize and maintain complex codebases.\n\nHere's an example of how to define a sub-application in FastAPI:\n```python\nfrom fastapi import FastAPI\n\n# Define the main application\napp = FastAPI()\n\n# Define a sub-application with its own API routing configuration\nsub_app = FastAPI()\n@sub_app.get(\"/sub\")\nasync def read_sub():\n    return {\"msg\": \"Hello from sub-app\"}\n\n# Mount the sub-application to the main application\napp.mount(\"/sub\", sub_app)\n```\nIn this example, we define a main application and a sub-application with its own API routing configuration. We then mount the sub-application to the main application using the `@app.Mount()` decorator.\n\nWith this approach, you can create multiple sub-applications within a single project, each with its own API routing configuration and management. FastAPI handles all the complexity of mounting and managing these sub-applications automatically, making it easier to build complex applications with multiple services or modules.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  },
+  {
+    "question": "How do proxies affect FastAPI applications?",
+    "generated_answer": "Proxies can be used to deploy FastAPI applications, and they have specific use cases.\n\nWhen running a container behind a TLS Termination Proxy (load balancer) like Nginx or Traefik, you need to add the option `--proxy-headers` with the FastAPI CLI. This will tell Uvicorn to trust the headers sent by that proxy telling it that the application is running behind HTTPS.\n\nThis is mentioned in the section about deploying FastAPI in containers using Docker.\n\nIn general, proxies do not affect how FastAPI applications function internally.",
+    "scores": {
+      "faithfulness": 3,
+      "correctness": 4,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Proxies can obscure original client IP addresses and protocol headers. The answer about `--proxy-headers` is supported, but the general claim that proxies do not affect FastAPI applications' internal behavior is not explicitly mentioned in the retrieved context."
+    }
+  },
+  {
+    "question": "How do custom exception handlers work in FastAPI?",
+    "generated_answer": "According to the documentation, custom exception handlers are added with the `@app.exception_handler()` decorator. This allows you to handle exceptions globally with FastAPI.\n\nHere's an example:\n```python\nfrom fastapi import FastAPI, RequestValidationError\nfrom starlette.exceptions import HTTPException\n\napp = FastAPI()\n\n@app.exception_handler(RequestValidationError)\nasync def validation_error_exception(request: Request, exc: RequestValidationError):\n    # Handle the exception\n    pass\n\n@app.exception_handler(HTTPException)\nasync def http_exception_exception(request: Request, exc: HTTPException):\n    # Handle the exception\n    pass\n```\nThis way, you can handle exceptions globally with FastAPI.\n\nNote that custom exception handlers can also be added for `WebSocketException`.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "The retrieved context fully supports the answer."
+    }
+  },
+  {
+    "question": "What are path operation decorators in FastAPI?",
+    "generated_answer": "Path operation decorators are a way to customize the behavior of a path operation in FastAPI. \n\nSome examples include `@app.get()`, `@app.post()`, `@app.put()`, and `@app.delete()`. These decorators specify how the path operation should be handled when a request is made.\n\nAdditionally, certain types such as `Request` or custom classes like `APIRoute` can also be used as path operation decorators.",
+    "scores": {
+      "faithfulness": 4,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Path operation decorators are supported by the context as examples like @app.get(), @app.post(), and @app.put()."
     }
   }
 ]

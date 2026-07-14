@@ -5,3 +5,5 @@ sentence-transformers
 fastapi
 uvicorn
 streamlit
+pyjwt
+bcrypt

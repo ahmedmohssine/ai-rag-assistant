@@ -41,7 +41,7 @@ The project is designed as a production-style RAG pipeline with evaluation tools
 
 ---
 
-## 🔍 Hybrid Retrieval
+## 🔍 Hybrid Retrieval & UI Controls
 
 - Semantic vector search
 - BM25 lexical retrieval
@@ -51,13 +51,17 @@ The project is designed as a production-style RAG pipeline with evaluation tools
 - Optional CrossEncoder reranking
 - Confidence scoring
 - URL-aware source metadata
+- **Configurable Context Count (Top-K)** adjustable straight from the sidebar
+- **Post-Retrieval Document Filtering** to match specific document path scopes
 
 ---
 
-## 🤖 Local LLM
+## 🤖 Local LLM & Streaming
 
 - Ollama
 - Llama 3.2
+- **Automatic Conversation Titles** generated using the local LLM instead of character truncation
+- **Real-time token streaming** with custom typewriter animations via Streamlit and FastAPI `StreamingResponse`
 
 ---
 
@@ -67,13 +71,13 @@ Built with FastAPI.
 
 Endpoints include:
 
-- Chat
+- Chat (with full metadata and streaming capabilities)
 - Conversation history
 - Conversation management
-- Conversation deletion
+- Conversation deletion (Isolated per user)
 - User registration
-- User login
-- Feedback submission
+- User login (JWT authentication)
+- Feedback submission (Isolated per user)
 
 ---
 
@@ -83,12 +87,13 @@ Built with Streamlit.
 
 Features:
 
-- Modern chat interface
-- Multiple conversations
-- Persistent chat history
-- Confidence score
+- Modern chat interface with custom styling
+- Multiple conversations with an LLM title engine
+- **Persistent browser login sessions** synced via native JavaScript browser storage and URL tracking
+- Active "Thinking Phase" loaders during initial RAG pipeline operations
+- Confidence score expanders
 - Clickable documentation sources
-- Feedback system (thumbs up/down + comments)
+- Feedback system (thumbs up/down + text area comments)
 - Conversation deletion
 - User authentication
 - Login & registration
@@ -113,10 +118,10 @@ SQLite is used to store:
 - Chat messages
 - Confidence scores
 - Source metadata
-- User feedback
+- User feedback tracking
 ---
 
-## 📊 Evaluation
+## 📊 Evaluation & Failure Reporting
 
 ### Retrieval Evaluation
 
@@ -136,20 +141,26 @@ Evaluates:
 - Relevance
 - Hallucination rate
 
+### Failure Tracking Reports
+
+Automated logging saves granular execution context blocks directly under the `data/` directory for analytical debugging:
+- **`evaluation_report.json`**: Broad automated matrix summary metrics.
+- **`retrieval_failures.json`**: Isolated records where documents were missed within Top-K.
+- **`generation_failures.json`**: Tracks LLM judge hallucinations or critically low metric drops.
+- **`worst_judged_answers.json`**: Sorts and slices the bottom-10 lowest-scoring generation answers.
+
 ---
 
-## 🔐 Authentication
+## 🔐 Authentication & Session Security
 
-The assistant includes a local authentication system.
+The assistant includes a cryptographically secure, isolated authentication system.
 
 Features:
 
 - Email/password registration
-- Secure password hashing using bcrypt
-- SQLite user database
-- Login before accessing the assistant
-
-No third-party authentication provider is required.
+- Secure password hashing using `bcrypt`
+- Secure cryptographic session signing using **JSON Web Tokens (JWT)** via `pyjwt`
+- **Strict Per-User Conversation Isolation**: Access control layers check ownership before returning histories, processing deletions, or appending metrics to feedback rows.
 
 ---
 
@@ -221,6 +232,10 @@ ai-rag-assistant/
 │   ├── chunks.json
 │   ├── judge_results.json
 │   ├── results.csv
+│   ├── evaluation_report.json     # Saved evaluation metrics
+│   ├── retrieval_failures.json     # Tracks search issues
+│   ├── generation_failures.json    # Tracks low faithfulness/hallucinations
+│   ├── worst_judged_answers.json   # Slices bottom 10 low-quality logs
 │   ├── chroma/
 │   └── evaluation_dataset50.json
 │
@@ -229,12 +244,17 @@ ai-rag-assistant/
 ├── scripts/
 │   ├── build_chunks.py
 │   ├── build_index.py
-│   ├── eval.py
+│   ├── eval.py                     # Generates comprehensive evaluation reports
 │   ├── search.py
 │   └── tune_retrieval.py (for tuning)
 │
 ├── src/
 │   ├── api/
+│   │   ├── app.py
+│   │   ├── auth_utils.py           # JWT encoder/decoder helpers
+│   │   ├── database.py
+│   │   ├── models.py
+│   │   └── services.py
 │   ├── chunking/
 │   ├── evaluation/
 │   ├── generation/
@@ -340,8 +360,11 @@ python scripts/search.py
 
 # Run FastAPI
 
+To prevent database update logs from triggering full server reloads, lock the uvicorn monitoring watcher scope to your source codebase folder:
+
+
 ```bash
-python -m uvicorn src.api.app:app --reload
+python -m uvicorn src.api.app:app --reload --reload-dir src
 ```
 
 Swagger documentation:
@@ -416,30 +439,19 @@ python -m unittest discover -s tests
 - ✅ Prompt builder
 - ✅ Retrieval evaluation
 - ✅ LLM-as-a-Judge evaluation
-- ✅ FastAPI REST API
-- ✅ Streamlit UI
-- ✅ Conversation history
-- ✅ Multiple conversations
-- ✅ Delete conversations
-- ✅ Source citations
-- ✅ Clickable documentation links
-- ✅ SQLite chat history
-- ✅ User feedback collection (👍 / 👎 + comments)
-- ✅ User registration
-- ✅ User login
-- ✅ Password hashing (bcrypt)
-- ✅ SQLite user database
-- ✅ Source persistence in chat history
+- ✅ FastAPI REST API with real-time text token streaming
+- ✅ Streamlit UI with typed stream renders and persistent thinking animations
+- ✅ Local LLM Automatic Title Generation for chats
+- ✅ Token failure logs (`retrieval_failures.json`, `generation_failures.json`, `worst_judged_answers.json`)
+- ✅ Secure Token Sessions: **JWT Authentication integration**
+- ✅ Secure Client Persistence: Native cross-messaging browser injection
+- ✅ **Strict Per-User Data Separation & Verification Isolation**
+- ✅ Configurable Sidebar UI panel: Dynamic **Top-K Context counts** and **Path Filtering keyword matchers**
 ---
 
 # In Progress
 
-- 🚧 Automatic chat titles
-- 🚧 Evaluation report command
-- 🚧 Query rewriting
 - 🚧 Deployment
-- 🚧 User session management
-- 🚧 Per-user conversation isolation
 ---
 
 # Tech Stack
@@ -448,6 +460,7 @@ python -m unittest discover -s tests
 - FastAPI
 - Streamlit
 - SQLite
+- PyJWT
 - bcrypt
 - ChromaDB
 - SentenceTransformers
@@ -462,14 +475,7 @@ python -m unittest discover -s tests
 # Roadmap
 
 - Google OAuth login
-- Persistent login sessions
-- Per-user conversation isolation
-- Deployment
-- Desktop application
-- Automatic conversation titles
-- Streaming chat responses
-- Query rewriting
-- Evaluation report generation
-- Improved hybrid search
-- Additional document connectors
-- Docker support
+- Docker Multi-Container orchestration
+- Per-user metadata workspace separation
+- Desktop wrapper assembly
+- Additional file connector parsing modules

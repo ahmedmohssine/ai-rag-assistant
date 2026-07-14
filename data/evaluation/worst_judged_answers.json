@@ -1,0 +1,252 @@
+[
+  {
+    "question": "How do you run background tasks in FastAPI?",
+    "expected_documents": [
+      "docs/fastapi/tutorial/background-tasks.md"
+    ],
+    "acceptable_documents": [
+      "docs/fastapi/tutorial/background-tasks.md"
+    ],
+    "retrieved_documents": [
+      "docs/fastapi/tutorial/background-tasks.md",
+      "docs/fastapi/fastapi-cli.md",
+      "docs/fastapi/tutorial/dependencies/dependencies-with-yield.md",
+      "docs/fastapi/index.md",
+      "docs/fastapi/deployment/manually.md"
+    ],
+    "expected_answer": "Import `BackgroundTasks` from `fastapi`, declare it as a parameter in your endpoint, and add your slow-running task function along with its arguments to it using `.add_task()`.",
+    "generated_answer": "To run background tasks in FastAPI, execute the command `fastapi run` in production mode.",
+    "scores": {
+      "faithfulness": 0,
+      "correctness": 0,
+      "relevance": 0,
+      "hallucination": false,
+      "reason": "Generated answer contains unsupported information 'To run background tasks in FastAPI, execute the command fastapi run' which is not supported by the retrieved context."
+    }
+  },
+  {
+    "question": "What is Pydantic used for in FastAPI request and response models?",
+    "expected_documents": [
+      "docs/fastapi/tutorial/body.md"
+    ],
+    "acceptable_documents": [
+      "docs/fastapi/tutorial/body.md"
+    ],
+    "retrieved_documents": [
+      "docs/fastapi/tutorial/response-model.md",
+      "docs/fastapi/tutorial/body.md",
+      "docs/fastapi/tutorial/request-form-models.md",
+      "docs/fastapi/how-to/migrate-from-pydantic-v1-to-pydantic-v2.md",
+      "docs/fastapi/reference/responses.md"
+    ],
+    "expected_answer": "Pydantic is used for data validation, serialization, and schema enforcement. It ensures incoming request data matches specified types (throwing automatic 422 errors if invalid) and structures outgoing JSON responses.",
+    "generated_answer": "Pydantic is used to create data validation and analysis capabilities. In the context of FastAPI, it's used to declare both input models (request bodies) and output models (response payloads). \n\nThis allows you to define your own custom models that dictate how your data should be structured. When a request comes in, Pydantic will automatically validate it against your model, ensuring it conforms to the expected format.\n\nOn the other hand, when FastAPI sends back a response, the same model is used to serialize the data into JSON bytes on the client side, which achieves better performance than using custom JSON responses.",
+    "scores": {
+      "faithfulness": 1,
+      "correctness": 2,
+      "relevance": 4,
+      "hallucination": false,
+      "reason": "The answer contains claims that are not supported by the retrieved context."
+    }
+  },
+  {
+    "question": "How do templates work in FastAPI applications?",
+    "expected_documents": [
+      "docs/fastapi/advanced/templates.md"
+    ],
+    "acceptable_documents": [
+      "docs/fastapi/advanced/templates.md"
+    ],
+    "retrieved_documents": [
+      "docs/fastapi/tutorial/bigger-applications.md",
+      "docs/fastapi/advanced/templates.md",
+      "docs/fastapi/tutorial/bigger-applications.md",
+      "docs/fastapi/tutorial/bigger-applications.md",
+      "docs/fastapi/tutorial/bigger-applications.md"
+    ],
+    "expected_answer": "FastAPI uses Jinja2Templates via fastapi.templating. Instantiate the template engine pointing to an HTML folder, and return templates using templates.TemplateResponse(request=request, name='index.html').",
+    "generated_answer": "In FastAPI, you can use any template engine with the framework. A common choice is Jinja2, which is also used by Flask and other tools.\n\nFastAPI has utilities to configure Jinja2 easily, and these utilities can be used directly in your FastAPI application (provided by Starlette).\n\nTo start using a template engine, you'll need to install the required dependencies for that engine. \n\nThe exact steps may vary depending on which template engine you choose for your FastAPI application.",
+    "scores": {
+      "faithfulness": 4,
+      "correctness": 2,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Incorrectly states FastAPI uses Jinja2Templates, while retrieved context supports using fastapi.templating."
+    }
+  },
+  {
+    "question": "How do form fields work in FastAPI request handling?",
+    "expected_documents": [
+      "docs/fastapi/tutorial/request-forms.md"
+    ],
+    "acceptable_documents": [
+      "docs/fastapi/tutorial/request-forms.md"
+    ],
+    "retrieved_documents": [
+      "docs/fastapi/tutorial/request-forms.md",
+      "docs/fastapi/tutorial/request-form-models.md",
+      "docs/fastapi/tutorial/request-forms-and-files.md",
+      "docs/fastapi/tutorial/request-files.md",
+      "docs/fastapi/tutorial/handling-errors.md"
+    ],
+    "expected_answer": "Import `Form` from `fastapi` and use it as a default parameter value in your function. This forces FastAPI to expect data formatted as HTML form inputs (`application/x-www-form-urlencoded`) instead of JSON.",
+    "generated_answer": "In FastAPI, you can use Pydantic models to declare form fields. To use forms, first install `python-multipart`. Make sure you create a virtual environment, activate it, and then install it.\n\nFastAPI will know to get the files from the correct part of the body when using the `File` parameter.\n\nHere are some key points about how form fields work in FastAPI:\n\n*   To declare form fields, use Pydantic models.\n*   Install `python-multipart` before using forms.\n*   Create a virtual environment and install `python-multipart` in it.",
+    "scores": {
+      "faithfulness": 4,
+      "correctness": 3,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "The answer provides a correct but incomplete explanation of how form fields work in FastAPI."
+    }
+  },
+  {
+    "question": "How do SQL databases integrate with FastAPI?",
+    "expected_documents": [
+      "docs/fastapi/tutorial/sql-databases.md"
+    ],
+    "acceptable_documents": [
+      "docs/fastapi/tutorial/sql-databases.md"
+    ],
+    "retrieved_documents": [
+      "docs/fastapi/tutorial/sql-databases.md",
+      "docs/fastapi/tutorial/sql-databases.md",
+      "docs/fastapi/tutorial/sql-databases.md",
+      "docs/fastapi/tutorial/sql-databases.md",
+      "docs/fastapi/tutorial/sql-databases.md"
+    ],
+    "expected_answer": "SQL databases integrate cleanly using ORMs like SQLAlchemy or SQLModel. You set up a session dependency generator that opens a clean database connection per request and closes it safely once the response is sent.",
+    "generated_answer": "According to the documentation, SQL databases don't have to be used with FastAPI. However, you can use any database that you want.\n\nFastAPI doesn't require a specific type of database to function. It is designed to work with various types of databases, including relational ones like SQL databases. \n\nYou can interact with a SQL database using [SQLModel](https://sqlmodel.tiangolo.com/), which is built on top of SQLAlchemy and Pydantic.\n\nBy declaring models in the `response_model` field, you are telling FastAPI to handle data from your chosen database without interfering with type annotations and editor help.",
+    "scores": {
+      "faithfulness": 4,
+      "correctness": 3,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "By declaring models in the `response_model` field, you are telling FastAPI to handle data from your chosen database without interfering with type annotations and editor help."
+    }
+  },
+  {
+    "question": "What is FastAPI and why is it used for building Python APIs?",
+    "expected_documents": [
+      "docs/fastapi/reference/fastapi.md"
+    ],
+    "acceptable_documents": [
+      "docs/fastapi/reference/fastapi.md"
+    ],
+    "retrieved_documents": [
+      "docs/fastapi/tutorial/first-steps.md",
+      "docs/fastapi/tutorial/dependencies/classes-as-dependencies.md",
+      "docs/fastapi/tutorial/dependencies/index.md",
+      "docs/fastapi/reference/fastapi.md",
+      "docs/fastapi/reference/index.md"
+    ],
+    "expected_answer": "FastAPI is a modern, high-performance web framework for building APIs with Python 3.8+ based on standard Python type hints. It is used because it provides automatic interactive documentation, native asynchronous support, standard validation via Pydantic, and performance on par with NodeJS and Go.",
+    "generated_answer": "FastAPI is a modern Python web framework that enables the creation of high-performance, scalable, and secure APIs. It is designed to be fast, with support for asynchronous views and requests, making it ideal for building efficient APIs.\n\nFastAPI is built on top of Starlette and Pydantic, which provide additional features such as auto-generated API documentation, robust error handling, and strong typing. By using FastAPI, developers can create high-quality APIs that meet the demands of modern web development.\n\nOne of the key reasons why FastAPI is used for building Python APIs is its ability to handle large volumes of requests and data efficiently. It provides features such as support for asynchronous programming, automatic response serialization, and robust error handling, making it well-suited for building scalable and high-performance APIs.\n\nOverall, FastAPI's unique combination of performance, scalability, and developer-friendly features makes it an attractive choice for building modern Python APIs.",
+    "scores": {
+      "faithfulness": 4,
+      "correctness": 4,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "The generated answer mostly supports the retrieved context, but lacks specific details on performance and features."
+    }
+  },
+  {
+    "question": "What is APIRouter and when should you use it?",
+    "expected_documents": [
+      "docs/fastapi/reference/apirouter.md"
+    ],
+    "acceptable_documents": [
+      "docs/fastapi/reference/apirouter.md"
+    ],
+    "retrieved_documents": [
+      "docs/fastapi/tutorial/bigger-applications.md",
+      "docs/fastapi/reference/apirouter.md",
+      "docs/fastapi/how-to/custom-request-and-route.md",
+      "docs/fastapi/tutorial/frontend.md",
+      "docs/fastapi/tutorial/cors.md"
+    ],
+    "expected_answer": "`APIRouter` is a utility class used to split big API applications into isolated, logical files. You should use it to group related endpoints (e.g., `/users`, `/items`) as your project grows.",
+    "generated_answer": "APIRouter is a class in FastAPI that allows you to create multiple routers with different prefixes. It's an advanced usage that might not be necessary for most applications, but it's there if you need it.\n\nYou can include an APIRouter in another router using the `include_router()` function. This can be useful for organizing your code and protecting certain routes with middleware or dependencies.\n\nIn general, you should use APIRouter when you need to create multiple independent routers that can handle different types of requests or have different configurations.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 4,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Generates a correct and faithful answer, but with minor wording differences."
+    }
+  },
+  {
+    "question": "How do you deploy FastAPI manually with a server process?",
+    "expected_documents": [
+      "docs/fastapi/deployment/manually.md"
+    ],
+    "acceptable_documents": [
+      "docs/fastapi/deployment/manually.md"
+    ],
+    "retrieved_documents": [
+      "docs/fastapi/deployment/manually.md",
+      "docs/fastapi/deployment/server-workers.md",
+      "docs/fastapi/deployment/concepts.md",
+      "docs/fastapi/deployment/fastapicloud.md",
+      "docs/fastapi/deployment/cloud.md"
+    ],
+    "expected_answer": "You set up a process manager like Gunicorn or Systemd to continuously run an underlying production-configured ASGI command, like: `gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker`.",
+    "generated_answer": "To deploy FastAPI manually with a server process, follow these steps:\n\n* Run the `fastapi` command to start the server program.\n* Uvicorn and other servers support the `--reload` option for development purposes.\n* Each running process has its own memory, meaning that consuming large amounts of memory in your code will be processed by each individual instance.\n\nFor more information on manually deploying FastAPI with a server process, refer to the documentation provided.",
+    "scores": {
+      "faithfulness": 3,
+      "correctness": 4,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Faithfulness: partially supported by retrieved context. Correctness: missing details (e.g., specifying the correct command). Relevance and hallucination: relevant answer, no factual claims unsupported by context."
+    }
+  },
+  {
+    "question": "How do the FastAPI testing utilities work?",
+    "expected_documents": [
+      "docs/fastapi/tutorial/testing.md"
+    ],
+    "acceptable_documents": [
+      "docs/fastapi/tutorial/testing.md"
+    ],
+    "retrieved_documents": [
+      "docs/fastapi/tutorial/testing.md",
+      "docs/fastapi/advanced/async-tests.md",
+      "docs/fastapi/_llm-test.md",
+      "docs/fastapi/how-to/testing-database.md",
+      "docs/fastapi/deployment/versions.md"
+    ],
+    "expected_answer": "FastAPI provides a TestClient class built on top of HTTPX. Pass your app object to TestClient(app), and call methods like .get() or .post() to simulate requests and assert response statuses/data.",
+    "generated_answer": "According to the documentation, the FastAPI testing utilities are used to test your FastAPI applications.\n\nTo pass a *path* or *query* parameter, you add it to the URL itself. \n\nTo pass a JSON body, you pass a Python object (e.g. a `dict`) to the parameter `json`. \n\nIf you need to send *Form Data* instead of JSON, you use the `data` parameter.\n\nYou can also pass *headers*, using a `dict` in the `headers` parameter.\n\nThe documentation also explains that you can test your FastAPI applications using the provided `TestClient`, which allows you to write tests without using `async` functions.",
+    "scores": {
+      "faithfulness": 5,
+      "correctness": 4,
+      "relevance": 3,
+      "hallucination": false,
+      "reason": "Contains relevant details, minor unsupported claim about using async functions."
+    }
+  },
+  {
+    "question": "How do environment variables work in FastAPI apps?",
+    "expected_documents": [
+      "docs/fastapi/environment-variables.md"
+    ],
+    "acceptable_documents": [
+      "docs/fastapi/environment-variables.md"
+    ],
+    "retrieved_documents": [
+      "docs/fastapi/environment-variables.md",
+      "docs/fastapi/advanced/settings.md",
+      "docs/fastapi/environment-variables.md",
+      "docs/fastapi/environment-variables.md",
+      "docs/fastapi/environment-variables.md"
+    ],
+    "expected_answer": "Environment variables are handled best by combining Pydantic's BaseSettings framework (pydantic-settings). It reads environment files automatically, casts variable types, and injects configuration configurations securely into application dependencies.",
+    "generated_answer": "Environment variables are a way to pass data from outside the application into the application itself. In FastAPI, you can access environment variables using the `os` module.\n\nFastAPI automatically loads environment variables from three sources: \n\n* The operating system's environment variables\n* A `.env` file specified in the `settings.py` file\n* Environment variables set on the command line when running the FastAPI application\n\nHere are some key points about how environment variables work in FastAPI apps:\n\n* You can access environment variables using the `os.environ` dictionary.\n* Environment variables are case-sensitive and cannot contain special characters except for underscore (_).\n* Environment variables can be set on the operating system, in a `.env` file, or on the command line when running the application.\n\n[docs/fastapi/tutorial/body.md]",
+    "scores": {
+      "faithfulness": 3,
+      "correctness": 4,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": ""
+    }
+  }
+]

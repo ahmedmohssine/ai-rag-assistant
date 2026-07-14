@@ -1,0 +1,251 @@
+[
+  {
+    "question": "What is Pydantic used for in FastAPI request and response models?",
+    "generated_answer": "Pydantic is used to create data validation and analysis capabilities. In the context of FastAPI, it's used to declare both input models (request bodies) and output models (response payloads). \n\nThis allows you to define your own custom models that dictate how your data should be structured. When a request comes in, Pydantic will automatically validate it against your model, ensuring it conforms to the expected format.\n\nOn the other hand, when FastAPI sends back a response, the same model is used to serialize the data into JSON bytes on the client side, which achieves better performance than using custom JSON responses.",
+    "scores": {
+      "faithfulness": 1,
+      "correctness": 2,
+      "relevance": 4,
+      "hallucination": false,
+      "reason": "The answer contains claims that are not supported by the retrieved context."
+    },
+    "retrieved_context": [
+      {
+        "content": "/// Section: Response Model - Return Type { #response-model-return-type } Section: Return the same input data { #return-the-same-input-data } And we are using this model to declare our input and the same model to declare our output: Section: Response Model - Return Type { #response-model-return-type } Section: Return the same input data { #return-the-same-input-data } {* ../../docs_src/response_model/tutorial002_py310.py hl[16] *}",
+        "metadata": {
+          "source": "fastapi",
+          "filename": "response-model",
+          "path": "docs/fastapi/tutorial/response-model.md",
+          "relative_path": "fastapi/tutorial/response-model.md",
+          "chunk_id": "fastapi/tutorial/response-model_4479",
+          "citation_id": "fastapi:response-model_4479",
+          "file_type": "md",
+          "title": "Response Model - Return Type { #response-model-return-type }",
+          "url": "https://fastapi.tiangolo.com/tutorial/response-model/"
+        }
+      },
+      {
+        "content": "cases. Section: Request Body { #request-body } As it is discouraged, the interactive docs with Swagger UI won't show the documentation for the body when using `GET`, and proxies in the middle might not support it. Section: Request Body { #request-body } /// ## Import Pydantic's `BaseModel` { #import-pydantics-basemodel } Section: Request Body { #request-body } Section: Import Pydantic's `BaseModel` { #import-pydantics-basemodel } First, you need to import `BaseModel` from `pydantic`:",
+        "metadata": {
+          "source": "fastapi",
+          "filename": "body",
+          "path": "docs/fastapi/tutorial/body.md",
+          "relative_path": "fastapi/tutorial/body.md",
+          "chunk_id": "fastapi/tutorial/body_881",
+          "citation_id": "fastapi:body_881",
+          "file_type": "md",
+          "title": "Request Body { #request-body }",
+          "url": "https://fastapi.tiangolo.com/tutorial/body/"
+        }
+      },
+      {
+        "content": "Form Models { #form-models }\ndocs/fastapi/tutorial/request-form-models.md\nfastapi/tutorial/request-form-models.md\nrequest-form-models\n*} Section: Form Models { #form-models } Section: Pydantic Models for Forms { #pydantic-models-for-forms } **FastAPI** will **extract** the data for **each field** from the **form data** in the request and give you the Pydantic model you defined. ## Check the Docs { #check-the-docs } Section: Form Models { #form-models } Section: Check the Docs { #check-the-docs } You can verify it in the docs UI at `/docs`:",
+        "metadata": {
+          "citation_id": "fastapi:request-form-models_734",
+          "title": "Form Models { #form-models }",
+          "filename": "request-form-models",
+          "relative_path": "fastapi/tutorial/request-form-models.md",
+          "path": "docs/fastapi/tutorial/request-form-models.md",
+          "source": "fastapi",
+          "chunk_id": "fastapi/tutorial/request-form-models_734",
+          "file_type": "md",
+          "url": "https://fastapi.tiangolo.com/tutorial/request-form-models/"
+        }
+      },
+      {
+        "content": "*} Section: Migrate from Pydantic v1 to Pydantic v2 { #migrate-from-pydantic-v1-to-pydantic-v2 } Section: Pydantic v1 in v2 { #pydantic-v1-in-v2 } Section: Pydantic v1 and v2 on the same app { #pydantic-v1-and-v2-on-the-same-app } In this example above, the input model is a Pydantic v1 model, and the output model (defined in `response_model=ItemV2`) is a Pydantic v2 model. ### Pydantic v1 parameters { #pydantic-v1-parameters }",
+        "metadata": {
+          "source": "fastapi",
+          "filename": "migrate-from-pydantic-v1-to-pydantic-v2",
+          "path": "docs/fastapi/how-to/migrate-from-pydantic-v1-to-pydantic-v2.md",
+          "relative_path": "fastapi/how-to/migrate-from-pydantic-v1-to-pydantic-v2.md",
+          "chunk_id": "fastapi/how-to/migrate-from-pydantic-v1-to-pydantic-v2_4970",
+          "citation_id": "fastapi:migrate-from-pydantic-v1-to-pydantic-v2_4970",
+          "file_type": "md",
+          "title": "Migrate from Pydantic v1 to Pydantic v2 { #migrate-from-pydantic-v1-to-pydantic-v2 }",
+          "url": "https://fastapi.tiangolo.com/how-to/migrate-from-pydantic-v1-to-pydantic-v2/"
+        }
+      },
+      {
+        "content": "Custom Response Classes - File, HTML, Redirect, Streaming, etc.\ndocs/fastapi/reference/responses.md\nfastapi/reference/responses.md\nresponses\nType](https://fastapi.tiangolo.com/tutorial/response-model/). Section: Custom Response Classes - File, HTML, Redirect, Streaming, etc. Section: FastAPI Responses That way, Pydantic will serialize the data into JSON bytes on the Rust side, which will achieve better performance than these custom JSON responses.",
+        "metadata": {
+          "citation_id": "fastapi:responses_863",
+          "title": "Custom Response Classes - File, HTML, Redirect, Streaming, etc.",
+          "filename": "responses",
+          "relative_path": "fastapi/reference/responses.md",
+          "path": "docs/fastapi/reference/responses.md",
+          "source": "fastapi",
+          "chunk_id": "fastapi/reference/responses_863",
+          "file_type": "md",
+          "url": "https://fastapi.tiangolo.com/reference/responses/"
+        }
+      }
+    ]
+  },
+  {
+    "question": "How do you run background tasks in FastAPI?",
+    "generated_answer": "To run background tasks in FastAPI, execute the command `fastapi run` in production mode.",
+    "scores": {
+      "faithfulness": 0,
+      "correctness": 0,
+      "relevance": 0,
+      "hallucination": false,
+      "reason": "Generated answer contains unsupported information 'To run background tasks in FastAPI, execute the command fastapi run' which is not supported by the retrieved context."
+    },
+    "retrieved_context": [
+      {
+        "content": "Background Tasks { #background-tasks }\ndocs/fastapi/tutorial/background-tasks.md\nfastapi/tutorial/background-tasks.md\nbackground-tasks\ncorrectly. Section: Background Tasks { #background-tasks } Section: Create a task function { #create-a-task-function } In this case, the task function will write to a file (simulating sending an email). Section: Background Tasks { #background-tasks } Section: Create a task function { #create-a-task-function } And as the write operation doesn't use `async` and `await`, we define the function with normal `def`:",
+        "metadata": {
+          "citation_id": "fastapi:background-tasks_1388",
+          "title": "Background Tasks { #background-tasks }",
+          "filename": "background-tasks",
+          "relative_path": "fastapi/tutorial/background-tasks.md",
+          "path": "docs/fastapi/tutorial/background-tasks.md",
+          "source": "fastapi",
+          "chunk_id": "fastapi/tutorial/background-tasks_1388",
+          "file_type": "md",
+          "url": "https://fastapi.tiangolo.com/tutorial/background-tasks/"
+        }
+      },
+      {
+        "content": "FastAPI CLI { #fastapi-cli }\ndocs/fastapi/fastapi-cli.md\nfastapi/fastapi-cli.md\nfastapi-cli\n} Section: FastAPI CLI { #fastapi-cli } Section: `fastapi run` { #fastapi-run } Executing `fastapi run` starts FastAPI in production mode.",
+        "metadata": {
+          "citation_id": "fastapi:fastapi-cli_5459",
+          "title": "FastAPI CLI { #fastapi-cli }",
+          "filename": "fastapi-cli",
+          "relative_path": "fastapi/fastapi-cli.md",
+          "path": "docs/fastapi/fastapi-cli.md",
+          "source": "fastapi",
+          "chunk_id": "fastapi/fastapi-cli_5459",
+          "file_type": "md",
+          "url": "https://fastapi.tiangolo.com/fastapi-cli/"
+        }
+      },
+      {
+        "content": "Section: Dependencies with yield { #dependencies-with-yield } Section: Dependencies with `yield`, `HTTPException`, `except` and Background Tasks { #dependencies-with-yield-httpexception-except-and-background-tasks }",
+        "metadata": {
+          "source": "fastapi",
+          "filename": "dependencies-with-yield",
+          "path": "docs/fastapi/tutorial/dependencies/dependencies-with-yield.md",
+          "relative_path": "fastapi/tutorial/dependencies/dependencies-with-yield.md",
+          "chunk_id": "fastapi/tutorial/dependencies/dependencies-with-yield_10538",
+          "citation_id": "fastapi:dependencies-with-yield_10538",
+          "file_type": "md",
+          "title": "Dependencies with yield { #dependencies-with-yield }",
+          "url": "https://fastapi.tiangolo.com/tutorial/dependencies/dependencies-with-yield/"
+        }
+      },
+      {
+        "content": "FastAPI { #fastapi }\ndocs/fastapi/index.md\nfastapi/index.md\nindex\nSection: FastAPI { #fastapi } Section: Example { #example } Section: Run it { #run-it } </div> Section: FastAPI { #fastapi } Section: Example { #example } Section: Run it { #run-it } <details markdown=\"1\"> <summary>About the command <code>fastapi dev</code>...</summary>",
+        "metadata": {
+          "citation_id": "fastapi:index_13236",
+          "title": "FastAPI { #fastapi }",
+          "filename": "index",
+          "relative_path": "fastapi/index.md",
+          "path": "docs/fastapi/index.md",
+          "source": "fastapi",
+          "chunk_id": "fastapi/index_13236",
+          "file_type": "md",
+          "url": "https://fastapi.tiangolo.com/"
+        }
+      },
+      {
+        "content": "files Importing from <font color=\"#75507B\">/home/user/code/</font><font color=\"#AD7FA8\">awesomeapp</font> <span style=\"background-color:#007166\"><font color=\"#D3D7CF\"> module </font></span> 🐍 main.py <span style=\"background-color:#007166\"><font color=\"#D3D7CF\"> code </font></span> Importing the FastAPI app object from the module with the following code:",
+        "metadata": {
+          "source": "fastapi",
+          "filename": "manually",
+          "path": "docs/fastapi/deployment/manually.md",
+          "relative_path": "fastapi/deployment/manually.md",
+          "chunk_id": "fastapi/deployment/manually_682",
+          "citation_id": "fastapi:manually_682",
+          "file_type": "md",
+          "title": "Run a Server Manually { #run-a-server-manually }",
+          "url": "https://fastapi.tiangolo.com/deployment/manually/"
+        }
+      }
+    ]
+  },
+  {
+    "question": "How do OAuth2 flows work in FastAPI security?",
+    "generated_answer": "According to the documentation, OAuth2 flows are specified in the section \"Security\" and then further detailed under \"OAuth2 with Password (and hashing), Bearer with JWT tokens\". In this context, the \"password flow\" is discussed. \n\nIn summary, OAuth2 specifies that when using the password flow, the client/user must send `username` and `password` fields as form data.",
+    "scores": {
+      "faithfulness": 2,
+      "correctness": 5,
+      "relevance": 5,
+      "hallucination": false,
+      "reason": "Faithfulness: The generated answer partially supports the retrieved context, but does not explicitly state how OAuth2 flows work in FastAPI security. Correctness: The generated answer is fully correct and accurately states that FastAPI uses `OAuth2PasswordBearer` to declare an endpoint path where a client can send a username and password to exchange for a JWT token. Relevance: The generated answer directly answers the question."
+    },
+    "retrieved_context": [
+      {
+        "content": "Simple OAuth2 with Password and Bearer { #simple-oauth2-with-password-and-bearer }\ndocs/fastapi/tutorial/security/simple-oauth2.md\nfastapi/tutorial/security/simple-oauth2.md\nsimple-oauth2\n} Section: Simple OAuth2 with Password and Bearer { #simple-oauth2-with-password-and-bearer } Section: Code to get the `username` and `password` { #code-to-get-the-username-and-password } Now let's use the utilities provided by **FastAPI** to handle this. ### `OAuth2PasswordRequestForm` { #oauth2passwordrequestform }",
+        "metadata": {
+          "citation_id": "fastapi:simple-oauth2_1870",
+          "title": "Simple OAuth2 with Password and Bearer { #simple-oauth2-with-password-and-bearer }",
+          "filename": "simple-oauth2",
+          "relative_path": "fastapi/tutorial/security/simple-oauth2.md",
+          "path": "docs/fastapi/tutorial/security/simple-oauth2.md",
+          "source": "fastapi",
+          "chunk_id": "fastapi/tutorial/security/simple-oauth2_1870",
+          "file_type": "md",
+          "url": "https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/"
+        }
+      },
+      {
+        "content": "Security - First Steps { #security-first-steps }\ndocs/fastapi/tutorial/security/first-steps.md\nfastapi/tutorial/security/first-steps.md\nfirst-steps\nyet). * A \"token\" is just a string with some content that we can use later to verify this user. * Normally, a token is set to expire after some time. * So, the user will have to log in again at some point later. * And if the token is stolen, the risk is less. It is not like a permanent key that will work forever (in most of the cases). * The frontend stores that token temporarily somewhere. * The user clicks in the frontend to go to another section of the frontend web app.",
+        "metadata": {
+          "citation_id": "fastapi:first-steps_3602",
+          "title": "Security - First Steps { #security-first-steps }",
+          "filename": "first-steps",
+          "relative_path": "fastapi/tutorial/security/first-steps.md",
+          "path": "docs/fastapi/tutorial/security/first-steps.md",
+          "source": "fastapi",
+          "chunk_id": "fastapi/tutorial/security/first-steps_3602",
+          "file_type": "md",
+          "url": "https://fastapi.tiangolo.com/tutorial/security/first-steps/"
+        }
+      },
+      {
+        "content": "Security { #security }\ndocs/fastapi/tutorial/security/index.md\nfastapi/tutorial/security/index.md\nindex\ntip Section: Security { #security } Section: OAuth2 { #oauth2 } Section: OAuth 1 { #oauth-1 } In the section about **deployment** you will see how to set up HTTPS for free, using Traefik and Let's Encrypt. Section: Security { #security } Section: OAuth2 { #oauth2 } Section: OAuth 1 { #oauth-1 } /// ## OpenID Connect { #openid-connect } Section: Security { #security } Section: OpenID Connect { #openid-connect } OpenID Connect is another specification, based on **OAuth2**.",
+        "metadata": {
+          "citation_id": "fastapi:index_1448",
+          "title": "Security { #security }",
+          "filename": "index",
+          "relative_path": "fastapi/tutorial/security/index.md",
+          "path": "docs/fastapi/tutorial/security/index.md",
+          "source": "fastapi",
+          "chunk_id": "fastapi/tutorial/security/index_1448",
+          "file_type": "md",
+          "url": "https://fastapi.tiangolo.com/tutorial/security/"
+        }
+      },
+      {
+        "content": "} Section: OAuth2 with Password (and hashing), Bearer with JWT tokens { #oauth2-with-password-and-hashing-bearer-with-jwt-tokens } Section: Install `pwdlib` { #install-pwdlib } pwdlib is a great Python package to handle password hashes. Section: OAuth2 with Password (and hashing), Bearer with JWT tokens { #oauth2-with-password-and-hashing-bearer-with-jwt-tokens } Section: Install `pwdlib` { #install-pwdlib } It supports many secure hashing algorithms and utilities to work with them.",
+        "metadata": {
+          "source": "fastapi",
+          "filename": "oauth2-jwt",
+          "path": "docs/fastapi/tutorial/security/oauth2-jwt.md",
+          "relative_path": "fastapi/tutorial/security/oauth2-jwt.md",
+          "chunk_id": "fastapi/tutorial/security/oauth2-jwt_2881",
+          "citation_id": "fastapi:oauth2-jwt_2881",
+          "file_type": "md",
+          "title": "OAuth2 with Password (and hashing), Bearer with JWT tokens { #oauth2-with-password-and-hashing-bearer-with-jwt-tokens }",
+          "url": "https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/"
+        }
+      },
+      {
+        "content": "Simple OAuth2 with Password and Bearer { #simple-oauth2-with-password-and-bearer }\ndocs/fastapi/tutorial/security/simple-oauth2.md\nfastapi/tutorial/security/simple-oauth2.md\nsimple-oauth2\n`password`. Section: Simple OAuth2 with Password and Bearer { #simple-oauth2-with-password-and-bearer } Section: Get the `username` and `password` { #get-the-username-and-password } OAuth2 specifies that when using the \"password flow\" (that we are using) the client/user must send `username` and `password` fields as form data.",
+        "metadata": {
+          "citation_id": "fastapi:simple-oauth2_341",
+          "title": "Simple OAuth2 with Password and Bearer { #simple-oauth2-with-password-and-bearer }",
+          "filename": "simple-oauth2",
+          "relative_path": "fastapi/tutorial/security/simple-oauth2.md",
+          "path": "docs/fastapi/tutorial/security/simple-oauth2.md",
+          "source": "fastapi",
+          "chunk_id": "fastapi/tutorial/security/simple-oauth2_341",
+          "file_type": "md",
+          "url": "https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/"
+        }
+      }
+    ]
+  }
+]

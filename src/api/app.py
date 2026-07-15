@@ -1,12 +1,14 @@
 import sys
 import os
 import json
-from fastapi import FastAPI
+import shutil
+import subprocess
 from fastapi.responses import StreamingResponse
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, UploadFile, File, FastAPI
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+from src.indexing.vector_store import VectorStore
 from src.api.auth_utils import create_access_token
 from src.api.services import rag
 from src.api.models import (
@@ -216,3 +218,55 @@ def delete_account(user_id: int):
     return {
         "success": True,
     }
+
+@app.post("/admin/upload")
+def upload_documents(files: list[UploadFile] = File(...)):
+    # 1. Clean out the temporary document ingestion corpus folder safely
+    if os.path.exists("docs"):
+        try:
+            shutil.rmtree("docs")
+        except PermissionError:
+            pass 
+    os.makedirs("docs", exist_ok=True)
+
+    def event_stream():
+        try:
+            # Save all incoming file streams into the docs staging folder
+            yield f"PROGRESS:10|Saving {len(files)} uploaded folder documents onto server...\n"
+            for file in files:
+                file_path = os.path.join("docs", file.filename)
+                os.makedirs(os.path.dirname(file_path), exist_ok=True)
+                with open(file_path, "wb") as buffer:
+                    shutil.copyfileobj(file.file, buffer)
+
+            # FIXED - Call native internal reset to bypass Windows OS file locks
+            yield "PROGRESS:20|Wiping old analytical indices and collections cleanly...\n"
+            
+            # Reset ChromaDB data internally via the provided VectorStore API method
+            if hasattr(rag, 'store') and rag.store is not None:
+                if hasattr(rag.store, 'reset'):
+                    rag.store.reset()
+            
+            # Build structural text splits 
+            yield "PROGRESS:30|Running structure-aware text chunking splits...\n"
+            subprocess.run([sys.executable, "scripts/build_chunks.py"], check=True)
+            
+            # Compute local embeddings
+            yield "PROGRESS:70|Computing local SentenceTransformer embeddings to ChromaDB...\n"
+            subprocess.run([sys.executable, "scripts/build_index.py"], check=True)
+            
+            # Reload context memory boundaries
+            yield "PROGRESS:100|Refreshing active memory context store instances...\n"
+            from src.indexing.vector_store import VectorStore
+            rag.store = VectorStore()
+            if hasattr(rag, 'retriever') and rag.retriever is not None:
+                rag.retriever.store = rag.store
+            
+            yield f"SUCCESS:Successfully initialized database with {len(files)} context sources!\n"
+            
+        except subprocess.CalledProcessError as e:
+            yield f"ERROR:Pipeline compilation script failed: {str(e)}\n"
+        except Exception as e:
+            yield f"ERROR:Unexpected processing ingestion crash: {str(e)}\n"
+
+    return StreamingResponse(event_stream(), media_type="text/event-stream")

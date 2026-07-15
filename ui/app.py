@@ -1,4 +1,5 @@
 import requests
+import os
 import streamlit as st
 from pathlib import Path
 import json
@@ -10,7 +11,7 @@ st.set_page_config(
     layout="wide",
 )
 
-API = "http://127.0.0.1:8000"
+API = os.getenv("API_URL", "http://localhost:8000")
 
 
 st.markdown("""
@@ -195,14 +196,88 @@ def render_assistant_message(message):
         if sources:
             st.markdown("### :material/Link_2: Sources")
             for source in sources:
-                st.link_button(
-                    label=f":material/docs: {Path(source['document']).name}",
-                    url=source["url"],
-                )  
-
+                url = source["url"]
+                if url.startswith("http"):
+                    st.link_button(
+                        f":material/docs: {Path(source['document']).name}",
+                        url=url,
+                    )
+                else:
+                    st.caption(f":material/Link_2: {url}")
 
 # --- SIDEBAR COMPONENT ---
 with st.sidebar:
+
+    # --- NON-PROFESSIONAL DOCUMENT MANAGER PANEL ---
+    with st.expander(":material/folder_open: Knowledge Base Manager", expanded=False):
+        st.markdown("<small>Drag & drop files or an entire folder here to rebuild the database.</small>", unsafe_allow_html=True)
+        
+        uploaded_files = st.file_uploader(
+            "Choose a document", 
+            type=["md", "txt", "pdf", "json"],
+            accept_multiple_files=True,
+            key="knowledge_base_uploader"
+        )
+        
+        if uploaded_files:
+            if st.button("Wipe & Re-index Database", type="primary", use_container_width=True):
+                
+                # Initialize placeholders for the progress indicators
+                status_text = st.empty()
+                progress_bar = st.progress(0)
+                
+                try:
+                    # Package multiple file buffers into a list format matching multi-form requirements
+                    multipart_form_data = [
+                        ("files", (file.name, file.getvalue(), file.type)) 
+                        for file in uploaded_files
+                    ]
+                    
+                    with requests.post(f"{API}/admin/upload", files=multipart_form_data, stream=True) as response:
+                        for line in response.iter_lines(decode_unicode=True):
+                            if line:
+                                if line.startswith("PROGRESS:"):
+                                    payload = line.replace("PROGRESS:", "")
+                                    percentage_str, message = payload.split("|", 1)
+                                    progress_bar.progress(int(percentage_str))
+                                    status_text.caption(f":material/sync: {message}")
+                                elif line.startswith("SUCCESS:"):
+                                    msg = line.replace("SUCCESS:", "")
+                                    status_text.success(msg)
+                                    progress_bar.empty()
+                                elif line.startswith("ERROR:"):
+                                    msg = line.replace("ERROR:", "")
+                                    status_text.error(msg)
+                                    progress_bar.empty()
+                except Exception as e:
+                    status_text.error(f"Network processing drop: {str(e)}")
+                    progress_bar.empty()
+                                    
+                except Exception as e:
+                    status_text.error(f"Network processing drop: {str(e)}")
+                    progress_bar.empty()
+
+     # --- RETRIEVAL CONFIGURATION PANEL ---
+    with st.expander(":material/settings: Retrieval Controls", expanded=False):
+    
+        # Configurable Top-K Slider
+        top_k_val = st.slider(
+            "Context Count (Top-K)", 
+            min_value=1, 
+            max_value=10, 
+            value=5, 
+            help="Number of document chunks to retrieve for context."
+        )
+        
+        # Document Source Metadata Filter
+        source_filter_val = st.text_input(
+            "Filter by Document/Path", 
+            value="", 
+            placeholder="e.g., fastapi/tutorial",
+            help="Leave empty to search all ingested documentation files."
+        )
+    st.divider()
+
     st.title(":material/chat_bubble: Conversations")
 
     if st.button(":material/add: New Chat", key="new_chat", use_container_width=True):  
@@ -210,82 +285,62 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
 
-    st.divider()
-
-    # --- RETRIEVAL CONFIGURATION PANEL ---
-    st.subheader(":material/settings: Retrieval Controls")
-    
-    # Configurable Top-K Slider
-    top_k_val = st.slider(
-        "Context Count (Top-K)", 
-        min_value=1, 
-        max_value=10, 
-        value=5, 
-        help="Number of document chunks to retrieve for context."
-    )
-    
-    # Document Source Metadata Filter
-    source_filter_val = st.text_input(
-        "Filter by Document/Path", 
-        value="", 
-        placeholder="e.g., fastapi/tutorial",
-        help="Leave empty to search all ingested documentation files."
-    )
-    
-    st.divider()
-
-
-
     response = requests.get(f"{API}/conversations", params={"user_id": st.session_state.user_id})
     if response.status_code != 200:
         st.error(response.text)
         st.stop()
 
-    conversations = response.json()
-    
-    for conv in conversations:
-        col1, col2 = st.columns([8.5, 1.5])
-        with col1:
-            if st.button(
-                conv.get("title", f"Conversation {conv['id']}"),
-                key=f"open_{conv['id']}",
-                use_container_width=True,
-            ):
-                st.session_state.conversation_id = conv["id"]
+    conversations = response.json() 
 
-                # FIXED: Added type-validation safety checks to prevent dict-to-string loops
-                history_response = requests.get(
-                    f"{API}/history/{conv['id']}",
-                    params={"user_id": st.session_state.user_id}
-                )
-                
-                if history_response.status_code == 200:
-                    history_data = history_response.json()
-                    st.session_state.messages = history_data if isinstance(history_data, list) else []
-                else:
-                    st.error(f"Failed to load chat history: {history_response.text}")
-                    st.session_state.messages = []
-                
-                st.rerun()
+    chat_list_container = st.container(height=300, border=False)
 
-        with col2:
-            if st.button(
-                ":material/delete:",
-                key=f"delete_{conv['id']}",
-                type="secondary",
-            ):
-                requests.delete(
-                    f"{API}/conversation/{conv['id']}",
-                    params={"user_id": st.session_state.user_id}
-                )
+    with chat_list_container:
+        for conv in conversations:
+            col1, col2 = st.columns([8.5, 1.5])
+            with col1:
+                if st.button(
+                    conv.get("title", f"Conversation {conv['id']}"),
+                    key=f"open_{conv['id']}",
+                    use_container_width=True,
+                ):
+                    st.session_state.conversation_id = conv["id"]
 
-                if st.session_state.conversation_id == conv["id"]:
-                    st.session_state.conversation_id = None
-                    st.session_state.messages = []
+                    # FIXED: Added type-validation safety checks to prevent dict-to-string loops
+                    history_response = requests.get(
+                        f"{API}/history/{conv['id']}",
+                        params={"user_id": st.session_state.user_id}
+                    )
+                    
+                    if history_response.status_code == 200:
+                        history_data = history_response.json()
+                        st.session_state.messages = history_data if isinstance(history_data, list) else []
+                    else:
+                        st.error(f"Failed to load chat history: {history_response.text}")
+                        st.session_state.messages = []
+                    
+                    st.rerun()
 
-                st.rerun()
+            with col2:
+                if st.button(
+                    ":material/delete:",
+                    key=f"delete_{conv['id']}",
+                    type="secondary",
+                ):
+                    requests.delete(
+                        f"{API}/conversation/{conv['id']}",
+                        params={"user_id": st.session_state.user_id}
+                    )
 
+                    if st.session_state.conversation_id == conv["id"]:
+                        st.session_state.conversation_id = None
+                        st.session_state.messages = []
+
+                    st.rerun()
+
+    st.markdown("<div style='position: relative; bottom: 0; width: 100%;'>", unsafe_allow_html=True)
     st.divider()
+
+
     st.subheader(":material/person: Account")
 
     if st.button("Logout", use_container_width=True):
@@ -312,7 +367,7 @@ with st.sidebar:
                 st.session_state.messages = []
                 st.session_state.show_delete_account = False
                 st.rerun()
-
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # --- MAIN CHAT INTERFACE ---
 # Render historical messages safely (only loops if it's confirmed to be a clean list)

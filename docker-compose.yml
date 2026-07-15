@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+
+    container_name: rag-backend
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - ./data:/app/data
+      - ./docs:/app/docs
+      - ./chroma_db:/app/chroma_db
+
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+
+    container_name: rag-frontend
+
+    depends_on:
+      - backend
+
+    ports:
+      - "8501:8501"
+
+    environment:
+      API_URL: http://backend:8000
+
+    restart: unless-stopped

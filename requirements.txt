@@ -1,9 +1,0 @@
-chromadb
-ollama
-pypdf
-sentence-transformers
-fastapi
-uvicorn
-streamlit
-pyjwt
-bcrypt

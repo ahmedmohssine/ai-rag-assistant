@@ -1,45 +1,108 @@
+import re
 from pathlib import Path
-
 
 class URLBuilder:
 
-    def build(self, source: str, path: str) -> str | None:
-        path = Path(path).as_posix()
+    def build(self, source: str, path: str) -> str:
+        posix_path = Path(path).as_posix()
 
-        if source.lower() == "fastapi":
-            return self._fastapi(path)
+        embedded_url = self._extract_url_from_file(posix_path)
+        if embedded_url:
+            return embedded_url
 
-        if source.lower() == "chromadb":
-            return self._chromadb(path)
+        structural = self._build_structural_url(source, posix_path)
+        if structural:
+            return structural
+
+        return posix_path
+
+    def _extract_url_from_file(self, path: str) -> str | None:
+        """Extract a URL directly from document metadata or HTML."""
+
+        try:
+            p = Path(path)
+
+            if not p.is_file():
+                return None
+
+            # Read only the beginning of the file (where frontmatter usually lives)
+            with open(p, "r", encoding="utf-8", errors="ignore") as f:
+                content_sample = "".join(f.readline() for _ in range(40))
+
+            patterns = [
+                # YAML frontmatter
+                r'^\s*url:\s*["\']?(https?://[^\s"\']+)["\']?',
+                r'^\s*link:\s*["\']?(https?://[^\s"\']+)["\']?',
+                r'^\s*canonical:\s*["\']?(https?://[^\s"\']+)["\']?',
+                r'^\s*permalink:\s*["\']?(https?://[^\s"\']+)["\']?',
+
+                # HTML
+                r'<link\s+rel=["\']canonical["\']\s+href=["\'](https?://[^"\']+)["\']',
+
+                # OpenGraph
+                r'property=["\']og:url["\']\s+content=["\'](https?://[^"\']+)["\']',
+            ]
+
+            for pattern in patterns:
+                match = re.search(
+                    pattern,
+                    content_sample,
+                    re.MULTILINE | re.IGNORECASE,
+                )
+                if match:
+                    return match.group(1).strip()
+
+        except Exception:
+            pass
 
         return None
-
-    def _fastapi(self, path: str) -> str | None:
-        if "docs/fastapi/" not in path:
+    def _build_structural_url(self, source: str, path: str) -> str | None:
+        if not source or not path:
             return None
 
-        relative = path.split("docs/fastapi/", 1)[1]
-        relative = relative.removesuffix(".md")
+        path = Path(path).as_posix()
+        lower = path.lower()
+        source = source.lower()
 
-        if relative == "index":
-            return "https://fastapi.tiangolo.com/"
+        # ---------------- FASTAPI ----------------
+        if source == "fastapi":
 
-        if relative.endswith("/index"):
-            relative = relative[:-6]
+            marker = "docs/fastapi/docs/"
 
-        return f"https://fastapi.tiangolo.com/{relative}/"
+            if marker not in lower:
+                return None
 
-    def _chromadb(self, path: str) -> str | None:
-        if "docs/chromadb/" not in path:
-            return None
+            route = path[lower.index(marker) + len(marker):]
 
-        relative = path.split("docs/chromadb/", 1)[1]
-        relative = relative.removesuffix(".md")
+            route = re.sub(r"\.(md|mdx)$", "", route)
 
-        if relative == "index":
-            return "https://docs.trychroma.com/"
+            if route.endswith("/index"):
+                route = route[:-6]
 
-        if relative.endswith("/index"):
-            relative = relative[:-6]
+            route = route.strip("/")
 
-        return f"https://docs.trychroma.com/{relative}/"
+            return f"https://fastapi.tiangolo.com/{route}/"
+        
+        
+           # ---------------- Chroma ----------------
+        if source == "chromadb" or source == "chroma":
+
+            marker = "docs/chromadb/docs/mintlify/"
+
+            if marker not in lower:
+                return None
+
+            route = path[lower.index(marker) + len(marker):]
+
+            route = re.sub(r"\.(md|mdx)$", "", route)
+
+            if route.endswith("/index"):
+                route = route[:-6]
+
+            route = route.strip("/")
+
+            return f"https://docs.trychroma.com/{route}/"
+
+
+
+        return None

@@ -13,7 +13,6 @@ The project is designed as a production-style RAG pipeline with evaluation tools
 - Markdown (.md, .mdx)
 - Text (.txt)
 - reStructuredText (.rst)
-- CSV
 - JSON / JSONL
 - PDF
 

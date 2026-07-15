@@ -7,6 +7,8 @@ from src.models.document import Document
 SKIP_FILES = {
     "AGENTS.md",
     "CLAUDE.md",
+    "docs.json",
+    "mint.json",
 }
 
 SUPPORTED_EXTENSIONS = {
@@ -14,7 +16,6 @@ SUPPORTED_EXTENSIONS = {
     ".mdx",
     ".txt",
     ".rst",
-    ".csv",
     ".json",
     ".jsonl",
     ".pdf",

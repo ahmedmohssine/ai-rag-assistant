@@ -8,7 +8,18 @@ from fastapi import HTTPException, status, UploadFile, File, FastAPI
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from src.indexing.vector_store import VectorStore
+try:
+    from scripts.build_index import main as run_indexing_pipeline
+except ImportError:
+    try:
+        # FIXED: Look for a flat root or sub-module fallback inside Docker path structures
+        import sys
+        if "/app" not in sys.path:
+            sys.path.append("/app")
+        from scripts.build_index import build_index as run_indexing_pipeline
+    except ImportError:
+        run_indexing_pipeline = None
+
 from src.api.auth_utils import create_access_token
 from src.api.services import rag
 from src.api.models import (
@@ -29,6 +40,7 @@ from src.api.database import (
     verify_user,
     delete_user,
     verify_conversation_owner,
+    get_all_feedback_report,
 )
 
 app = FastAPI(
@@ -130,9 +142,18 @@ def chat(request: ChatRequest):
 
     def stream_response():
         full_answer = ""
-        for chunk in rag.generator.generate_stream(request.question, context):
-            full_answer += chunk
-            yield chunk
+
+        try:
+            for chunk in rag.generator.generate_stream(request.question, context):
+                full_answer += chunk
+                yield chunk
+
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+
+            yield f"\n\n[ERROR] {str(e)}"
+            return
 
         assistant_message_id = add_message(
             conversation_id,
@@ -146,10 +167,10 @@ def chat(request: ChatRequest):
             "conversation_id": conversation_id,
             "assistant_message_id": assistant_message_id,
             "confidence": results["confidence"],
-            "sources": sources
+            "sources": sources,
         }
-        yield f"\n__METADATA__:{json.dumps(metadata_payload)}"
 
+        yield f"\n__METADATA__:{json.dumps(metadata_payload)}"
     return StreamingResponse(stream_response(), media_type="text/plain")
 
 @app.post("/feedback")
@@ -168,6 +189,17 @@ def feedback(request: FeedbackRequest):
         comment=request.comment,
     )
     return {"success": True}
+
+@app.get("/admin/feedback")
+def admin_feedback_report(email: str):
+    # FIXED: Check the email address string directly instead of user_id integer
+    if email.strip().lower() != "admin@gmail.com":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access Denied: Only administration accounts can view the analytics dashboard."
+        )
+        
+    return get_all_feedback_report()
 
 @app.post("/register")
 def register(request: RegisterRequest):
@@ -221,7 +253,7 @@ def delete_account(user_id: int):
 
 @app.post("/admin/upload")
 def upload_documents(files: list[UploadFile] = File(...)):
-    # 1. Clean out the temporary document ingestion corpus folder safely
+    # Clean out the temporary document ingestion corpus folder safely
     if os.path.exists("docs"):
         try:
             shutil.rmtree("docs")
@@ -270,3 +302,4 @@ def upload_documents(files: list[UploadFile] = File(...)):
             yield f"ERROR:Unexpected processing ingestion crash: {str(e)}\n"
 
     return StreamingResponse(event_stream(), media_type="text/event-stream")
+

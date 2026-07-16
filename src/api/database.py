@@ -14,9 +14,19 @@ def get_connection():
 def initialize_database():
     conn = get_connection()
 
+    # Migration for messages table
     try:
         conn.execute("""
         ALTER TABLE messages
+        ADD COLUMN sources TEXT
+        """)
+    except sqlite3.OperationalError:
+        pass
+
+    # NEW MIGRATION: Add sources column to feedback table if it doesn't exist yet
+    try:
+        conn.execute("""
+        ALTER TABLE feedback
         ADD COLUMN sources TEXT
         """)
     except sqlite3.OperationalError:
@@ -73,6 +83,7 @@ def initialize_database():
 
     conn.commit()
     conn.close()
+
 
 
 def create_conversation(title: str = "New Conversation",user_id: int = None):
@@ -348,3 +359,34 @@ def delete_user(user_id: int):
     conn.close()
 
 
+def get_all_feedback_report() -> list[dict]:
+    """Retrieves all submitted user feedback records with corresponding chat messages context."""
+    conn = get_connection()
+    
+    # We select the feedback properties, join the specific assistant message, 
+    # and find the closest preceding user question from the same conversation.
+    rows = conn.execute("""
+        SELECT 
+            f.id as feedback_id,
+            f.conversation_id,
+            f.message_id,
+            f.rating,
+            f.comment,
+            f.created_at,
+            m.content as assistant_answer,
+            (
+                SELECT content 
+                FROM messages 
+                WHERE conversation_id = f.conversation_id 
+                  AND role = 'user' 
+                  AND id < f.message_id 
+                ORDER BY id DESC 
+                LIMIT 1
+            ) as user_question
+        FROM feedback f
+        JOIN messages m ON f.message_id = m.id
+        ORDER BY f.created_at DESC
+    """).fetchall()
+    
+    conn.close()
+    return [dict(row) for row in rows]

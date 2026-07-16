@@ -1,4 +1,6 @@
-from ollama import chat
+from ollama import Client
+
+client = Client(host="http://host.docker.internal:11434")
 
 from src.generation.prompt_builder import build_rag_prompt
 
@@ -17,19 +19,28 @@ class Generator:
     def generate_stream(self, question: str, context: str):
         prompt = build_rag_prompt(question, context)
 
-        stream = chat(
-            model="llama3.2:3b",
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt,
-                }
-            ],
-            stream=True,
-        )
+        try:
+            stream = client.chat(
+                model="llama3.2:3b",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": prompt,
+                    }
+                ],
+                stream=True,
+            )
 
-        for chunk in stream:
-            yield chunk["message"]["content"]
+            for chunk in stream:
+                print("OLLAMA CHUNK:", chunk)
+
+                if "message" in chunk and "content" in chunk["message"]:
+                    yield chunk["message"]["content"]
+
+        except Exception:
+            import traceback
+            traceback.print_exc()
+            raise
 
     def generate_title(self, question: str) -> str:
         """Generates a concise 2-4 word conversation title from a question using LLM."""
@@ -46,7 +57,7 @@ class Generator:
         )
 
         try:
-            response = chat(
+            response = client.chat(
                 model="llama3.2:3b",
                 messages=[
                     {
@@ -92,7 +103,7 @@ class Generator:
         )
 
         try:
-            response = chat(
+            response = client.chat(
                 model="llama3.2:3b",
                 messages=[
                     {

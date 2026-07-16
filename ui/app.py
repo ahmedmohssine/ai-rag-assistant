@@ -36,24 +36,28 @@ def sync_browser_to_url():
     <script>
         const token = localStorage.getItem('rag_auth_token');
         const userId = localStorage.getItem('rag_user_id');
+        const userEmail = localStorage.getItem('rag_user_email');
         const urlParams = new URLSearchParams(window.location.search);
         
-        // If localStorage has data but the URL doesn't, inject them into the URL and reload
-        if (token && userId && !urlParams.has('token')) {
+        // FIXED: If browser memory has data, but the URL is missing ANY of the parameters,
+        // inject them all into the address bar and reload the workspace cleanly.
+        if (token && userId && userEmail && (!urlParams.has('token') || !urlParams.has('user_id') || !urlParams.has('email'))) {
             urlParams.set('token', token);
             urlParams.set('user_id', userId);
+            urlParams.set('email', userEmail);
             window.location.search = urlParams.toString();
         }
     </script>
     """
     st.components.v1.html(js_code, height=0, width=0)
 
-def save_browser_session(token, user_id):
+def save_browser_session(token, user_id, email):
     """Saves session info into permanent browser storage."""
     js_code = f"""
     <script>
         localStorage.setItem('rag_auth_token', '{token}');
         localStorage.setItem('rag_user_id', '{user_id}');
+        localStorage.setItem('rag_user_email', '{email}'); // NEW
     </script>
     """
     st.components.v1.html(js_code, height=0, width=0)
@@ -64,9 +68,11 @@ def clear_browser_session():
     <script>
         localStorage.removeItem('rag_auth_token');
         localStorage.removeItem('rag_user_id');
+        localStorage.removeItem('rag_user_email'); // NEW
     </script>
     """
     st.components.v1.html(js_code, height=0, width=0)
+
 
 
 # Check URL params on refresh BEFORE rendering the login page
@@ -76,14 +82,19 @@ if "logged_in" not in st.session_state:
 if "user_id" not in st.session_state:
     st.session_state.user_id = None
 
-# If the URL contains the session parameters, auto-login the Python state!
-if not st.session_state.logged_in and "token" in st.query_params and "user_id" in st.query_params:
+if "user_email" not in st.session_state:
+    st.session_state.user_email = None
+
+# FIXED: Catch the incoming email from the address bar on page reload!
+if not st.session_state.logged_in and "token" in st.query_params and "user_id" in st.query_params and "email" in st.query_params:
     st.session_state.logged_in = True
     st.session_state.user_id = int(st.query_params["user_id"])
+    st.session_state.user_email = str(st.query_params["email"]).strip().lower()
 
 # If Python still doesn't know, trigger the JS scanner to check browser memory
 if not st.session_state.logged_in:
     sync_browser_to_url()
+
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -101,7 +112,7 @@ if not st.session_state.logged_in:
         email = st.text_input("Email", key="login_email")
         password = st.text_input("Password", type="password", key="login_password")
 
-        if st.button("Login"):
+        if st.button("Login", key="main_login_submit_btn"):
             response = requests.post(
                 f"{API}/login",
                 json={"email": email, "password": password},
@@ -110,13 +121,15 @@ if not st.session_state.logged_in:
             if response["success"]:
                 st.session_state.logged_in = True
                 st.session_state.user_id = response["user_id"]
-                
+                st.session_state.user_email = email.strip().lower()
                 # Push into permanent browser memory
-                save_browser_session(response["token"], str(response["user_id"]))
-                
+                # After (Line 126)
+                save_browser_session(response["token"], str(response["user_id"]), email.strip().lower())
+
                 # Update the URL bar immediately so it stays persistent on next refresh
                 st.query_params["token"] = response["token"]
                 st.query_params["user_id"] = str(response["user_id"])
+                st.query_params["email"] = email.strip().lower()
                 
                 st.rerun()
             else:
@@ -194,7 +207,7 @@ def render_assistant_message(message):
                 st.write(f"{confidence:.2f}")
 
         if sources:
-            st.markdown("### :material/Link_2: Sources")
+            st.markdown("### :material/Link: Sources")
             for source in sources:
                 url = source["url"]
                 if url.startswith("http"):
@@ -339,9 +352,15 @@ with st.sidebar:
 
     st.markdown("<div style='position: relative; bottom: 0; width: 100%;'>", unsafe_allow_html=True)
     st.divider()
-
-
     st.subheader(":material/person: Account")
+
+    if st.session_state.get("user_email") == "admin@gmail.com":
+        if st.checkbox(":material/dashboard: Open Feedback Dashboard", key="admin_dashboard_toggle_checkbox"):
+            st.session_state.viewing_admin = True
+        else:
+            st.session_state.viewing_admin = False
+    else:
+        st.session_state.viewing_admin = False
 
     if st.button("Logout", use_container_width=True):
         clear_browser_session()
@@ -370,6 +389,52 @@ with st.sidebar:
     st.markdown("</div>", unsafe_allow_html=True)
 
 # --- MAIN CHAT INTERFACE ---
+if st.session_state.get("viewing_admin", False):
+# --- MAIN WORKSPACE ROUTING LAYOUT ---
+    if st.session_state.get("viewing_admin", False):
+        st.title(":material/analytics: User Feedback & Quality Dashboard")
+        st.markdown("Review system alignment, track low-quality generation reports, and read user comments.")
+        
+        # FIXED: Changed params from 'user_id' to 'email' matching your backend router rewrite
+        feedback_res = requests.get(f"{API}/admin/feedback", params={"email": st.session_state.user_email})
+    
+    if feedback_res.status_code == 200:
+        reports = feedback_res.json()
+        
+        if not reports:
+            st.info("No feedback metrics have been logged by active users yet.")
+        else:
+            # Compute baseline metrics summaries
+            likes = sum(1 for r in reports if r["rating"] == "up")
+            dislikes = sum(1 for r in reports if r["rating"] == "down")
+            total = len(reports)
+            ratio = (likes / total) if total else 0
+            
+            # Render a summary layout
+            m1, m2, m3 = st.columns(3)
+            m1.metric("Total Submissions", total)
+            m2.metric("Thumbs Up (Likes)", likes)
+            m3.metric("Approval Rating Ratio", f"{ratio:.1%}")
+            
+            st.divider()
+            
+            # Loop through and draw cards for every logged element
+            for item in reports:
+                # Assign icodns based on value strings
+                rating_icon = ":material/thumb_up:" if item["rating"] == "up" else ":material/thumb_down:"
+                card_color = "🟢" if item["rating"] == "up" else "🔴"
+                
+                with st.expander(f"{card_color} Feedback #{item['feedback_id']} - Chat ID: {item['conversation_id']} ({item['created_at']})"):
+                    st.markdown(f"**User Question:**\n>{item.get('user_question') or '*No leading text prompt extracted*'}")
+                    st.markdown(f"**Assistant Generation:**\n{item['assistant_answer']}")
+                    
+                    if item.get("comment"):
+                        st.warning(f"**User Written Comments:**\n{item['comment']}")
+    else:
+        st.error(f"Failed to fetch administrative reports: {feedback_res.text}")
+    
+    st.stop() # Prevents default chat strings loop layout from drawing underneath
+
 # Render historical messages safely (only loops if it's confirmed to be a clean list)
 if isinstance(st.session_state.get("messages"), list):
     for msg in st.session_state.messages:
@@ -400,7 +465,7 @@ if prompt := st.chat_input("Ask something about the documentation..."):
             first_chunk = next(stream_iterator, None)
 
         def chunk_generator():
-            # FIXED: Safely parse JSON metadata immediately if it drops inside the first_chunk
+            # FIXED: Safely parse metadata string into a dictionary if it arrives in the first chunk
             if first_chunk:
                 if "__METADATA__:" in first_chunk:
                     parts = first_chunk.split("__METADATA__:")

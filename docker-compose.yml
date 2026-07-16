@@ -1,37 +1,44 @@
-version: "3.9"
+# FIXED: Removed the obsolete version attribute string to clear terminal console warnings
 
 services:
   backend:
     build:
       context: .
       dockerfile: Dockerfile.backend
-
     container_name: rag-backend
-
     ports:
       - "8000:8000"
-
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./data:/app/data
       - ./docs:/app/docs
-      - ./chroma_db:/app/chroma_db
-
+    networks:
+      - rag-network
     restart: unless-stopped
+    # FIXED: Replaced external curl execution with an inline native Python internal health tracker
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/conversations?user_id=1', timeout=5)"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 5s
 
   frontend:
     build:
       context: .
       dockerfile: Dockerfile.frontend
-
     container_name: rag-frontend
-
-    depends_on:
-      - backend
-
     ports:
       - "8501:8501"
-
     environment:
       API_URL: http://backend:8000
-
+    networks:
+      - rag-network
     restart: unless-stopped
+    depends_on:
+        - backend
+
+networks:
+  rag-network:
+    driver: bridge

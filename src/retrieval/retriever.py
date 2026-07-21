@@ -47,8 +47,7 @@ class Retriever:
         vector_results = self.store.search(query_embedding, max(vector_k, 80))
         vector_results = self._filter_vector_results(vector_results)
 
-        # BM25 catches exact names and keywords, e.g. FastAPI, APIRouter,
-        # OpenAPI, first-steps, and route.
+        # BM25 catches exact names and keywords, e.g. FastAPI, APIRouter, OpenAPI, first-steps, and route.
         bm25_results = self.bm25_index.search(question, max(bm25_k, 80))
         bm25_results = self._filter_bm25_results(bm25_results)
         candidates = self._merge_results(vector_results, bm25_results)

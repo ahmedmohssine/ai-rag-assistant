@@ -103,7 +103,6 @@ def evaluate(
 
         start = time.perf_counter()
 
-        # FIXED: Reverted to pass the raw question string directly
         results = retriever.retrieve(question, top_k=top_k)
 
         retrieval_time_total += time.perf_counter() - start
@@ -151,9 +150,26 @@ def evaluate(
             json.dump(judge_results, f, indent=2, ensure_ascii=False)
 
         document_rank = None
+        def normalize_path(path: str) -> str:
+            if not path:
+                return ""
+
+            path = path.replace("\\", "/")
+            path = path.lower()
+
+            # remove duplicated docs folder
+            path = path.replace("docs/fastapi/docs/", "docs/fastapi/")
+
+            return path
+
+
+        expected = {normalize_path(p) for p in expected_documents}
+        acceptable = {normalize_path(p) for p in acceptable_documents}
+
         for index, metadata in enumerate(result_metadatas, start=1):
-            path = metadata.get("path") if metadata else None
-            if path and (path in expected_documents or path in acceptable_documents):
+            path = normalize_path(metadata.get("path"))
+
+            if path in expected or path in acceptable:
                 document_rank = index
                 break
 
@@ -297,4 +313,5 @@ def main() -> None:
 
     print(report)
 
-main()
+if __name__ == "__main__":
+    main()

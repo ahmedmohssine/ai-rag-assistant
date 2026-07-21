@@ -1,7 +1,7 @@
 fastapi==0.116.1
 uvicorn[standard]==0.35.0
 
-chromadb==1.0.15
+chromadb==1.5.9
 ollama==0.5.3
 pypdf==6.0.0
 

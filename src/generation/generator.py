@@ -1,7 +1,8 @@
+import os
 from ollama import Client
 
-client = Client(host="http://host.docker.internal:11434")
-
+OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
+client = Client(host=OLLAMA_HOST)
 from src.generation.prompt_builder import build_rag_prompt
 
 

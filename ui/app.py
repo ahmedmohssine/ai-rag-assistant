@@ -85,7 +85,6 @@ if "user_id" not in st.session_state:
 if "user_email" not in st.session_state:
     st.session_state.user_email = None
 
-# FIXED: Catch the incoming email from the address bar on page reload!
 if not st.session_state.logged_in and "token" in st.query_params and "user_id" in st.query_params and "email" in st.query_params:
     st.session_state.logged_in = True
     st.session_state.user_id = int(st.query_params["user_id"])
@@ -123,7 +122,6 @@ if not st.session_state.logged_in:
                 st.session_state.user_id = response["user_id"]
                 st.session_state.user_email = email.strip().lower()
                 # Push into permanent browser memory
-                # After (Line 126)
                 save_browser_session(response["token"], str(response["user_id"]), email.strip().lower())
 
                 # Update the URL bar immediately so it stays persistent on next refresh
@@ -318,7 +316,6 @@ with st.sidebar:
                 ):
                     st.session_state.conversation_id = conv["id"]
 
-                    # FIXED: Added type-validation safety checks to prevent dict-to-string loops
                     history_response = requests.get(
                         f"{API}/history/{conv['id']}",
                         params={"user_id": st.session_state.user_id}
@@ -359,6 +356,67 @@ with st.sidebar:
             st.session_state.viewing_admin = True
         else:
             st.session_state.viewing_admin = False
+        
+        if st.button(":material/analytics: Print Evaluation", use_container_width=True):
+
+            with st.spinner("Running evaluation..."):
+
+                response = requests.post(
+                    f"{API}/admin/eval",
+                    params={
+                        "email": st.session_state.user_email
+                    }
+                )
+
+                if response.status_code == 200:
+                    st.session_state.eval_results = response.json()
+                else:
+                    st.error(response.text)
+        if "eval_results" in st.session_state:
+
+            report = st.session_state.eval_results
+            metrics = report["metrics"]
+            st.header("Evaluation Results")
+
+            # ---------------- Retrieval ----------------
+
+            st.subheader("Retrieval")
+
+            r1, r2, r3, r4 = st.columns(4)
+
+            r1.metric("Recall@1", f"{metrics['document_recall@1']:.1%}")
+            r2.metric("Recall@3", f"{metrics['document_recall@3']:.1%}")
+            r3.metric("Recall@5", f"{metrics['document_recall@5']:.1%}")
+            r4.metric("MRR", f"{metrics['document_mrr']:.3f}")
+
+            st.divider()
+
+            # ---------------- LLM Judge ----------------
+
+            st.subheader("LLM Judge")
+
+            j1, j2, j3, j4 = st.columns(4)
+
+            j1.metric("Faithfulness", f"{metrics['faithfulness']:.2f}/5")
+            j2.metric("Correctness", f"{metrics['correctness']:.2f}/5")
+            j3.metric("Relevance", f"{metrics['relevance']:.2f}/5")
+            j4.metric("Hallucination", f"{metrics['hallucination_rate']:.1%}")
+
+            st.divider()
+
+            # ---------------- Timing ----------------
+
+            t1, t2 = st.columns(2)
+
+            t1.metric(
+                "Average Retrieval Time",
+                f"{metrics['average_retrieval_time']:.3f}s"
+            )
+
+            t2.metric(
+                "Average Generation Time",
+                f"{metrics['average_generation_time']:.3f}s"
+            )
     else:
         st.session_state.viewing_admin = False
 
@@ -395,7 +453,6 @@ if st.session_state.get("viewing_admin", False):
         st.title(":material/analytics: User Feedback & Quality Dashboard")
         st.markdown("Review system alignment, track low-quality generation reports, and read user comments.")
         
-        # FIXED: Changed params from 'user_id' to 'email' matching your backend router rewrite
         feedback_res = requests.get(f"{API}/admin/feedback", params={"email": st.session_state.user_email})
     
     if feedback_res.status_code == 200:
@@ -465,7 +522,6 @@ if prompt := st.chat_input("Ask something about the documentation..."):
             first_chunk = next(stream_iterator, None)
 
         def chunk_generator():
-            # FIXED: Safely parse metadata string into a dictionary if it arrives in the first chunk
             if first_chunk:
                 if "__METADATA__:" in first_chunk:
                     parts = first_chunk.split("__METADATA__:")
@@ -500,7 +556,6 @@ if prompt := st.chat_input("Ask something about the documentation..."):
         if st.session_state.conversation_id is None:
             st.session_state.conversation_id = meta.get("conversation_id")
             
-    # FIXED: Check the backend response code before assigning history lists
     history_response = requests.get(
         f"{API}/history/{st.session_state.conversation_id}",
         params={"user_id": st.session_state.user_id}

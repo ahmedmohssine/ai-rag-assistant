@@ -11,9 +11,6 @@ API_TOKENS = {
     "jsonschema": "jsonschema",
 }
 
-# Metadata fields are stronger signals than raw body text.
-# Example: if a file is named "first-steps", it is very likely relevant
-# to a query like "How do I start with FastAPI?" even before reading content.
 FIELD_WEIGHTS = {
     "title": 5,
     "filename": 5,

@@ -171,11 +171,24 @@ Features:
 
 ---
 
+## 🐳 Docker Support
+
+The application can be run either natively or through Docker Compose.
+
+Containers include:
+
+- FastAPI backend
+- Streamlit frontend
+- Shared persistent ChromaDB storage
+- Connects to a local Ollama instance running on the host machine
+
+---
+
 # Architecture
 
 ```text
                   Documents
- (.md .pdf .json .csv .txt .rst ...)
+ (.md .pdf .json .txt .rst ...)
                      │
                      ▼
              Document Reader
@@ -209,14 +222,18 @@ Features:
             Prompt Builder
                      │
                      ▼
-         Ollama (Llama 3.2)
+          Ollama (Host Machine)
                      │
                      ▼
               Generated Answer
                      │
           ┌──────────┴──────────┐
           ▼                     ▼
-     FastAPI API          Streamlit UI
+        FastAPI            Streamlit
+          │                     │
+          └──────────┬──────────┘
+                     ▼
+             Docker Compose
 ```
 
 ---
@@ -273,30 +290,33 @@ ai-rag-assistant/
 
 ---
 
-## Before Installation
+# Before Installation
 
-Important: The repository includes the FastAPI documentation corpus used for development and evaluation.
+The repository includes the FastAPI and ChromaDB documentation corpora used for development and evaluation.
 
-Before building the index, delete everything inside the docs/ folder and add your own documentation files (Markdown, PDF, JSON, TXT, etc.).
+If you want to use your own knowledge base:
+
+1. Remove the sample documentation under `docs/`.
+2. Add your own documentation (Markdown, PDF, JSON, TXT, RST, etc.).
+3. Rebuild the chunks and vector index before starting the application.
 
 Example:
-```
-Delete
 
-docs/fastapi/
+```text
+Remove
 
-docs/chromadb/
+docs/FastAPI/
+docs/ChromaDB/
 
-Add your own corpus
+Add
 
 docs/my_docs/
-
 docs/product_docs/
-
 docs/company_docs/
-
-Then run the indexing pipeline normally.
 ```
+
+---
+
 # Installation
 
 Clone the repository:
@@ -306,97 +326,160 @@ git clone https://github.com/<your-username>/ai-rag-assistant.git
 cd ai-rag-assistant
 ```
 
-Create and activate a virtual environment:
-
-```bash
-python -m venv .venv
-```
-
-Windows
-
-```bash
-.venv\Scripts\activate
-```
-
-Linux / macOS
-
-```bash
-source .venv/bin/activate
-```
-
-Install the dependencies:
-
-```bash
-pip install -r requirements.txt
-```
 ---
 
 # Install Ollama
+
+Install Ollama from https://ollama.com/download
+
+Then download the model used by the project:
 
 ```bash
 ollama pull llama3.2:3b
 ```
 
+Verify it is available:
+
+```bash
+ollama list
+```
+
+---
+
+# Docker (Recommended)
+
+Build the application:
+
+```bash
+docker compose build
+```
+
+Start all services:
+
+```bash
+docker compose up
+```
+
+Or run in detached mode:
+
+```bash
+docker compose up -d
+```
+
+The Docker setup starts:
+
+- FastAPI backend
+- Streamlit frontend
+
+Ollama runs on the host machine and is accessed from the containers through `host.docker.internal`.
+
 ---
 
 # Build the Index
 
-```bash
-python scripts/build_chunks.py
+Whenever you change the documentation corpus, rebuild the chunks and embeddings.
 
-python scripts/build_index.py
+Inside the backend container:
+
+```bash
+docker compose exec backend python scripts/build_chunks.py
+docker compose exec backend python scripts/build_index.py
 ```
 
 ---
 
-# Run CLI Search (optional)
+# CLI Search (Optional)
 
 ```bash
-python scripts/search.py
+docker compose exec backend python scripts/search.py
 ```
 
 ---
 
-# Run FastAPI
+# API
 
-To prevent database update logs from triggering full server reloads, lock the uvicorn monitoring watcher scope to your source codebase folder:
+FastAPI Swagger UI:
 
+```
+http://localhost:8000/docs
+```
+
+---
+
+# Web Interface
+
+Streamlit:
+
+```
+http://localhost:8501
+```
+
+---
+
+# Evaluation
+
+Run the complete retrieval and generation benchmark:
+
+```bash
+docker compose exec backend python scripts/eval.py
+```
+
+The evaluation automatically generates:
+
+- `evaluation_report.json`
+- `retrieval_failures.json`
+- `generation_failures.json`
+- `worst_judged_answers.json`
+
+---
+
+# Unit Tests
+
+```bash
+docker compose exec backend python -m unittest discover -s tests
+```
+
+---
+
+# Running Without Docker (Optional)
+
+If you prefer running everything locally:
+
+Create a virtual environment:
+
+```bash
+python -m venv .venv
+```
+
+Windows:
+
+```bash
+.venv\Scripts\activate
+```
+
+Linux/macOS:
+
+```bash
+source .venv/bin/activate
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Start the backend:
 
 ```bash
 python -m uvicorn src.api.app:app --reload --reload-dir src
 ```
 
-Swagger documentation:
-
-```
-http://127.0.0.1:8000/docs
-```
-
----
-
-# Run Streamlit
+Start the frontend:
 
 ```bash
 streamlit run ui/app.py
 ```
-
----
-
-# Evaluation (takes about 20-30 min related to your Q/A)
-
-Run retrieval + generation evaluation:
-
-```bash
-python scripts/eval.py
-```
-
-Run retriever tests:
-
-```bash
-python -m unittest discover -s tests
-```
-
----
 
 # Current Results
 
@@ -446,11 +529,10 @@ python -m unittest discover -s tests
 - ✅ Secure Client Persistence: Native cross-messaging browser injection
 - ✅ **Strict Per-User Data Separation & Verification Isolation**
 - ✅ Configurable Sidebar UI panel: Dynamic **Top-K Context counts** and **Path Filtering keyword matchers**
----
-
-# In Progress
-
-- 🚧 Deployment
+- ✅ Dockerized backend
+- ✅ Dockerized Streamlit frontend
+- ✅ Docker Compose orchestration
+- ✅ Local Ollama integration from Docker containers
 ---
 
 # Tech Stack
@@ -468,13 +550,41 @@ python -m unittest discover -s tests
 - Ollama
 - Llama 3.2
 - PyPDF
+- Docker
+- Docker Compose
 
 ---
 
 # Roadmap
 
+## User Experience
+- Automatic Ollama installation detection
+- Automatic model detection (`llama3.2:3b`)
+- One-click model download if missing
+- Automatic Docker startup verification
+- Automatic browser launch after startup
+- Native desktop launcher (Windows)
+
+## Deployment
+- Docker multi-container orchestration
+- One-click installer (Windows)
+- Standalone desktop application
+- Automatic application updates
+
+## Authentication & Users
 - Google OAuth login
-- Docker Multi-Container orchestration
 - Per-user metadata workspace separation
-- Desktop wrapper assembly
+- User roles & administration panel
+
+## Document Support
 - Additional file connector parsing modules
+- Microsoft Office documents (.docx, .pptx, .xlsx)
+- HTML website ingestion
+- ZIP archive ingestion
+
+## Monitoring & Evaluation
+- Evaluation dashboard
+- Retrieval performance visualization
+- Feedback analytics
+- Conversation analytics
+- Exportable evaluation reports

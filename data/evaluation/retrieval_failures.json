@@ -1,15 +1,54 @@
 [
   {
-    "question": "How do dependencies work in FastAPI applications?",
+    "question": "What is FastAPI and why is it used for building Python APIs?",
     "expected_documents": [
-      "docs/fastapi/tutorial/dependencies/index.md"
+      "docs/fastapi/docs/docs/reference/fastapi.md"
     ],
     "retrieved_documents": [
-      "docs/fastapi/tutorial/bigger-applications.md",
-      "docs/fastapi/tutorial/bigger-applications.md",
-      "docs/fastapi/tutorial/bigger-applications.md",
-      "docs/fastapi/tutorial/bigger-applications.md",
-      "docs/fastapi/tutorial/bigger-applications.md"
+      "docs/fastapi/docs/tutorial/first-steps.md",
+      "docs/fastapi/docs/tutorial/dependencies/classes-as-dependencies.md",
+      "docs/fastapi/docs/tutorial/dependencies/index.md",
+      "docs/fastapi/docs/mintlify/reference/python/collection.mdx",
+      "docs/fastapi/docs/mintlify/reference/python/client.mdx"
+    ]
+  },
+  {
+    "question": "How do you install FastAPI in a Python environment?",
+    "expected_documents": [
+      "docs/fastapi/docs/docs/tutorial/index.md"
+    ],
+    "retrieved_documents": [
+      "docs/fastapi/docs/index.md",
+      "docs/fastapi/docs/virtual-environments.md",
+      "docs/fastapi/docs/environment-variables.md",
+      "docs/fastapi/docs/tutorial/first-steps.md",
+      "docs/fastapi/docs/tutorial/index.md"
+    ]
+  },
+  {
+    "question": "How do you create your first FastAPI application?",
+    "expected_documents": [
+      "docs/fastapi/docs/docs/tutorial/first-steps.md"
+    ],
+    "retrieved_documents": [
+      "docs/fastapi/docs/tutorial/first-steps.md",
+      "docs/fastapi/docs/tutorial/security/first-steps.md",
+      "docs/fastapi/docs/tutorial/first-steps.md",
+      "docs/fastapi/docs/tutorial/first-steps.md",
+      "docs/fastapi/docs/tutorial/first-steps.md"
+    ]
+  },
+  {
+    "question": "How do dependencies work in FastAPI applications?",
+    "expected_documents": [
+      "docs/fastapi/docs/tutorial/dependencies/index.md"
+    ],
+    "retrieved_documents": [
+      "docs/fastapi/docs/tutorial/bigger-applications.md",
+      "docs/fastapi/docs/tutorial/bigger-applications.md",
+      "docs/fastapi/docs/tutorial/bigger-applications.md",
+      "docs/fastapi/docs/tutorial/bigger-applications.md",
+      "docs/fastapi/docs/tutorial/bigger-applications.md"
     ]
   }
 ]

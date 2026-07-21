@@ -1,7 +1,13 @@
-import ollama
+import os
 import json
+from ollama import Client
+
+OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
+client = Client(host=OLLAMA_HOST)
 
 from src.evaluation.prompt import build_prompt
+
+
 
 class LLMjudge:
     def __init__(self, model: str = "llama3.2:3b"):
@@ -22,7 +28,7 @@ class LLMjudge:
                 generated_answer=generated_answer,
             )
 
-            response = ollama.chat(
+            response = client.chat(
                 model=self.model,
                 messages=[
                     {

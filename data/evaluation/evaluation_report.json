@@ -2,16 +2,16 @@
   "metrics": {
     "total_samples": 50,
     "top_k": 5,
-    "document_recall@1": 0.64,
-    "document_recall@3": 0.92,
-    "document_recall@5": 0.98,
-    "document_mrr": 0.7816666666666666,
-    "faithfulness": 4.32,
-    "correctness": 4.56,
-    "relevance": 4.84,
+    "document_recall@1": 0.62,
+    "document_recall@3": 0.88,
+    "document_recall@5": 0.92,
+    "document_mrr": 0.7466666666666666,
+    "faithfulness": 4.42,
+    "correctness": 4.4,
+    "relevance": 4.94,
     "hallucination_rate": 0.0,
-    "average_retrieval_time": 0.6740075919998344,
-    "average_generation_time": 11.086758279999994
+    "average_retrieval_time": 0.6676069860001007,
+    "average_generation_time": 3.5304970380001395
   },
   "summary": "RAG Evaluation Report"
 }

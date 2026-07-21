@@ -8,26 +8,22 @@ from fastapi import HTTPException, status, UploadFile, File, FastAPI
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-try:
-    from scripts.build_index import main as run_indexing_pipeline
-except ImportError:
-    try:
-        # FIXED: Look for a flat root or sub-module fallback inside Docker path structures
-        import sys
-        if "/app" not in sys.path:
-            sys.path.append("/app")
-        from scripts.build_index import build_index as run_indexing_pipeline
-    except ImportError:
-        run_indexing_pipeline = None
-
+from scripts.eval import evaluate
+from src.indexing.embedder import Embedder
+from src.indexing.vector_store import VectorStore
+from src.retrieval.retriever import Retriever
+from src.generation.generator import Generator
+from src.evaluation.judge import LLMjudge
 from src.api.auth_utils import create_access_token
 from src.api.services import rag
+
 from src.api.models import (
     ChatRequest,
     FeedbackRequest,
     RegisterRequest,
     LoginRequest,
 )
+
 from src.api.database import (
     initialize_database,
     create_conversation,
@@ -42,6 +38,7 @@ from src.api.database import (
     verify_conversation_owner,
     get_all_feedback_report,
 )
+
 
 app = FastAPI(
     title="AI RAG Assistant",
@@ -101,7 +98,6 @@ def chat(request: ChatRequest):
             yield f"\n__METADATA__:{json.dumps({'conversation_id': conversation_id, 'assistant_message_id': None, 'confidence': results['confidence'], 'sources': []})}"
         return StreamingResponse(fallback_stream(), media_type="text/plain")
 
-    # FIXED: Added [0] index to safely step past ChromaDB's outer batch list layer
     raw_docs = results["documents"][0] if results.get("documents") else []
     raw_metas = results["metadatas"][0] if results.get("metadatas") else []
 
@@ -192,7 +188,6 @@ def feedback(request: FeedbackRequest):
 
 @app.get("/admin/feedback")
 def admin_feedback_report(email: str):
-    # FIXED: Check the email address string directly instead of user_id integer
     if email.strip().lower() != "admin@gmail.com":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -271,7 +266,6 @@ def upload_documents(files: list[UploadFile] = File(...)):
                 with open(file_path, "wb") as buffer:
                     shutil.copyfileobj(file.file, buffer)
 
-            # FIXED - Call native internal reset to bypass Windows OS file locks
             yield "PROGRESS:20|Wiping old analytical indices and collections cleanly...\n"
             
             # Reset ChromaDB data internally via the provided VectorStore API method
@@ -303,3 +297,36 @@ def upload_documents(files: list[UploadFile] = File(...)):
 
     return StreamingResponse(event_stream(), media_type="text/event-stream")
 
+@app.post("/admin/eval")
+def run_evaluation(email: str):
+
+    if email.lower() != "admin@gmail.com":
+        raise HTTPException(
+            status_code=403,
+            detail="Access denied."
+        )
+
+    embedder = Embedder()
+    store = VectorStore()
+    retriever = Retriever(embedder, store)
+    generator = Generator()
+    judge = LLMjudge()
+
+    metrics, retrieval_failures, generation_failures, all_evaluations = evaluate(
+        retriever=retriever,
+        generator=generator,
+        judge=judge,
+        top_k=5,
+    )
+
+    worst_answers = sorted(
+        all_evaluations,
+        key=lambda x: x["scores"].get("correctness", 5)
+    )[:10]
+    print(metrics)
+    return {
+        "metrics": metrics,
+        "retrieval_failures": retrieval_failures,
+        "generation_failures": generation_failures,
+        "worst_answers": worst_answers,
+    }

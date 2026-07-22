@@ -112,41 +112,69 @@ if not st.session_state.logged_in:
         password = st.text_input("Password", type="password", key="login_password")
 
         if st.button("Login", key="main_login_submit_btn"):
-            response = requests.post(
-                f"{API}/login",
-                json={"email": email, "password": password},
-            ).json()
+            try:
+                response = requests.post(
+                    f"{API}/login",
+                    json={"email": email, "password": password},
+                    timeout=5,
+                ).json()
 
-            if response["success"]:
-                st.session_state.logged_in = True
-                st.session_state.user_id = response["user_id"]
-                st.session_state.user_email = email.strip().lower()
-                # Push into permanent browser memory
-                save_browser_session(response["token"], str(response["user_id"]), email.strip().lower())
+                if response["success"]:
+                    st.session_state.logged_in = True
+                    st.session_state.user_id = response["user_id"]
+                    st.session_state.user_email = email.strip().lower()
 
-                # Update the URL bar immediately so it stays persistent on next refresh
-                st.query_params["token"] = response["token"]
-                st.query_params["user_id"] = str(response["user_id"])
-                st.query_params["email"] = email.strip().lower()
-                
-                st.rerun()
-            else:
-                st.error(response["message"])
+                    # Push into permanent browser memory
+                    save_browser_session(
+                        response["token"],
+                        str(response["user_id"]),
+                        email.strip().lower(),
+                    )
+
+                    # Update URL
+                    st.query_params["token"] = response["token"]
+                    st.query_params["user_id"] = str(response["user_id"])
+                    st.query_params["email"] = email.strip().lower()
+
+                    st.rerun()
+                else:
+                    st.error(response["message"])
+
+            except requests.exceptions.RequestException:
+                st.info(
+                    ":material/Rocket_Launch: The backend server is still starting.\n\n"
+                    "Please wait a few seconds and try again."
+                )
+
+                if st.button("Retry", key="retry_login"):
+                    st.rerun()
 
     with tab2:
         email = st.text_input("Email", key="register_email")
         password = st.text_input("Password", type="password", key="register_password")
 
-        if st.button("Register"):
-            response = requests.post(
-                f"{API}/register",
-                json={"email": email, "password": password},
-            ).json()
+        if st.button("Register", key="main_register_submit_btn"):
+            try:
+                response = requests.post(
+                    f"{API}/register",
+                    json={"email": email, "password": password},
+                    timeout=5,
+                ).json()
 
-            if response["success"]:
-                st.success("Account created successfully!")
-            else:
-                st.error(response["message"])
+                if response["success"]:
+                    st.success("Account created successfully!")
+                else:
+                    st.error(response["message"])
+
+            except requests.exceptions.RequestException:
+                st.info(
+                    ":material/Rocket_Launch: The backend server is still starting.\n\n"
+                    "Please wait a few seconds and try again."
+                )
+
+                if st.button("Retry", key="retry_register"):
+                    st.rerun()
+
     st.stop()
 
 def render_assistant_message(message):
